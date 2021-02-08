@@ -47,3 +47,5 @@ Route::resource('paymentVoucherDetails', App\Http\Controllers\PaymentVoucherDeta
 Route::resource('payments', App\Http\Controllers\PaymentController::class);
 
 Route::resource('transactions', App\Http\Controllers\TransactionController::class);
+
+Route::resource('configurations', App\Http\Controllers\ConfigurationController::class);

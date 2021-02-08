@@ -88,3 +88,11 @@
 </li>
 
 
+<li class="nav-item">
+    <a href="{{ route('configurations.index') }}"
+       class="nav-link {{ Request::is('configurations*') ? 'active' : '' }}">
+        <p>Configurations</p>
+    </a>
+</li>
+
+

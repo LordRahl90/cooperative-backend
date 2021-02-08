@@ -44,3 +44,5 @@ Route::resource('payment_voucher_details', App\Http\Controllers\API\PaymentVouch
 Route::resource('payments', App\Http\Controllers\API\PaymentAPIController::class);
 
 Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
+
+Route::resource('configurations', App\Http\Controllers\API\ConfigurationAPIController::class);
