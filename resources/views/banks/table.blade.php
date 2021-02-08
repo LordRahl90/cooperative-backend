@@ -1,21 +1,21 @@
 <div class="table-responsive">
     <table class="table" id="banks-table">
         <thead>
-            <tr>
-                <th>Country Id</th>
-        <th>Name</th>
-        <th>Slug</th>
-        <th>Active</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Country</th>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Active</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($banks as $bank)
             <tr>
-                <td>{{ $bank->country_id }}</td>
-            <td>{{ $bank->name }}</td>
-            <td>{{ $bank->slug }}</td>
-            <td>{{ $bank->active }}</td>
+                <td>{{ $bank->country->name }}</td>
+                <td>{{ $bank->name }}</td>
+                <td>{{ $bank->slug }}</td>
+                <td>{{ $bank->active?"Active":"InActive" }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['banks.destroy', $bank->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

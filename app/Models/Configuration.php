@@ -23,25 +23,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Configuration extends Model
 {
     use SoftDeletes;
-
     use HasFactory;
 
     public $table = 'configurations';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'income_category',
-        'expense_category',
-        'cash_account_categories',
-        'fixed_asset_categories',
-        'current_assets_category',
-        'account_payable_category',
-        'account_recieveable_category'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -54,11 +45,11 @@ class Configuration extends Model
         'company_id' => 'integer',
         'income_category' => 'integer',
         'expense_category' => 'integer',
-        'cash_account_categories' => 'integer',
-        'fixed_asset_categories' => 'integer',
+        'cash_account_category' => 'integer',
+        'fixed_asset_category' => 'integer',
         'current_assets_category' => 'integer',
         'account_payable_category' => 'integer',
-        'account_recieveable_category' => 'integer'
+        'account_receivable_category' => 'integer'
     ];
 
     /**
@@ -68,14 +59,51 @@ class Configuration extends Model
      */
     public static $rules = [
         'company_id' => 'required',
-        'income_category' => 'required',
-        'expense_category' => 'required',
-        'cash_account_categories' => 'required',
-        'fixed_asset_categories' => 'required',
-        'current_assets_category' => 'required',
-        'account_payable_category' => 'required',
-        'account_recieveable_category' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function income()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'income_category', 'id');
+    }
+
+    public function expense()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'expense_category', 'id');
+    }
+
+    public function cash_account()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'cash_account_category', 'id');
+    }
+
+    public function fixed_asset()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'fixed_asset_category', 'id');
+    }
+
+    public function current_asset()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'current_assets_category', 'id');
+    }
+
+    public function current_liability()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'current_liability_category', 'id');
+    }
+
+    public function account_payable()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'account_payable_category', 'id');
+    }
+
+    public function account_receivable()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'account_receivable_category', 'id');
+    }
+
 }

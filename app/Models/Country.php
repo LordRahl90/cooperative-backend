@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,11 +19,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Country extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'countries';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -53,9 +54,15 @@ class Country extends Model
      */
     public static $rules = [
         'name' => 'required',
-        'slug' => 'required',
         'code' => 'required'
     ];
 
-    
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 }

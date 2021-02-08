@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAccountHeadRequest;
 use App\Http\Requests\UpdateAccountHeadRequest;
+use App\Models\AccountCategory;
+use App\Models\AccountHead;
 use App\Repositories\AccountHeadRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +44,10 @@ class AccountHeadController extends AppBaseController
      */
     public function create()
     {
-        return view('account_heads.create');
+        $categories = AccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('account_heads.create', [
+            'categories' => $categories->toArray()
+        ]);
     }
 
     /**
@@ -55,6 +60,13 @@ class AccountHeadController extends AppBaseController
     public function store(CreateAccountHeadRequest $request)
     {
         $input = $request->all();
+        $category = AccountCategory::find($input['category_id']);
+        $input['code'] = $category->prefix_digit . $input['code'];
+
+        if (AccountHead::where('code', $input['code'])->count() > 0) {
+            Flash::error("Account code already exists");
+            return redirect()->back()->withInput();
+        }
 
         $accountHead = $this->accountHeadRepository->create($input);
 
@@ -133,9 +145,9 @@ class AccountHeadController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

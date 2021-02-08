@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,14 +22,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OrgAccountHead extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'org_account_heads';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -64,10 +64,26 @@ class OrgAccountHead extends Model
         'company_id' => 'required|exists:companies,id',
         'category_id' => 'required|exists:org_account_categories,id',
         'name' => 'required',
-        'slug' => 'required',
         'code' => 'required',
         'active' => 'required'
     ];
 
-    
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, 'category_id', 'id');
+    }
 }

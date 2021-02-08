@@ -46,3 +46,7 @@ Route::resource('payments', App\Http\Controllers\API\PaymentAPIController::class
 Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
 
 Route::resource('configurations', App\Http\Controllers\API\ConfigurationAPIController::class);
+
+Route::resource('companies', App\Http\Controllers\API\CompanyAPIController::class);
+
+Route::resource('users', App\Http\Controllers\API\UserAPIController::class);

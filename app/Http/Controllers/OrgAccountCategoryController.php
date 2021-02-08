@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrgAccountCategoryRequest;
 use App\Http\Requests\UpdateOrgAccountCategoryRequest;
+use App\Models\Company;
 use App\Repositories\OrgAccountCategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +43,10 @@ class OrgAccountCategoryController extends AppBaseController
      */
     public function create()
     {
-        return view('org_account_categories.create');
+        $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
+        return view('org_account_categories.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -93,14 +97,16 @@ class OrgAccountCategoryController extends AppBaseController
     public function edit($id)
     {
         $orgAccountCategory = $this->orgAccountCategoryRepository->find($id);
+        $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
 
         if (empty($orgAccountCategory)) {
             Flash::error('Org Account Category not found');
-
             return redirect(route('orgAccountCategories.index'));
         }
 
-        return view('org_account_categories.edit')->with('orgAccountCategory', $orgAccountCategory);
+        return view('org_account_categories.edit', [
+            'companies' => $companies
+        ])->with('orgAccountCategory', $orgAccountCategory);
     }
 
     /**
@@ -133,9 +139,9 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

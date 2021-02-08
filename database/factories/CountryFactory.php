@@ -21,12 +21,12 @@ class CountryFactory extends Factory
      */
     public function definition()
     {
+        $countries = ["Nigeria", "Cameroon", "United State of America"];
         return [
             'name' => $this->faker->word,
-        'slug' => $this->faker->word,
-        'code' => $this->faker->word,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'code' => $this->faker->word,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

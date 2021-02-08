@@ -123,6 +123,10 @@
       <path value="$PROJECT_DIR$/vendor/swagger-api/swagger-ui" />
       <path value="$PROJECT_DIR$/vendor/cocur/slugify" />
       <path value="$PROJECT_DIR$/vendor/cviebrock/eloquent-sluggable" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/antennaio/laravel-clyde" />
+      <path value="$PROJECT_DIR$/vendor/league/glide-symfony" />
+      <path value="$PROJECT_DIR$/vendor/league/glide" />
     </include_path>
   </component>
   <component name="PhpUnit">

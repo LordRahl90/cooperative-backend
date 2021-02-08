@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAccountCategoryRequest;
 use App\Http\Requests\UpdateAccountCategoryRequest;
+use App\Models\AccountCategory;
 use App\Repositories\AccountCategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -55,7 +56,6 @@ class AccountCategoryController extends AppBaseController
     public function store(CreateAccountCategoryRequest $request)
     {
         $input = $request->all();
-
         $accountCategory = $this->accountCategoryRepository->create($input);
 
         Flash::success('Account Category saved successfully.');
@@ -133,9 +133,9 @@ class AccountCategoryController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

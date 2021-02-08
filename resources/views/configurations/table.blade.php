@@ -1,36 +1,38 @@
 <div class="table-responsive">
     <table class="table" id="configurations-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Income Category</th>
-        <th>Expense Category</th>
-        <th>Cash Account Categories</th>
-        <th>Fixed Asset Categories</th>
-        <th>Current Assets Category</th>
-        <th>Account Payable Category</th>
-        <th>Account Recieveable Category</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Company</th>
+            <th>Income</th>
+            <th>Expense</th>
+            <th>Cash Account</th>
+            <th>Fixed Asset</th>
+            <th>Current Assets</th>
+            <th>Account Payable</th>
+            <th>Account Receivable</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($configurations as $configuration)
             <tr>
-                <td>{{ $configuration->company_id }}</td>
-            <td>{{ $configuration->income_category }}</td>
-            <td>{{ $configuration->expense_category }}</td>
-            <td>{{ $configuration->cash_account_categories }}</td>
-            <td>{{ $configuration->fixed_asset_categories }}</td>
-            <td>{{ $configuration->current_assets_category }}</td>
-            <td>{{ $configuration->account_payable_category }}</td>
-            <td>{{ $configuration->account_recieveable_category }}</td>
+                <td>{{ $configuration->company->name }}</td>
+                <td>{{ $configuration->income->name }}</td>
+                <td>{{ $configuration->expense->name }}</td>
+                <td>{{ $configuration->cash_account->name }}</td>
+                <td>{{ $configuration->fixed_asset->name }}</td>
+                <td>{{ $configuration->current_asset->name }}</td>
+                <td>{{ $configuration->account_payable->name }}</td>
+                <td>{{ $configuration->account_receivable->name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['configurations.destroy', $configuration->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('configurations.show', [$configuration->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('configurations.show', [$configuration->id]) }}"
+                           class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('configurations.edit', [$configuration->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('configurations.edit', [$configuration->id]) }}"
+                           class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
                         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}

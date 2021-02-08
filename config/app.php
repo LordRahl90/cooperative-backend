@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Antennaio\Clyde\ClydeServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -230,6 +231,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
+        'ClydeUpload' => Antennaio\Clyde\Facades\ClydeUpload::class,
+        'ClydeImage' => Antennaio\Clyde\Facades\ClydeImage::class,
     ],
 
 ];

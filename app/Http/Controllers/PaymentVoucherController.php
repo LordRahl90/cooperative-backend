@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePaymentVoucherRequest;
 use App\Http\Requests\UpdatePaymentVoucherRequest;
+use App\Models\Company;
 use App\Repositories\PaymentVoucherRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +43,10 @@ class PaymentVoucherController extends AppBaseController
      */
     public function create()
     {
-        return view('payment_vouchers.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('payment_vouchers.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -133,9 +137,9 @@ class PaymentVoucherController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

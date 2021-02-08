@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrgAccountHeadRequest;
 use App\Http\Requests\UpdateOrgAccountHeadRequest;
+use App\Models\Company;
+use App\Models\OrgAccountCategory;
+use App\Models\OrgAccountHead;
 use App\Repositories\OrgAccountHeadRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +45,13 @@ class OrgAccountHeadController extends AppBaseController
      */
     public function create()
     {
-        return view('org_account_heads.create');
+        //TODO: return the categories based on the company name
+        $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('org_account_heads.create', [
+            'companies' => $companies,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -55,6 +64,13 @@ class OrgAccountHeadController extends AppBaseController
     public function store(CreateOrgAccountHeadRequest $request)
     {
         $input = $request->all();
+        $category = OrgAccountCategory::WhereRaw('company_id=? AND id=?', [$input['company_id'], $input['category_id']])->get();
+        $input['code'] = $category->first()->prefix_digit . $input['code'];
+
+        if (OrgAccountHead::whereRaw('company_id=? and code=?', [$input['company_id'], $input['code']])->count() > 0) {
+            Flash::error("Code already exists");
+            return redirect()->back()->withInput();
+        }
 
         $orgAccountHead = $this->orgAccountHeadRepository->create($input);
 
@@ -93,6 +109,8 @@ class OrgAccountHeadController extends AppBaseController
     public function edit($id)
     {
         $orgAccountHead = $this->orgAccountHeadRepository->find($id);
+        $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
 
         if (empty($orgAccountHead)) {
             Flash::error('Org Account Head not found');
@@ -100,7 +118,10 @@ class OrgAccountHeadController extends AppBaseController
             return redirect(route('orgAccountHeads.index'));
         }
 
-        return view('org_account_heads.edit')->with('orgAccountHead', $orgAccountHead);
+        return view('org_account_heads.edit', [
+            'companies' => $companies,
+            'categories' => $categories
+        ])->with('orgAccountHead', $orgAccountHead);
     }
 
     /**
@@ -133,9 +154,9 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

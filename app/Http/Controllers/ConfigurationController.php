@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateConfigurationRequest;
 use App\Http\Requests\UpdateConfigurationRequest;
+use App\Models\Company;
+use App\Models\OrgAccountCategory;
 use App\Repositories\ConfigurationRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +44,13 @@ class ConfigurationController extends AppBaseController
      */
     public function create()
     {
-        return view('configurations.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        //TODO: Sort this by company ID
+        $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('configurations.create', [
+            'companies' => $companies,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -56,6 +64,7 @@ class ConfigurationController extends AppBaseController
     {
         $input = $request->all();
 
+        //TODO: Prevent using same account id for different config.
         $configuration = $this->configurationRepository->create($input);
 
         Flash::success('Configuration saved successfully.');
@@ -92,6 +101,8 @@ class ConfigurationController extends AppBaseController
      */
     public function edit($id)
     {
+        $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
         $configuration = $this->configurationRepository->find($id);
 
         if (empty($configuration)) {
@@ -100,7 +111,10 @@ class ConfigurationController extends AppBaseController
             return redirect(route('configurations.index'));
         }
 
-        return view('configurations.edit')->with('configuration', $configuration);
+        return view('configurations.edit', [
+            'companies' => $companies,
+            'categories' => $categories
+        ])->with('configuration', $configuration);
     }
 
     /**
@@ -133,9 +147,9 @@ class ConfigurationController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

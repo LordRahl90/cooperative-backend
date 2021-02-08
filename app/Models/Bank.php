@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,14 +20,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Bank extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'banks';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -57,9 +57,20 @@ class Bank extends Model
     public static $rules = [
         'country_id' => 'required|exists:countries,id',
         'name' => 'required',
-        'slug' => 'required',
         'active' => 'required'
     ];
 
-    
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

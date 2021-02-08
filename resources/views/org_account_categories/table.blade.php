@@ -2,22 +2,22 @@
     <table class="table" id="orgAccountCategories-table">
         <thead>
             <tr>
-                <th>Company Id</th>
-        <th>Name</th>
-        <th>Slug</th>
-        <th>Account Type</th>
-        <th>Prefix Digit</th>
-                <th colspan="3">Action</th>
+                <th>Company</th>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Account Type</th>
+                <th>Prefix Digit</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
         @foreach($orgAccountCategories as $orgAccountCategory)
             <tr>
-                <td>{{ $orgAccountCategory->company_id }}</td>
-            <td>{{ $orgAccountCategory->name }}</td>
-            <td>{{ $orgAccountCategory->slug }}</td>
-            <td>{{ $orgAccountCategory->account_type }}</td>
-            <td>{{ $orgAccountCategory->prefix_digit }}</td>
+                <td>{{ $orgAccountCategory->company->name }}</td>
+                <td>{{ $orgAccountCategory->name }}</td>
+                <td>{{ $orgAccountCategory->slug }}</td>
+                <td>{{ $orgAccountCategory->account_type }}</td>
+                <td>{{ $orgAccountCategory->prefix_digit }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['orgAccountCategories.destroy', $orgAccountCategory->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

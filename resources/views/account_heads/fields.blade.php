@@ -1,7 +1,7 @@
 <!-- Category Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('category_id', 'Category Id:') !!}
-    {!! Form::select('category_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('category_id', 'Category:') !!}
+    {!! Form::select('category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
@@ -9,12 +9,6 @@
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Slug Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('slug', 'Slug:') !!}
-    {!! Form::text('slug', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Code Field -->

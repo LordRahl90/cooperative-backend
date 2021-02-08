@@ -13,5 +13,5 @@
 <!-- Account Type Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('account_type', 'Account Type:') !!}
-    {!! Form::select('account_type', ['Select' => '0'], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('account_type', ['Select Account Type','DEBIT', 'CREDIT'], null, ['class' => 'form-control custom-select']) !!}
 </div>

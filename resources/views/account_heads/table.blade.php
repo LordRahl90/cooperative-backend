@@ -1,23 +1,23 @@
 <div class="table-responsive">
     <table class="table" id="accountHeads-table">
         <thead>
-            <tr>
-                <th>Category Id</th>
-        <th>Name</th>
-        <th>Slug</th>
-        <th>Code</th>
-        <th>Active</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Category</th>
+            <th>Name</th>
+            <th>Slug</th>
+            <th>Code</th>
+            <th>Active</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($accountHeads as $accountHead)
             <tr>
-                <td>{{ $accountHead->category_id }}</td>
-            <td>{{ $accountHead->name }}</td>
-            <td>{{ $accountHead->slug }}</td>
-            <td>{{ $accountHead->code }}</td>
-            <td>{{ $accountHead->active }}</td>
+                <td>{{ $accountHead->category->name }}</td>
+                <td>{{ $accountHead->name }}</td>
+                <td>{{ $accountHead->slug }}</td>
+                <td>{{ $accountHead->code }}</td>
+                <td>{{ $accountHead->active?"Active":"InActive" }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['accountHeads.destroy', $accountHead->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,22 +21,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class OrgBankAccount extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'org_bank_accounts';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'bank_id',
-        'account_name',
-        'slug',
-        'account_number',
-        'account_head_id'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -45,6 +41,7 @@ class OrgBankAccount extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'company_id' => 'integer',
         'bank_id' => 'integer',
         'account_name' => 'string',
         'slug' => 'string',
@@ -60,10 +57,30 @@ class OrgBankAccount extends Model
     public static $rules = [
         'bank_id' => 'required|exists:banks,id',
         'account_name' => 'required',
-        'slug' => 'required',
         'account_number' => 'required',
-        'account_head_id' => 'required|exists:org_account_heads,id'
     ];
 
-    
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'account_name'
+            ]
+        ];
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class);
+    }
+
+    public function account_head()
+    {
+        return $this->belongsTo(OrgAccountHead::class, "account_head_id", "id");
+    }
 }

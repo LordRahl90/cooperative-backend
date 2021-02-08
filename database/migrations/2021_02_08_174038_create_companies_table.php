@@ -16,6 +16,7 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('country_id')->unsigned();
             $table->string('name');
             $table->string('slug');
             $table->string('logo');
@@ -26,6 +27,8 @@ class CreateCompaniesTable extends Migration
             $table->string('address');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

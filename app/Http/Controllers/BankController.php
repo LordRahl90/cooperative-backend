@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateBankRequest;
 use App\Http\Requests\UpdateBankRequest;
+use App\Models\Country;
 use App\Repositories\BankRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +43,10 @@ class BankController extends AppBaseController
      */
     public function create()
     {
-        return view('banks.create');
+        $countries = Country::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('banks.create', [
+            'countries' => $countries
+        ]);
     }
 
     /**
@@ -93,6 +97,7 @@ class BankController extends AppBaseController
     public function edit($id)
     {
         $bank = $this->bankRepository->find($id);
+        $countries = Country::orderBy('name', 'asc')->pluck('name', 'id');
 
         if (empty($bank)) {
             Flash::error('Bank not found');
@@ -100,7 +105,9 @@ class BankController extends AppBaseController
             return redirect(route('banks.index'));
         }
 
-        return view('banks.edit')->with('bank', $bank);
+        return view('banks.edit', [
+            'countries' => $countries
+        ])->with('bank', $bank);
     }
 
     /**
@@ -133,9 +140,9 @@ class BankController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

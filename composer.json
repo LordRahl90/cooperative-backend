@@ -15,6 +15,7 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
+        "antennaio/laravel-clyde": "~0.0.1",
         "appointer/swaggervel": "dev-master",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "~2.3",

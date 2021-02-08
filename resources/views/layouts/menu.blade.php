@@ -1,4 +1,11 @@
 <li class="nav-item">
+    <a href="{{ route('countries.index') }}"
+       class="nav-link {{ Request::is('countries*') ? 'active' : '' }}">
+        <p>Countries</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('accountCategories.index') }}"
        class="nav-link {{ Request::is('accountCategories*') ? 'active' : '' }}">
         <p>Account Categories</p>
@@ -15,9 +22,23 @@
 
 
 <li class="nav-item">
+    <a href="{{ route('companies.index') }}"
+       class="nav-link {{ Request::is('companies*') ? 'active' : '' }}">
+        <p>Companies</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('orgAccountCategories.index') }}"
        class="nav-link {{ Request::is('orgAccountCategories*') ? 'active' : '' }}">
         <p>Org Account Categories</p>
+    </a>
+</li>
+
+<li class="nav-item">
+    <a href="{{ route('configurations.index') }}"
+       class="nav-link {{ Request::is('configurations*') ? 'active' : '' }}">
+        <p>Configurations</p>
     </a>
 </li>
 
@@ -26,14 +47,6 @@
     <a href="{{ route('orgAccountHeads.index') }}"
        class="nav-link {{ Request::is('orgAccountHeads*') ? 'active' : '' }}">
         <p>Org Account Heads</p>
-    </a>
-</li>
-
-
-<li class="nav-item">
-    <a href="{{ route('countries.index') }}"
-       class="nav-link {{ Request::is('countries*') ? 'active' : '' }}">
-        <p>Countries</p>
     </a>
 </li>
 
@@ -52,8 +65,6 @@
         <p>Org Bank Accounts</p>
     </a>
 </li>
-
-
 
 
 <li class="nav-item">
@@ -89,9 +100,9 @@
 
 
 <li class="nav-item">
-    <a href="{{ route('configurations.index') }}"
-       class="nav-link {{ Request::is('configurations*') ? 'active' : '' }}">
-        <p>Configurations</p>
+    <a href="{{ route('users.index') }}"
+       class="nav-link {{ Request::is('users*') ? 'active' : '' }}">
+        <p>Users</p>
     </a>
 </li>
 
