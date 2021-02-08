@@ -27,7 +27,7 @@ class CreateConfigurationsTable extends Migration
             $table->integer('account_receivable_category')->unsigned();
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('company_id')->references('')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('income_category')->references('id')->on('org_account_categories');
             $table->foreign('expense_category')->references('id')->on('org_account_categories');
             $table->foreign('cash_account_categories')->references('id')->on('account_categories');

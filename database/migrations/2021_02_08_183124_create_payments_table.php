@@ -27,7 +27,7 @@ class CreatePaymentsTable extends Migration
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('pv_id')->references('id')->on('payment_vouchers');
-            $table->foreign('debit_account')->references('id')->on('org_bank_accounts');
+            $table->foreign('bank_account')->references('id')->on('org_bank_accounts');
         });
     }
 
