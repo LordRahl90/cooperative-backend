@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    dd("hello world");
     return view('welcome');
 });
 
@@ -35,10 +36,6 @@ Route::resource('countries', App\Http\Controllers\CountryController::class);
 Route::resource('banks', App\Http\Controllers\BankController::class);
 
 Route::resource('orgBankAccounts', App\Http\Controllers\OrgBankAccountController::class);
-
-
-
-
 
 Route::resource('paymentVouchers', App\Http\Controllers\PaymentVoucherController::class);
 
