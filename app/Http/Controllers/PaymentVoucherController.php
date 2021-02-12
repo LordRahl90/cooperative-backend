@@ -4,11 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePaymentVoucherRequest;
 use App\Http\Requests\UpdatePaymentVoucherRequest;
+use App\Models\Bank;
 use App\Models\Company;
+use App\Models\OrgAccountHead;
+use App\Models\PaymentVoucher;
 use App\Repositories\PaymentVoucherRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Invoice;
+use App\Utility\NumberConversion;
+use App\Utility\PhpTest;
+use App\Utility\PhpTester;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Storage;
 use Response;
 
 class PaymentVoucherController extends AppBaseController
@@ -44,8 +52,12 @@ class PaymentVoucherController extends AppBaseController
     public function create()
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        //TODO: Abiodun, sort the account heads with login companies
+        $accountHeads = OrgAccountHead::orderBy('name', 'asc')->pluck('name', 'id');
+        $banks = Bank::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('payment_vouchers.create', [
-            'companies' => $companies
+            'companies' => [0 => 'Select Account'] + $companies->toArray(),
+            'banks' => $banks
         ]);
     }
 
@@ -156,5 +168,83 @@ class PaymentVoucherController extends AppBaseController
         Flash::success('Payment Voucher deleted successfully.');
 
         return redirect(route('paymentVouchers.index'));
+    }
+
+    public function printPV($id)
+    {
+        $amount = 0;
+        $pv = PaymentVoucher::with(['items', 'company'])->where("pv_id", $id)->get()->first();
+        $pdf = new Invoice('P', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->watermark(strtoupper($pv->company->name));
+        $pdf->addCompanyAddress("JOSEPH AYO BABALOLA UNIVERSITY",
+            "IKEJI-ARAKEJI\n" .
+            "PMB 5006, ILESHA\n" .
+            "OSUN STATE\n" .
+            "www.jabu.edu.ng");
+
+        $pdf->addDate($pv->status);
+
+        $pdf->addClientAdresse($pv->payee .
+            "\n" . $pv->address .
+            "\n" . $pv->phone .
+            "\n" . $pv->email .
+            "\n" . $pv->website);
+        $pdf->addReglement("");
+        $pdf->addCreatedDate(Date('Y-m-d', strtotime($pv->created_at)));
+        $pdf->addPVID($pv->pv_id);
+        $pdf->addReference("\nYour REF.................................");
+
+        $cols = array(
+            "SN" => 15,
+            "Description" => 78,
+            "Code" => 20,
+            "Rate" => 20,
+            "Quantity" => 20,
+            "Amount" => 30,
+        );
+        $pdf->addCols($cols);
+        $cols = array("SN" => "C",
+            "Description" => "L",
+            "Code" => "C",
+            "Rate" => "R",
+            "Quantity" => 'R',
+            "Amount" => "R",
+        );
+        $pdf->addLineFormat($cols);
+        $y = 109;
+
+        foreach ($pv->items as $k => $item) {
+            $amount += $item->amount;
+            $line = array("SN" => $k + 1,
+                "Description" => $item->narration,
+                "Code" => $item->accountHead->code,
+                "Rate" => number_format($item->rate, 2),
+                "Quantity" => number_format($item->quantity, 2),
+                "Amount" => number_format($item->amount, 2),
+            );
+            $size = $pdf->addLine($y, $line);
+            $y += $size + 2;
+        }
+        $line = array("SN" => "T",
+            "Description" => "Total",
+            "Code" => "Total",
+            "Rate" => "Total",
+            "Quantity" => "Total",
+            "Amount" => number_format($amount, 2),
+        );
+        $pdf->addReglement(number_format($amount, 2));
+        $size = $pdf->addLine($y, $line);
+        $y += $size + 2;
+        $pdf->addCadreTVAs();
+        $psp = NumberConversion::convert_number_to_words($amount);
+        $pdf->MultiCell(150, 4, "Payment is hereby authorised for " . $psp . " Naira only, in respect of the above stated services.
+        \n\n........................................................... \n\n" .
+            "Approved By(Name, Signature and Date)\n\n..........................................................." . "
+        \nAuthorized By(Name, Signature and Date)\n\n...................................................." .
+            "\nFor: Payee");
+        Storage::put("test.pdf", $pdf->Output('S', $id . '.pdf', true));
+
+        dd("All done");;
     }
 }

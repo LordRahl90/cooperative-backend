@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Antennaio\Clyde\ClydeServiceProvider::class,
+        Crabbly\Fpdf\FpdfServiceProvider::class,
 
         /*
          * Application Service Providers...

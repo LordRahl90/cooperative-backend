@@ -21,6 +21,8 @@ class CreatePaymentVoucherDetailsTable extends Migration
             $table->integer('account_head_id')->unsigned();
             $table->double('amount', 30, 2);
             $table->string('narration');
+            $table->double('rate', 20, 2);
+            $table->integer('quantity');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');

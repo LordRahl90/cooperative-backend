@@ -4,17 +4,20 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateCompanyAPIRequest;
 use App\Http\Requests\API\UpdateCompanyAPIRequest;
+use App\Models\AccountHead;
 use App\Models\Company;
+use App\Models\OrgAccountHead;
+use App\Models\OrgBankAccount;
 use App\Repositories\CompanyRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
  * Class CompanyController
  * @package App\Http\Controllers\API
  */
-
 class CompanyAPIController extends AppBaseController
 {
     /** @var  CompanyRepository */
@@ -277,5 +280,17 @@ class CompanyAPIController extends AppBaseController
         $company->delete();
 
         return $this->sendSuccess('Company deleted successfully');
+    }
+
+    public function accountHeads($id)
+    {
+        $bankAccounts = OrgBankAccount::where("company_id", $id)->get('account_head_id');
+        $acctHeadIDs = [];
+
+        foreach ($bankAccounts as $v) {
+            $acctHeadIDs[] = $v->account_head_id;
+        }
+        $acctHeads = OrgAccountHead::where("company_id", $id)->whereNotIn('id', $acctHeadIDs)->get();
+        return $this->sendResponse($acctHeads, "Company account head loaded successfully.");
     }
 }

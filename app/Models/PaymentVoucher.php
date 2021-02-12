@@ -25,19 +25,13 @@ class PaymentVoucher extends Model
     use HasFactory;
 
     public $table = 'payment_vouchers';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'payee',
-        'address',
-        'email',
-        'website',
-        'phone',
-        'pv_id'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -61,13 +55,15 @@ class PaymentVoucher extends Model
      * @var array
      */
     public static $rules = [
-        'payee' => 'required',
-        'address' => 'required',
-        'email' => 'required',
-        'website' => 'required',
-        'phone' => 'required',
-        'pv_id' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PaymentVoucherDetails::class, "pv_id", "id");
+    }
 }

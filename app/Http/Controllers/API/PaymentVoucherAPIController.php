@@ -5,16 +5,18 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreatePaymentVoucherAPIRequest;
 use App\Http\Requests\API\UpdatePaymentVoucherAPIRequest;
 use App\Models\PaymentVoucher;
+use App\Models\PaymentVoucherDetails;
 use App\Repositories\PaymentVoucherRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Response;
 
 /**
  * Class PaymentVoucherController
  * @package App\Http\Controllers\API
  */
-
 class PaymentVoucherAPIController extends AppBaseController
 {
     /** @var  PaymentVoucherRepository */
@@ -54,10 +56,60 @@ class PaymentVoucherAPIController extends AppBaseController
     public function store(CreatePaymentVoucherAPIRequest $request)
     {
         $input = $request->all();
+        $details = $input['details'];
+        $items = $input['items'];
 
-        $paymentVoucher = $this->paymentVoucherRepository->create($input);
+        if (PaymentVoucher::where("pv_id", $details['id'])->count() > 0) {
+            return $this->sendError("This PV already exists", 400);
+        }
 
-        return $this->sendResponse($paymentVoucher->toArray(), 'Payment Voucher saved successfully');
+        DB::beginTransaction();
+        try {
+            $newPV = PaymentVoucher::create([
+                'company_id' => $details['company_id'],
+                'payee' => $details['payee'],
+                'address' => $details['address'],
+                'email' => $details['email'],
+                'website' => $details['website'],
+                'phone' => $details['phone'],
+                'pv_id' => $details['id'],
+                'account_name' => $details['account_name'],
+                'account_number' => $details['account_number'],
+                'bank_id' => $details['bank_id'],
+                'status' => "UNPAID",
+                'created_by' => 1, //TODO: Fix the auth user here.
+            ]);
+
+            if (!$newPV) {
+                throw new \Exception("cannot create PV details.");
+            }
+
+            foreach ($items as $item) {
+                $newItem = PaymentVoucherDetails::create([
+                    'company_id' => $details['company_id'],
+                    'pv_id' => $newPV->id,
+                    'account_head_id' => $item['account_head_id'],
+                    'narration' => $item['narration'],
+                    'rate' => $item['rate'],
+                    'quantity' => $item['quantity'],
+                    'amount' => $item['amount']
+                ]);
+
+                if (!$newItem) {
+                    Log::info($item);
+                    throw new \Exception("Cannot create a new item");
+                }
+            }
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Log::info($ex);
+            return $this->sendError($ex->getMessage(), 500);
+        }
+
+        Log::info("Hello world");
+
+        DB::commit();
+        return $this->sendSuccess("Payment Voucher created successfully.");
     }
 
     /**
@@ -111,9 +163,9 @@ class PaymentVoucherAPIController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

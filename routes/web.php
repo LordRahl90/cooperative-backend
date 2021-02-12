@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('orgBankAccounts', App\Http\Controllers\OrgBankAccountController::class);
 
     Route::resource('paymentVouchers', App\Http\Controllers\PaymentVoucherController::class);
+    Route::get('/paymentVouchers/{id}/details','App\Http\Controllers\PaymentVoucherController@printPV');
 
     Route::resource('paymentVoucherDetails', App\Http\Controllers\PaymentVoucherDetailsController::class);
 

@@ -24,18 +24,13 @@ class PaymentVoucherDetails extends Model
     use HasFactory;
 
     public $table = 'payment_voucher_details';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'pv_id',
-        'account_head_id',
-        'amount',
-        'narration'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -49,21 +44,14 @@ class PaymentVoucherDetails extends Model
         'pv_id' => 'integer',
         'account_head_id' => 'integer',
         'amount' => 'double',
-        'narration' => 'string'
+        'narration' => 'string',
+        'quantity' => 'integer',
+        'rate' => 'double'
     ];
 
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public static $rules = [
-        'company_id' => 'required',
-        'pv_id' => 'required|exists:payment_vouchers,id',
-        'account_head_id' => 'required|exists:org_account_heads,id',
-        'amount' => 'required',
-        'narration' => 'required'
-    ];
+    public function accountHead()
+    {
+        return $this->belongsTo(OrgAccountHead::class, 'account_head_id', 'id');
+    }
 
-    
 }

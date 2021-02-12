@@ -127,6 +127,7 @@
       <path value="$PROJECT_DIR$/vendor/antennaio/laravel-clyde" />
       <path value="$PROJECT_DIR$/vendor/league/glide-symfony" />
       <path value="$PROJECT_DIR$/vendor/league/glide" />
+      <path value="$PROJECT_DIR$/vendor/crabbly/fpdf-laravel" />
     </include_path>
   </component>
   <component name="PhpUnit">

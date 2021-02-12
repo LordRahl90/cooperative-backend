@@ -17,6 +17,7 @@ class CreatePaymentVouchersTable extends Migration
         Schema::create('payment_vouchers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
+            $table->integer('bank_id')->unsigned();
             $table->string('payee');
             $table->string('address');
             $table->string('email');
@@ -31,6 +32,7 @@ class CreatePaymentVouchersTable extends Migration
             $table->softDeletes();
 
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('bank_id')->references('id')->on('banks');
         });
     }
 
