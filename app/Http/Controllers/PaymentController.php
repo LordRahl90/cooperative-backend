@@ -6,16 +6,19 @@ use App\Http\Requests\CreatePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use App\Models\Bank;
 use App\Models\Company;
+use App\Models\OrgAccountHead;
 use App\Models\OrgBankAccount;
 use App\Models\PaymentVoucher;
 use App\Models\Staff;
+use App\Models\Transaction;
 use App\Repositories\PaymentRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
-use Illuminate\Support\Facades\DB;
+use PDF;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Response;
 
 class PaymentController extends AppBaseController
@@ -85,7 +88,6 @@ class PaymentController extends AppBaseController
             Transactions::makePayment($companyID, $pvID, $bankAccount, $reference, $narration, $totalAmount, $confirmedBy, $authorizedBy, auth()->id());
 
         } catch (\Exception $ex) {
-            DB::rollBack();
             Log::error($ex);
             Flash::error($ex->getMessage());
             return redirect()->back()->withInput();
@@ -183,5 +185,87 @@ class PaymentController extends AppBaseController
         Flash::success('Payment deleted successfully.');
 
         return redirect(route('payments.index'));
+    }
+
+    public function showCreateIncome()
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->pluck('account_name', 'account_head_id');
+        $acctHeadIDs = [];
+        foreach ($bankAccounts as $k => $v) {
+            $acctHeadIDs[] = $k;
+        }
+        //TODO: use the code below to sorth account head by companies.
+//        $acctHeads = OrgAccountHead::where("company_id", $id)->whereNotIn('id', $acctHeadIDs)->get();
+        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->whereNotIn('id', $acctHeadIDs)->pluck("name", "id");
+
+        return view("payments.income", [
+            'companies' => [0 => 'Select Company'] + $companies,
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray(),
+            'acctHeads' => $acctHeads
+        ]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function createIncome(Request $request)
+    {
+        $v = Validator::make($request->all(), [
+            'company_id' => 'required|exists:companies,id',
+            'reference' => 'required|unique:transactions,reference',
+            'bank_account' => 'required|exists:org_account_heads,id',
+            'account_head' => 'required|exists:org_account_heads,id',
+            'narration' => 'required',
+            'total_amount' => 'required',
+            'payer' => 'required'
+        ]);
+        $input = $request->all();
+        $companyID = $input['company_id'];
+        $reference = $input['reference'];
+        $narration = $input['narration'];
+        $amount = $input['total_amount'];
+        $bankAccount = $input['bank_account'];
+        $accountHead = $input['account_head'];
+        $payer = $input['payer'];
+        $phone = $input['phone'];
+        $email = $input['email'];
+
+        try {
+            Transactions::processIncome($companyID, $accountHead, $bankAccount, $reference, $narration, $amount, $payer, auth()->id(), $phone, $email);
+            return response()->redirectTo("/income/{" . encrypt($reference) . "}/receipt");
+        } catch (\Exception $ex) {
+            Log::error($ex);
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function showReceipt($id)
+    {
+        $id = decrypt($id);
+        $details = Transaction::with(['company'])->whereRaw("reference=? and credit_amount>?", [$id, 0.0])->first();
+        if ($details == null || $details->receipt == null) {
+            Flash::error("invalid rceipt reference, please try again.");
+            return redirect()->back();
+        }
+
+        $pdf = PDF::loadView('payments.receipt', [
+            'details' => $details
+        ],
+            ['title' => 'Income Receipt']);
+        return $pdf->stream($details->reference . '.pdf');
+    }
+
+    public function showCreateJV()
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->pluck("name", "id");
+        return view("payments.journals", [
+            'companies' => $companies,
+            'accountHeads' => $acctHeads
+        ]);
     }
 }

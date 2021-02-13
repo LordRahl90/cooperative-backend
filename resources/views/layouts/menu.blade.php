@@ -90,13 +90,27 @@
     </a>
 </li>
 
-
 <li class="nav-item">
-    <a href="{{ route('transactions.index') }}"
-       class="nav-link {{ Request::is('transactions*') ? 'active' : '' }}">
-        <p>Transactions</p>
+    <a href="/income/create"
+       class="nav-link {{ Request::is('income*') ? 'active' : '' }}">
+        <p>Income</p>
     </a>
 </li>
+
+<li class="nav-item">
+    <a href="/jv/create"
+       class="nav-link {{ Request::is('jv*') ? 'active' : '' }}">
+        <p>Journal Vouchers</p>
+    </a>
+</li>
+
+
+{{--<li class="nav-item">--}}
+{{--    <a href="{{ route('transactions.index') }}"--}}
+{{--       class="nav-link {{ Request::is('transactions*') ? 'active' : '' }}">--}}
+{{--        <p>Transactions</p>--}}
+{{--    </a>--}}
+{{--</li>--}}
 
 
 <li class="nav-item">
@@ -111,6 +125,14 @@
     <a href="{{ route('staff.index') }}"
        class="nav-link {{ Request::is('staff*') ? 'active' : '' }}">
         <p>Staff</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('receipts.index') }}"
+       class="nav-link {{ Request::is('receipts*') ? 'active' : '' }}">
+        <p>Receipts</p>
     </a>
 </li>
 

@@ -31,7 +31,6 @@ class Transaction extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
         'company_id',
         'account_head_id',
@@ -72,6 +71,21 @@ class Transaction extends Model
         'credit_amount' => 'required',
         'created_by' => 'required'
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function receipt()
+    {
+        return $this->hasOne(Receipt::class, "reference", "reference");
+    }
+
+    public function account_head()
+    {
+        return $this->belongsTo(OrgAccountHead::class, "account_head_id", "id");
+    }
 
 
 }

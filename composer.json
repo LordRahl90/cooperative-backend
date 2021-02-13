@@ -17,6 +17,7 @@
         "php": "^7.3|^8.0",
         "antennaio/laravel-clyde": "~0.0.1",
         "appointer/swaggervel": "dev-master",
+        "carlos-meneses/laravel-mpdf": "^2.1",
         "crabbly/fpdf-laravel": "^1.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "~2.3",

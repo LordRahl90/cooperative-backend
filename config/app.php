@@ -167,6 +167,7 @@ return [
          */
         Antennaio\Clyde\ClydeServiceProvider::class,
         Crabbly\Fpdf\FpdfServiceProvider::class,
+        Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -234,6 +235,7 @@ return [
         'Flash' => Laracasts\Flash\Flash::class,
         'ClydeUpload' => Antennaio\Clyde\Facades\ClydeUpload::class,
         'ClydeImage' => Antennaio\Clyde\Facades\ClydeImage::class,
+        'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class
     ],
 
 ];

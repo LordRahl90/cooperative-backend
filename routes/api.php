@@ -51,3 +51,6 @@ Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
 
 
 Route::resource('staff', App\Http\Controllers\API\StaffAPIController::class);
+
+
+Route::resource('receipts', App\Http\Controllers\API\ReceiptAPIController::class);

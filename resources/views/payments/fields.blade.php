@@ -100,6 +100,6 @@
 
 <!-- Debit Account Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('debit_account', 'Debit Account:') !!}
+    {!! Form::label('debit_account', 'Select Bank Account:') !!}
     {!! Form::select('debit_account', $bankAccounts, null, ['class' => 'form-control custom-select','payments.debit_account']) !!}
 </div>

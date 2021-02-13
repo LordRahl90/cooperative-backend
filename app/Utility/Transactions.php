@@ -7,12 +7,24 @@ namespace App\Utility;
 use App\Models\OrgBankAccount;
 use App\Models\Payment;
 use App\Models\PaymentVoucher;
+use App\Models\Receipt;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class Transactions
 {
+
+    /**
+     * @param $companyID
+     * @param $accountHead
+     * @param $reference
+     * @param $narration
+     * @param $debit
+     * @param $credit
+     * @param $user
+     * @return mixed
+     */
     public static function transact($companyID, $accountHead, $reference, $narration, $debit, $credit, $user)
     {
         $transaction = Transaction::create([
@@ -28,7 +40,20 @@ class Transactions
     }
 
 
-    public static function processIncome($companyID, $acctHead, $bankAccount, $reference, $narration, $amount, $user)
+    /**
+     * @param $companyID
+     * @param $acctHead
+     * @param $bankAccount
+     * @param $reference
+     * @param $narration
+     * @param $amount
+     * @param $payer
+     * @param $user
+     * @param string $phone
+     * @param string $email
+     * @throws \Exception
+     */
+    public static function processIncome($companyID, $acctHead, $bankAccount, $reference, $narration, $amount, $payer, $user, $phone = "", $email = "")
     {
         DB::beginTransaction();
         try {
@@ -45,7 +70,17 @@ class Transactions
             if (!$credit) {
                 throw new \Exception("cannot create a credit entry for receiving payment " . $reference . ' ' . $user . ' ' . $amount);
             }
-
+            $receipt = Receipt::create([
+                'company_id' => $companyID,
+                'reference' => $reference,
+                'payer' => $payer,
+                'phone' => $phone,
+                'email' => $email,
+                'amount' => $amount
+            ]);
+            if (!$receipt) {
+                throw new \Exception("cannot create a receipt entry for " . $reference);
+            }
         } catch (\Exception $ex) {
             DB::rollBack();
             throw $ex;
@@ -64,6 +99,7 @@ class Transactions
      * @param $confirmed
      * @param $authorized
      * @param $user
+     * @return
      * @throws \Exception
      */
     public static function makePayment($companyID, $pvID, $bankAccount, $reference, $narration, $amount, $confirmed, $authorized, $user)
@@ -123,7 +159,17 @@ class Transactions
         }
     }
 
-    static function reverse($companyID, $reference)
+    /**
+     * @param $companyID
+     * @param $reference
+     * @return mixed
+     */
+    static function reverseIncome($companyID, $reference)
+    {
+        return Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
+    }
+
+    static function reversePayment($companyID, $reference)
     {
         return Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
     }
