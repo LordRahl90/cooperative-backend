@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
+use App\Models\Bank;
+use App\Models\Company;
+use App\Models\OrgBankAccount;
+use App\Models\PaymentVoucher;
+use App\Models\Staff;
 use App\Repositories\PaymentRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Response;
 
 class PaymentController extends AppBaseController
@@ -42,7 +50,16 @@ class PaymentController extends AppBaseController
      */
     public function create()
     {
-        return view('payments.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->pluck('account_name', 'id')->toArray();
+        $staff = Staff::orderBy('name', 'asc')->pluck('name', 'id')->toArray(); //TODO: Find staff by company please
+        $pvs = PaymentVoucher::orderBy('pv_id', 'asc')->where('status', 'UNPAID')->pluck('pv_id', 'id')->toArray(); //TODO: Find PV by company please
+        return view('payments.create', [
+            'companies' => [0 => 'Select Company'] + $companies,
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
+            'staff' => [0 => 'Select Staff'] + $staff,
+            'pvs' => [0 => "Select PV"] + $pvs
+        ]);
     }
 
     /**
@@ -55,11 +72,25 @@ class PaymentController extends AppBaseController
     public function store(CreatePaymentRequest $request)
     {
         $input = $request->all();
+        try {
+            $pvID = $input['pv_id'];
+            $companyID = $input['company_id'];
+            $bankAccount = $input['debit_account'];
+            $totalAmount = $input['total_amount'];
+            $reference = $input['reference'];
+            $narration = $input['narration'];
+            $authorizedBy = $input['authorized_by'];
+            $confirmedBy = $input['confirmed_by'];
 
-        $payment = $this->paymentRepository->create($input);
+            Transactions::makePayment($companyID, $pvID, $bankAccount, $reference, $narration, $totalAmount, $confirmedBy, $authorizedBy, auth()->id());
 
-        Flash::success('Payment saved successfully.');
-
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Log::error($ex);
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
+        Flash::success("Payment registered successfully.");
         return redirect(route('payments.index'));
     }
 
@@ -133,9 +164,9 @@ class PaymentController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

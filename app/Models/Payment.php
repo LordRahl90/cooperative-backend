@@ -26,20 +26,13 @@ class Payment extends Model
     use HasFactory;
 
     public $table = 'payments';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'pv_id',
-        'reference',
-        'confirmed_by',
-        'authorized_by',
-        'total_amount',
-        'debit_account'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -64,14 +57,38 @@ class Payment extends Model
      * @var array
      */
     public static $rules = [
-        'company_id' => 'required',
-        'pv_id' => 'required',
-        'reference' => 'required|unique',
-        'confirmed_by' => 'required',
-        'authorized_by' => 'required',
+        'company_id' => 'required|numeric|gte:0|exists:companies,id',
+        'pv_id' => 'required|numeric|gte:0',
+        'reference' => 'required',
+        'confirmed_by' => 'required|numeric|gte:0',
+        'authorized_by' => 'required|numeric|gte:0',
+        'narration' => 'required',
         'total_amount' => 'required',
-        'debit_account' => 'required'
+        'debit_account' => 'required|exists:org_bank_accounts,id'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function pv()
+    {
+        return $this->belongsTo(PaymentVoucher::class, "pv_id", "id");
+    }
+
+    public function confirmed()
+    {
+        return $this->belongsTo(Staff::class, "confirmed_by", "id");
+    }
+
+    public function authorized()
+    {
+        return $this->belongsTo(Staff::class, "authorized_by", "id");
+    }
+
+    public function bankAccount()
+    {
+        return $this->belongsTo(OrgBankAccount::class, "bank_account", "id");
+    }
 }

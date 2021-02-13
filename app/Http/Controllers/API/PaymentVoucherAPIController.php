@@ -180,4 +180,10 @@ class PaymentVoucherAPIController extends AppBaseController
 
         return $this->sendSuccess('Payment Voucher deleted successfully');
     }
+
+    public function loadPVDetails($id)
+    {
+        $pvs = PaymentVoucher::with(['company', 'items','items.accountHead'])->find($id);
+        return $this->sendResponse($pvs, "PV details loaded successfully");
+    }
 }

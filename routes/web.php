@@ -57,3 +57,6 @@ Route::group(['middleware' => 'auth'], function () {
 Route::resource('companies', App\Http\Controllers\CompanyController::class);
 
 Route::resource('users', App\Http\Controllers\UserController::class);
+
+
+Route::resource('staff', App\Http\Controllers\StaffController::class);

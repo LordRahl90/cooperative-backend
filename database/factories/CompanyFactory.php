@@ -22,17 +22,17 @@ class CompanyFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
-        'slug' => $this->faker->word,
-        'logo' => $this->faker->word,
-        'slogan' => $this->faker->word,
-        'email' => $this->faker->word,
-        'phone' => $this->faker->word,
-        'website' => $this->faker->word,
-        'address' => $this->faker->word,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s'),
-        'deleted_at' => $this->faker->date('Y-m-d H:i:s')
+            'country_id' => $this->faker->randomElement([1, 2, 3]),
+            'name' => $this->faker->unique()->company,
+            'logo' => $this->faker->imageUrl(),
+            'slogan' => $this->faker->catchPhrase,
+            'email' => $this->faker->unique()->companyEmail,
+            'phone' => $this->faker->unique()->phoneNumber,
+            'website' => $this->faker->unique()->url,
+            'address' => $this->faker->address,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s'),
+            'deleted_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

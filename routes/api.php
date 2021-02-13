@@ -34,6 +34,7 @@ Route::resource('banks', App\Http\Controllers\API\BankAPIController::class);
 Route::resource('org_bank_accounts', App\Http\Controllers\API\OrgBankAccountAPIController::class);
 
 Route::resource('payment_vouchers', 'PaymentVoucherAPIController');
+Route::get('payment_vouchers/{id}/details', 'PaymentVoucherAPIController@loadPVDetails');
 
 Route::resource('payment_voucher_details', App\Http\Controllers\API\PaymentVoucherDetailsAPIController::class);
 
@@ -47,3 +48,6 @@ Route::resource('companies', App\Http\Controllers\API\CompanyAPIController::clas
 Route::get('companies/{id}/account-heads', 'CompanyAPIController@accountHeads');
 
 Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
+
+
+Route::resource('staff', App\Http\Controllers\API\StaffAPIController::class);

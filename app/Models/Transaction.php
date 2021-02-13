@@ -26,7 +26,7 @@ class Transaction extends Model
     use HasFactory;
 
     public $table = 'transactions';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -73,5 +73,5 @@ class Transaction extends Model
         'created_by' => 'required'
     ];
 
-    
+
 }

@@ -170,6 +170,10 @@ class PaymentVoucherController extends AppBaseController
         return redirect(route('paymentVouchers.index'));
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function printPV($id)
     {
         $amount = 0;
@@ -177,11 +181,11 @@ class PaymentVoucherController extends AppBaseController
         $pdf = new Invoice('P', 'mm', 'A4');
         $pdf->AddPage();
         $pdf->watermark(strtoupper($pv->company->name));
-        $pdf->addCompanyAddress("JOSEPH AYO BABALOLA UNIVERSITY",
-            "IKEJI-ARAKEJI\n" .
-            "PMB 5006, ILESHA\n" .
-            "OSUN STATE\n" .
-            "www.jabu.edu.ng");
+        $pdf->addCompanyAddress($pv->company->name,
+            $pv->company->address . "\n" .
+            $pv->company->phone . "\n" .
+            $pv->company->email . "\n" .
+            $pv->company->website);
 
         $pdf->addDate($pv->status);
 
@@ -238,13 +242,13 @@ class PaymentVoucherController extends AppBaseController
         $y += $size + 2;
         $pdf->addCadreTVAs();
         $psp = NumberConversion::convert_number_to_words($amount);
-        $pdf->MultiCell(150, 4, "Payment is hereby authorised for " . $psp . " Naira only, in respect of the above stated services.
+        $pdf->MultiCell(150, 4, "Payment is hereby authorised for " . $psp . " naira only, in respect of the above stated service(s).
         \n\n........................................................... \n\n" .
             "Approved By(Name, Signature and Date)\n\n..........................................................." . "
         \nAuthorized By(Name, Signature and Date)\n\n...................................................." .
             "\nFor: Payee");
-        Storage::put("test.pdf", $pdf->Output('S', $id . '.pdf', true));
-
-        dd("All done");;
+        $path = $pv->pv_id . ".pdf";
+        Storage::put("pv/" . $path, $pdf->Output('S', $id . '.pdf', true));
+        return Storage::download("/pv/" . $path);
     }
 }

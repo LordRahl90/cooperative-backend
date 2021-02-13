@@ -317,22 +317,12 @@ class Invoice extends Fpdf
             $this->Cell($pos, 1, $lib, 0, 0, "C");
             $colX += $pos;
             $this->Line($colX, $y1, $colX, $y1 + $y2);
-            dump($pos . '=>' . $lib);
         }
-
-//        while (list($lib, $pos) = each($tab)) {
-//            $this->SetXY($colX, $y1 + 2);
-//            $this->Cell($pos, 1, $lib, 0, 0, "C");
-//            $colX += $pos;
-//            $this->Line($colX, $y1, $colX, $y1 + $y2);
-//        }
     }
 
     function addLineFormat($tab)
     {
         global $format, $colonnes;
-
-        dump($tab);
 
         foreach ($colonnes as $lib => $pos) {
             if (isset($tab["$lib"]))
@@ -353,13 +343,6 @@ class Invoice extends Fpdf
             if ($size > $maxSize)
                 $maxSize = $size;
         }
-//        while (list($lib, $pos) = each($colonnes)) {
-//            $texte = $tab[$lib];
-//            $longCell = $pos - 2;
-//            $size = $this->sizeOfText($texte, $longCell);
-//            if ($size > $maxSize)
-//                $maxSize = $size;
-//        }
         return $maxSize;
     }
 

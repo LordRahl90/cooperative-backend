@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
+use App\Models\Staff;
 use Illuminate\Database\Seeder;
 
-class CompaniesTableSeeder extends Seeder
+class StaffTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class CompaniesTableSeeder extends Seeder
      */
     public function run()
     {
-        Company::factory(2)->create();
+        Staff::factory(10)->create();
     }
 }

@@ -1,27 +1,27 @@
 <div class="table-responsive">
     <table class="table" id="payments-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Pv Id</th>
-        <th>Reference</th>
-        <th>Confirmed By</th>
-        <th>Authorized By</th>
-        <th>Total Amount</th>
-        <th>Debit Account</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Company</th>
+            <th>PV</th>
+            <th>Reference</th>
+            <th>Confirmed By</th>
+            <th>Authorized By</th>
+            <th>Total Amount</th>
+            <th>Bank Account</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($payments as $payment)
             <tr>
-                <td>{{ $payment->company_id }}</td>
-            <td>{{ $payment->pv_id }}</td>
-            <td>{{ $payment->reference }}</td>
-            <td>{{ $payment->confirmed_by }}</td>
-            <td>{{ $payment->authorized_by }}</td>
-            <td>{{ $payment->total_amount }}</td>
-            <td>{{ $payment->debit_account }}</td>
+                <td>{{ $payment->company->name }}</td>
+                <td>{{ $payment->pv->payee }}</td>
+                <td>{{ $payment->reference }}</td>
+                <td>{{ $payment->confirmed->name }}</td>
+                <td>{{ $payment->authorized->name }}</td>
+                <td>{{ number_format($payment->total_amount,2) }}</td>
+                <td>{{ $payment->bankAccount->account_name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['payments.destroy', $payment->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

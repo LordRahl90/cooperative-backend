@@ -74,11 +74,6 @@
         </thead>
         <tbody>
         <tr v-for="(v,k) in items" :key="k">
-            <input type="hidden" name="account_head_id[]" :value="v.account_head_id"/>
-            <input type="hidden" name="narration[]" :value="v.narration"/>
-            <input type="hidden" name="rate[]" :value="v.rate"/>
-            <input type="hidden" name="quantity[]" :value="v.quantity"/>
-            <input type="hidden" name="amount[]" :value="v.amount"/>
             <td>@{{ k+1 }}</td>
             <td>@{{ accountHead(v.account_head_id) }}</td>
             <td>@{{ v.narration }}</td>
