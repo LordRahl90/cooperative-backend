@@ -152,15 +152,21 @@
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reprints/receipt" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Reprint Receipt</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reprints/pv" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Reprint PV</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="/reprints/jv" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reprint JV</p>
             </a>
         </li>
         <li class="nav-item">
@@ -173,7 +179,7 @@
         <li class="nav-item">
             <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
-                <p>Reprint Payment</p>
+                <p>Reverse Payment</p>
             </a>
         </li>
     </ul>

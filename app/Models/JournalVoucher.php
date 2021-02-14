@@ -105,12 +105,18 @@ class JournalVoucher extends Model
         'created_by' => 'required|exists:staff,id'
     ];
 
-    public function company(){
+    public function company()
+    {
         return $this->belongsTo(Company::class);
     }
 
     public function staff()
     {
         return $this->belongsTo(Staff::class, "created_by", "id");
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, "reference", "reference");
     }
 }

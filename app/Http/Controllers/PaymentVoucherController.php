@@ -251,4 +251,16 @@ class PaymentVoucherController extends AppBaseController
         Storage::put("pv/" . $path, $pdf->Output('S', $id . '.pdf', true));
         return Storage::download("/pv/" . $path);
     }
+
+    public function showReprintPV()
+    {
+        return view('payment_vouchers.reprint');
+    }
+
+    public function reprintPV(Request $request)
+    {
+        $input = $request->all();
+        $pvID = $input['pv_id'];
+        return response()->redirectTo("/paymentVouchers/$pvID/details");
+    }
 }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateJournalVoucherRequest;
 use App\Http\Requests\UpdateJournalVoucherRequest;
 use App\Models\Company;
+use App\Models\JournalVoucher;
 use App\Models\OrgAccountHead;
 use App\Repositories\JournalVoucherRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use PDF;
 use Response;
 
 class JournalVoucherController extends AppBaseController
@@ -168,5 +170,43 @@ class JournalVoucherController extends AppBaseController
         Flash::success('Journal Voucher deleted successfully.');
 
         return redirect(route('journalVouchers.index'));
+    }
+
+    public function printJV($reference)
+    {
+        $reference = decrypt($reference);
+        $jv = JournalVoucher::with('transactions')->where('reference', $reference)->get();
+        if (count($jv) == 0) {
+            Flash::error("Invalid JV reference number");
+            return redirect()->back()->withInput();
+        }
+        $jv = $jv->first();
+        $pdf = PDF::loadView('journal_vouchers.print_out', [
+            'details' => $jv
+        ],
+            ['title' => 'Journal Voucher Summary']);
+        return $pdf->stream($reference . '.pdf');
+    }
+
+    public function showReprintJV()
+    {
+        return view('journal_vouchers.reprint');
+    }
+
+    public function reprintJV(Request $request)
+    {
+        $input = $request->all();
+        $reference = $input['reference'];
+        $jv = JournalVoucher::with('transactions')->where('reference', $reference)->get();
+        if (count($jv) == 0) {
+            Flash::error("Invalid JV reference number");
+            return redirect()->back()->withInput();
+        }
+        $jv = $jv->first();
+        $pdf = PDF::loadView('journal_vouchers.print_out', [
+            'details' => $jv
+        ],
+            ['title' => 'Journal Voucher Summary']);
+        return $pdf->stream($reference . '.pdf');
     }
 }

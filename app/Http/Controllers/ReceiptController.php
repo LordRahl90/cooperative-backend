@@ -160,4 +160,16 @@ class ReceiptController extends AppBaseController
 
         return redirect(route('receipts.index'));
     }
+
+    public function showReprintReceipt()
+    {
+        return view('receipts.reprint');
+    }
+
+    public function reprintReceipt(Request $request)
+    {
+        $input = $request->all();
+        $reference = encrypt($input['reference']);
+        return response()->redirectTo("/income/$reference/receipt");
+    }
 }

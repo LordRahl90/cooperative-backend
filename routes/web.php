@@ -57,18 +57,26 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 
     Route::resource('configurations', App\Http\Controllers\ConfigurationController::class);
+
+    Route::resource('companies', App\Http\Controllers\CompanyController::class);
+
+    Route::resource('users', App\Http\Controllers\UserController::class);
+
+    Route::resource('staff', App\Http\Controllers\StaffController::class);
+
+    Route::resource('receipts', App\Http\Controllers\ReceiptController::class);
+
+    Route::resource('journalVouchers', App\Http\Controllers\JournalVoucherController::class);
+    Route::get('/jv/{id}/summary', 'App\Http\Controllers\JournalVoucherController@printJV');
+
+    Route::group(['prefix' => 'reprints'], function () {
+        Route::get('/pv', 'App\Http\Controllers\PaymentVoucherController@showReprintPV');
+        Route::post('/pv', 'App\Http\Controllers\PaymentVoucherController@reprintPV');
+
+        Route::get('/receipt', 'App\Http\Controllers\ReceiptController@showReprintReceipt');
+        Route::post('/receipt', 'App\Http\Controllers\ReceiptController@reprintReceipt');
+
+        Route::get('/jv', 'App\Http\Controllers\JournalVoucherController@showReprintJV');
+        Route::post('/jv', 'App\Http\Controllers\JournalVoucherController@reprintJV');
+    });
 });
-
-
-Route::resource('companies', App\Http\Controllers\CompanyController::class);
-
-Route::resource('users', App\Http\Controllers\UserController::class);
-
-
-Route::resource('staff', App\Http\Controllers\StaffController::class);
-
-
-Route::resource('receipts', App\Http\Controllers\ReceiptController::class);
-
-
-Route::resource('journalVouchers', App\Http\Controllers\JournalVoucherController::class);
