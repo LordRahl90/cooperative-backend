@@ -79,4 +79,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/jv', 'App\Http\Controllers\JournalVoucherController@showReprintJV');
         Route::post('/jv', 'App\Http\Controllers\JournalVoucherController@reprintJV');
     });
+
+    Route::group(['prefix' => 'reverse'], function () {
+        Route::get('/receipt', 'App\Http\Controllers\ReceiptController@showReverseReceipt');
+        Route::post('/receipt', 'App\Http\Controllers\ReceiptController@reverseReceipt');
+
+        Route::get('/payment', 'App\Http\Controllers\PaymentController@showReversePayment');
+        Route::post('/payment', 'App\Http\Controllers\PaymentController@reversePayment');
+    });
 });

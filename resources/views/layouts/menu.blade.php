@@ -170,14 +170,14 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reverse/receipt" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Reverse Receipt</p>
             </a>
         </li>
 
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reverse/payment" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Reverse Payment</p>
             </a>

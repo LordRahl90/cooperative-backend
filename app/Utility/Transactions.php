@@ -160,16 +160,49 @@ class Transactions
     /**
      * @param $companyID
      * @param $reference
+     * @param $user
      * @return mixed
+     * @throws \Exception
      */
-    static function reverseIncome($companyID, $reference)
+    static function reverseReceipt($companyID, $reference, $user)
     {
-        return Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
+        DB::beginTransaction();
+        try {
+            Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
+            Receipt::whereRaw('company_id=? AND reference=?', [$companyID, $reference])->delete();
+
+            Log::info($user . " Reversed transaction " . $reference);
+            DB::commit();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            throw new \Exception($ex);
+        }
     }
 
-    static function reversePayment($companyID, $reference)
+    static function reversePayment($companyID, $reference, $user)
     {
-        return Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
+        DB::beginTransaction();
+        try {
+            $payment = Payment::whereRaw('company_id=? AND reference=?', [$companyID, $reference])->get();
+            if (count($payment) == 0) {
+                return;
+            }
+            $payment = $payment->first();
+            $pv = PaymentVoucher::find($payment->pv_id);
+            $pv->status = "UNPAID";
+            if (!$pv->save()) {
+                throw new \Exception("cannot update PV status");
+            }
+
+            Transaction::whereRaw("company_id=? AND reference=?", [$companyID, $reference])->delete();
+            $payment->delete();
+
+            Log::info($user . " Reversed payment " . $reference);
+            DB::commit();
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            throw new \Exception($ex);
+        }
     }
 
 }

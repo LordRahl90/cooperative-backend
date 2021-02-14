@@ -86,6 +86,4 @@ class Transaction extends Model
     {
         return $this->belongsTo(OrgAccountHead::class, "account_head_id", "id");
     }
-
-
 }

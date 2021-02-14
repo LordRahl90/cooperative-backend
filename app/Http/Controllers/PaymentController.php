@@ -258,4 +258,37 @@ class PaymentController extends AppBaseController
             ['title' => 'Income Receipt']);
         return $pdf->stream($details->reference . '.pdf');
     }
+
+    public function showReversePayment()
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        return view('payments.reverse', [
+            'companies' => $companies
+        ]);
+    }
+
+    public function reversePayment(Request $request)
+    {
+        $input = $request->all();
+        $v = Validator::make($input, [
+            'reference' => 'required|exists:payments,reference',
+            'company_id' => 'required|exists:companies,id'
+        ]);
+        if ($v->fails()) {
+            Flash::error(join($v->messages()->all()));
+            return redirect()->back()->withInput();
+        }
+        $reference = $input['reference'];
+        $companyID = $input['company_id'];
+
+        try {
+            Transactions::reversePayment($companyID, $reference, auth()->id());
+
+        } catch (\Exception $ex) {
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
+        Flash::success("Payment reversed successfully");
+        return redirect()->back();
+    }
 }

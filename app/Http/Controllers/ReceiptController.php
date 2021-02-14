@@ -7,8 +7,10 @@ use App\Http\Requests\UpdateReceiptRequest;
 use App\Models\Company;
 use App\Repositories\ReceiptRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Validator;
 use Response;
 
 class ReceiptController extends AppBaseController
@@ -171,5 +173,37 @@ class ReceiptController extends AppBaseController
         $input = $request->all();
         $reference = encrypt($input['reference']);
         return response()->redirectTo("/income/$reference/receipt");
+    }
+
+    public function showReverseReceipt()
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        return view('receipts.reverse', [
+            'companies' => $companies
+        ]);
+    }
+
+    public function reverseReceipt(Request $request)
+    {
+        $input = $request->all();
+        $v = Validator::make($input, [
+            'reference' => 'required|exists:receipts,reference',
+            'company_id' => 'required|exists:companies,id'
+        ]);
+        if ($v->fails()) {
+            Flash::error($v->messages()->all());
+            return redirect()->back()->withInput();
+        }
+        $reference = $input['reference'];
+        $companyID = $input['company_id'];
+
+        try {
+            Transactions::reverseReceipt($companyID, $reference, auth()->id());
+        } catch (\Exception $ex) {
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
+        Flash::success('Transaction reversed successfully.');
+        return redirect()->back();
     }
 }
