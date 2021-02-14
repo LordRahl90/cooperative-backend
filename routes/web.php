@@ -42,16 +42,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('orgBankAccounts', App\Http\Controllers\OrgBankAccountController::class);
 
     Route::resource('paymentVouchers', App\Http\Controllers\PaymentVoucherController::class);
-    Route::get('/paymentVouchers/{id}/details','App\Http\Controllers\PaymentVoucherController@printPV');
+    Route::get('/paymentVouchers/{id}/details', 'App\Http\Controllers\PaymentVoucherController@printPV');
 
     Route::resource('paymentVoucherDetails', App\Http\Controllers\PaymentVoucherDetailsController::class);
 
     Route::resource('payments', App\Http\Controllers\PaymentController::class);
-    Route::get('/income/create','App\Http\Controllers\PaymentController@showCreateIncome');
-    Route::post('/income/create','App\Http\Controllers\PaymentController@createIncome');
-    Route::get('/jv/create','App\Http\Controllers\PaymentController@showCreateJV');
-    Route::post('/jv/create','App\Http\Controllers\PaymentController@createJV');
-    Route::get('/income/{id}/receipt','App\Http\Controllers\PaymentController@showReceipt');
+
+    Route::get('/income/create', 'App\Http\Controllers\PaymentController@showCreateIncome');
+    Route::post('/income/create', 'App\Http\Controllers\PaymentController@createIncome');
+    Route::get('/income/{id}/receipt', 'App\Http\Controllers\PaymentController@showReceipt');
+
+    Route::post('/jv/create', 'App\Http\Controllers\PaymentController@createJV');
 
     Route::resource('transactions', App\Http\Controllers\TransactionController::class);
 
@@ -68,3 +69,6 @@ Route::resource('staff', App\Http\Controllers\StaffController::class);
 
 
 Route::resource('receipts', App\Http\Controllers\ReceiptController::class);
+
+
+Route::resource('journalVouchers', App\Http\Controllers\JournalVoucherController::class);

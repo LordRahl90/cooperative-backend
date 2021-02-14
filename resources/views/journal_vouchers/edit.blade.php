@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Account Category</h1>
+                    <h1>Edit Journal Voucher</h1>
                 </div>
             </div>
         </div>
@@ -17,22 +17,20 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'orgAccountCategories.store']) !!}
+            {!! Form::model($journalVoucher, ['route' => ['journalVouchers.update', $journalVoucher->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
-
                 <div class="row">
-                    @include('org_account_categories.fields')
+                    @include('journal_vouchers.fields')
                 </div>
-
             </div>
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('orgAccountCategories.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('journalVouchers.index') }}" class="btn btn-default">Cancel</a>
             </div>
 
-            {!! Form::close() !!}
+           {!! Form::close() !!}
 
         </div>
     </div>

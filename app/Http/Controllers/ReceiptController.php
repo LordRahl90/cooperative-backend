@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateReceiptRequest;
 use App\Http\Requests\UpdateReceiptRequest;
+use App\Models\Company;
 use App\Repositories\ReceiptRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +43,10 @@ class ReceiptController extends AppBaseController
      */
     public function create()
     {
-        return view('receipts.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        return view('receipts.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -92,6 +96,7 @@ class ReceiptController extends AppBaseController
      */
     public function edit($id)
     {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         $receipt = $this->receiptRepository->find($id);
 
         if (empty($receipt)) {
@@ -100,7 +105,9 @@ class ReceiptController extends AppBaseController
             return redirect(route('receipts.index'));
         }
 
-        return view('receipts.edit')->with('receipt', $receipt);
+        return view('receipts.edit', [
+            'companies' => $companies
+        ])->with('receipt', $receipt);
     }
 
     /**
@@ -133,9 +140,9 @@ class ReceiptController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

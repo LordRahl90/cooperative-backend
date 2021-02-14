@@ -5,16 +5,20 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreatePaymentAPIRequest;
 use App\Http\Requests\API\UpdatePaymentAPIRequest;
 use App\Models\Payment;
+use App\Models\Transaction;
 use App\Repositories\PaymentRepository;
+use App\Utility\JournalVoucher;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Response;
 
 /**
  * Class PaymentController
  * @package App\Http\Controllers\API
  */
-
 class PaymentAPIController extends AppBaseController
 {
     /** @var  PaymentRepository */
@@ -111,9 +115,9 @@ class PaymentAPIController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {
@@ -127,5 +131,28 @@ class PaymentAPIController extends AppBaseController
         $payment->delete();
 
         return $this->sendSuccess('Payment deleted successfully');
+    }
+
+    public function postJournalVoucher(Request $request)
+    {
+        $input = $request->all();
+        $v = Validator::make($input, [
+            'company_id' => 'required|exists:companies,id',
+            'narration' => 'required',
+            'reference' => 'required|unique:transactions,reference',
+            'credit' => 'required',
+            'debit' => 'required'
+        ]);
+        if ($v->fails()) {
+            return $this->sendError($v->messages()->all(), 400);
+        }
+        try {
+            $userID = 1; //TODO: Use authenticated user information here.
+            $trans = new JournalVoucher();
+            $jv = $trans->create($input['company_id'], $input['reference'], $input['narration'], $input['credit'], $input['debit'], $userID);
+            return $this->sendResponse($jv, "JV Posted successfully");
+        } catch (\Exception $ex) {
+            return $this->sendError($ex->getMessage(), 500);
+        }
     }
 }

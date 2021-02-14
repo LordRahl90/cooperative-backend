@@ -5,11 +5,11 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Receipts</h1>
+                    <h1>Journal Vouchers</h1>
                 </div>
                 <div class="col-sm-6">
                     <a class="btn btn-primary float-right"
-                       href="/income/create">
+                       href="{{ route('journalVouchers.create') }}">
                         Add New
                     </a>
                 </div>
@@ -25,11 +25,11 @@
 
         <div class="card">
             <div class="card-body p-0">
-                @include('receipts.table')
+                @include('journal_vouchers.table')
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-
+                        
                     </div>
                 </div>
             </div>

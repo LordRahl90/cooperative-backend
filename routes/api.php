@@ -39,6 +39,7 @@ Route::get('payment_vouchers/{id}/details', 'PaymentVoucherAPIController@loadPVD
 Route::resource('payment_voucher_details', App\Http\Controllers\API\PaymentVoucherDetailsAPIController::class);
 
 Route::resource('payments', App\Http\Controllers\API\PaymentAPIController::class);
+Route::post("/payments/jv", 'PaymentAPIController@postJournalVoucher');
 
 Route::resource('transactions', App\Http\Controllers\API\TransactionAPIController::class);
 
@@ -54,3 +55,6 @@ Route::resource('staff', App\Http\Controllers\API\StaffAPIController::class);
 
 
 Route::resource('receipts', App\Http\Controllers\API\ReceiptAPIController::class);
+
+
+Route::resource('journal_vouchers', App\Http\Controllers\API\JournalVoucherAPIController::class);

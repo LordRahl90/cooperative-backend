@@ -1,7 +1,7 @@
 <!-- Company Id Field -->
 <div class="col-sm-12">
-    {!! Form::label('company_id', 'Company Id:') !!}
-    <p>{{ $receipt->company_id }}</p>
+    {!! Form::label('company_id', 'Company:') !!}
+    <p>{{ $receipt->company->name }}</p>
 </div>
 
 <!-- Reference Field -->
@@ -26,6 +26,12 @@
 <div class="col-sm-12">
     {!! Form::label('email', 'Email:') !!}
     <p>{{ $receipt->email }}</p>
+</div>
+
+<!-- Email Field -->
+<div class="col-sm-12">
+    {!! Form::label('amount', 'Amount:') !!}
+    <p>{{ number_format($receipt->amount,2) }}</p>
 </div>
 
 <!-- Created At Field -->

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
+use App\Models\Company;
 use App\Repositories\StaffRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Hash;
 use Response;
 
 class StaffController extends AppBaseController
@@ -42,7 +44,10 @@ class StaffController extends AppBaseController
      */
     public function create()
     {
-        return view('staff.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        return view('staff.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -55,6 +60,7 @@ class StaffController extends AppBaseController
     public function store(CreateStaffRequest $request)
     {
         $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
 
         $staff = $this->staffRepository->create($input);
 
@@ -93,6 +99,7 @@ class StaffController extends AppBaseController
     public function edit($id)
     {
         $staff = $this->staffRepository->find($id);
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
 
         if (empty($staff)) {
             Flash::error('Staff not found');
@@ -100,7 +107,9 @@ class StaffController extends AppBaseController
             return redirect(route('staff.index'));
         }
 
-        return view('staff.edit')->with('staff', $staff);
+        return view('staff.edit', [
+            'companies' => $companies
+        ])->with('staff', $staff);
     }
 
     /**
@@ -133,9 +142,9 @@ class StaffController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

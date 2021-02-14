@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @SWG\Definition(
- *      definition="Receipt",
- *      required={"company_id", "reference", "payer", "phone", "email"},
+ *      definition="JournalVoucher",
+ *      required={"company_id", "reference", "narration", "total_amount", "created_by"},
  *      @SWG\Property(
  *          property="id",
  *          description="id",
@@ -28,19 +28,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *          type="string"
  *      ),
  *      @SWG\Property(
- *          property="payer",
- *          description="payer",
+ *          property="narration",
+ *          description="narration",
  *          type="string"
  *      ),
  *      @SWG\Property(
- *          property="phone",
- *          description="phone",
- *          type="string"
+ *          property="total_amount",
+ *          description="total_amount",
+ *          type="number",
+ *          format="number"
  *      ),
  *      @SWG\Property(
- *          property="email",
- *          description="email",
- *          type="string"
+ *          property="created_by",
+ *          description="created_by",
+ *          type="integer",
+ *          format="int32"
  *      ),
  *      @SWG\Property(
  *          property="created_at",
@@ -56,20 +58,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *      )
  * )
  */
-class Receipt extends Model
+class JournalVoucher extends Model
 {
     use SoftDeletes;
 
     use HasFactory;
 
-    public $table = 'receipts';
+    public $table = 'journal_vouchers';
 
 
     protected $dates = ['deleted_at'];
 
 
-    public $guarded = [
-        'deleted_at'
+    public $fillable = [
+        'company_id',
+        'reference',
+        'narration',
+        'total_amount',
+        'created_by'
     ];
 
     /**
@@ -81,9 +87,9 @@ class Receipt extends Model
         'id' => 'integer',
         'company_id' => 'integer',
         'reference' => 'string',
-        'payer' => 'string',
-        'phone' => 'string',
-        'email' => 'string'
+        'narration' => 'string',
+        'total_amount' => 'double',
+        'created_by' => 'integer'
     ];
 
     /**
@@ -92,17 +98,19 @@ class Receipt extends Model
      * @var array
      */
     public static $rules = [
-        'company_id' => 'required',
-        'reference' => 'required|exists:transactions,reference',
-        'payer' => 'required',
-        'phone' => 'required',
-        'email' => 'required'
+        'company_id' => 'required|exists:companies,id',
+        'reference' => 'required',
+        'narration' => 'required',
+        'total_amount' => 'required',
+        'created_by' => 'required|exists:staff,id'
     ];
 
-    public function company()
-    {
+    public function company(){
         return $this->belongsTo(Company::class);
     }
 
-
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, "created_by", "id");
+    }
 }

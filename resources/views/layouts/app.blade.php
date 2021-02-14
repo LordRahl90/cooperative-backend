@@ -165,7 +165,9 @@
 
     $(function () {
         bsCustomFileInput.init();
+        $('ul').Treeview();
     });
+
 
     $("input[data-bootstrap-switch]").each(function () {
         $(this).bootstrapSwitch('state', $(this).prop('checked'));

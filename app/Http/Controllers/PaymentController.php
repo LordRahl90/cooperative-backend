@@ -258,14 +258,4 @@ class PaymentController extends AppBaseController
             ['title' => 'Income Receipt']);
         return $pdf->stream($details->reference . '.pdf');
     }
-
-    public function showCreateJV()
-    {
-        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
-        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->pluck("name", "id");
-        return view("payments.journals", [
-            'companies' => $companies,
-            'accountHeads' => $acctHeads
-        ]);
-    }
 }

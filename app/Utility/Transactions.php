@@ -3,7 +3,6 @@
 
 namespace App\Utility;
 
-
 use App\Models\OrgBankAccount;
 use App\Models\Payment;
 use App\Models\PaymentVoucher;
@@ -121,7 +120,6 @@ class Transactions
                 $totalDebit += $item->amount;
             }
 
-            dump("Total Debit: $totalDebit Amount: $amount");
             if ($totalDebit != $amount) {
                 throw new \Exception("total amount paid to the bank doesn't equal the PV total amount.");
             }

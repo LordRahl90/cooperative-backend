@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStaffTable extends Migration
+class CreateJournalVouchersTable extends Migration
 {
 
     /**
@@ -14,19 +14,17 @@ class CreateStaffTable extends Migration
      */
     public function up()
     {
-        Schema::create('staff', function (Blueprint $table) {
+        Schema::create('journal_vouchers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('password');
-            $table->enum('role', ['REGULAR', 'SUPERVISOR', 'MANAGER', 'ADMIN']);
-            $table->string('address');
-            $table->boolean('active')->default(true);
+            $table->string('reference');
+            $table->string('narration');
+            $table->double('total_amount', 30, 2);
+            $table->integer('created_by')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('created_by')->references('id')->on('staff');
         });
     }
 
@@ -37,6 +35,6 @@ class CreateStaffTable extends Migration
      */
     public function down()
     {
-        Schema::drop('staff');
+        Schema::drop('journal_vouchers');
     }
 }

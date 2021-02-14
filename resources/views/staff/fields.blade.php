@@ -1,7 +1,7 @@
 <!-- Company Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('company_id', 'Company Id:') !!}
-    {!! Form::select('company_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('company_id', 'Company:') !!}
+    {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

@@ -20,7 +20,7 @@
 
         <div class="card" id="incomeRegisterDiv">
 
-            {!! Form::open(['url' => '/income/create']) !!}
+            {!! Form::open(['url' => '/income/create','target'=>'_blank']) !!}
 
             <div class="card-body">
 
@@ -62,7 +62,7 @@
                     <!-- Reference Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('reference', 'Reference:') !!}
-                        {!! Form::text('reference', uniqid('IN-'), ['class' => 'form-control','v-model="payments.reference"']) !!}
+                        {!! Form::text('reference',strtoupper(uniqid('IN-')), ['class' => 'form-control','v-model="payments.reference"']) !!}
                     </div>
 
                     <!-- Total Amount Field -->

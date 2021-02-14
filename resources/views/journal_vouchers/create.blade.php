@@ -30,10 +30,15 @@
                         {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select',' v-model="company_id"']) !!}
                     </div>
 
-                    <!-- Total Amount Field -->
+                    <!-- Narration Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('narration', 'Narration:') !!}
                         {!! Form::text('narration', null, ['class' => 'form-control','v-model="narration"']) !!}
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        {!! Form::label('reference', 'Reference:') !!}
+                        {!! Form::text('reference', null, ['class' => 'form-control','v-model="reference"']) !!}
                     </div>
                 </div>
 
@@ -44,11 +49,25 @@
                             <tr>
                                 <th scope="col" width="10%">SN</th>
                                 <th scope="col" width="20%">Code</th>
-                                <th scope="col" width="20%">Name</th>
                                 <th scope="col" width="45%">Amount</th>
                                 <th scope="col" width="5%">Action</th>
                             </tr>
                             </thead>
+                            <tbody>
+                            <tr v-for="(v,k) in debit">
+                                <td>@{{ k+1 }}</td>
+                                <td>@{{ v.accountHead }}</td>
+                                <td>@{{ v.amount.toLocaleString() }}</td>
+                                <td style="text-align: center; vertical-align: center" @click="removeDebitItem(k)">
+                                    <i style="color:red;"
+                                       class="fas fa-times"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="font-weight: bold">Total Debit:</td>
+                                <td style="font-weight: bold">@{{ totalDebit.toLocaleString() }}</td>
+                            </tr>
+                            </tbody>
                         </table>
                         <div class="row">
                             <div class="form-group col-sm-4">
@@ -71,7 +90,6 @@
                             <tr>
                                 <th scope="col" width="10%">SN</th>
                                 <th scope="col" width="20%">Code</th>
-                                <th scope="col" width="20%">Name</th>
                                 <th scope="col" width="45%">Amount</th>
                                 <th scope="col" width="5%">Action</th>
                             </tr>
@@ -80,13 +98,15 @@
                             <tr v-for="(v,k) in credit">
                                 <td>@{{ k+1 }}</td>
                                 <td>@{{ v.accountHead }}</td>
-                                <td>dd</td>
-                                <td>@{{ v.amount }}</td>
-                                <td>dd</td>
+                                <td>@{{ v.amount.toLocaleString() }}</td>
+                                <td style="text-align: center; vertical-align: center" @click="removeCreditItem(k)">
+                                    <i style="color:red;"
+                                       class="fas fa-times"></i>
+                                </td>
                             </tr>
                             <tr>
-                                <td colspan="4" style="font-weight: bold">Total Credit:</td>
-                                <td style="font-weight: bold">@{{ totalCredit }}</td>
+                                <td colspan="2" style="font-weight: bold">Total Credit:</td>
+                                <td style="font-weight: bold">@{{ totalCredit.toLocaleString() }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -96,8 +116,8 @@
                                 {!! Form::select('credit_account', $accountHeads, null, ['class' => 'form-control custom-select',' v-model="creditItem.accountHead"']) !!}
                             </div>
                             <div class="form-group col-sm-4">
-                                {!! Form::label('debit_amount', 'Enter Amount:') !!}
-                                {!! Form::text('debit_amount', null, ['class' => 'form-control','v-model="debitItem.amount"']) !!}
+                                {!! Form::label('credit_amount', 'Enter Amount:') !!}
+                                {!! Form::text('credit_amount', null, ['class' => 'form-control','v-model="creditItem.amount"']) !!}
                             </div>
                             <div style="vertical-align: center; padding-top: 5%;" class="form-group col-sm-4">
                                 <button type="button" @click="addCreditEntry" class="btn btn-info">Add Credit Entry
@@ -108,7 +128,8 @@
                 </div>
 
                 <div class="card-footer">
-                    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+                    <button type="button" @click="postJV()" class="btn btn-primary">Post JV</button>
+                    <button type="button" @click="previewJV()" class="btn btn-info">Preview JV</button>
                     <a href="{{ route('payments.index') }}" class="btn btn-default">Cancel</a>
                 </div>
 
@@ -121,10 +142,9 @@
 @section('third_party_scripts')
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        var journalVoucherApp = new Vue({
-            el: '#journalVoucherDiv',
-            data: {
-                company_id: 0,
+        function initialState() {
+            return {
+                company_id: 1,
                 debitItem: {
                     accountHead: 0,
                     amount: 0,
@@ -133,32 +153,102 @@
                     accountHead: 0,
                     amount: 0,
                 },
-                credit: [
-                    {
-                        accountHead: 1212,
-                        amount: 2000,
-                    }
-                ],
-                debit: [
-                    {
-                        accountHead: 1212,
-                        amount: 2000,
-                    }
-                ],
-                narration: '',
+                credit: [],
+                debit: [],
+                narration: 'Test Narration',
+                reference: '{{ strtoupper(uniqid('JV-')) }}'
+            };
+        }
+
+        var journalVoucherApp = new Vue({
+            el: '#journalVoucherDiv',
+            data: {
+                company_id: 1,
+                debitItem: {
+                    accountHead: 0,
+                    amount: 0,
+                },
+                creditItem: {
+                    accountHead: 0,
+                    amount: 0,
+                },
+                credit: [],
+                debit: [],
+                narration: 'Test Narration',
+                reference: '{{ strtoupper(uniqid('JV-')) }}'
             },
             methods: {
                 addDebitEntry() {
-                    alert("Debit entry added");
+                    let entry = this.debitItem;
+                    this.debit.push(entry);
+                    this.debitItem = {
+                        accountHead: 0,
+                        amount: 0
+                    }
                 },
                 addCreditEntry() {
-                    alert("Credit entry added");
+                    let entry = this.creditItem;
+                    this.credit.push(entry);
+                    this.creditItem = {
+                        accountHead: 0,
+                        amount: 0
+                    }
+                },
+                removeDebitItem(index) {
+                    this.debit = this.debit.filter((val, i, element) => {
+                        return i !== index;
+                    });
+                },
+                removeCreditItem(index) {
+                    this.credit = this.credit.filter((val, i, element) => {
+                        return i !== index;
+                    });
+                },
+                async postJV() {
+                    if (this.totalCredit !== this.totalDebit) {
+                        this.error("The Journal Voucher is not balanced.");
+                        return;
+                    }
+                    let payload = {
+                        company_id: this.company_id,
+                        narration: this.narration,
+                        reference: this.reference,
+                        credit: this.credit,
+                        debit: this.debit
+                    };
+                    try {
+                        let response = await axios.post('/api/payments/jv', payload);
+                        success(response.data.message);
+                        this.clearFields();
+                    } catch (e) {
+                        this.error(e);
+                    }
+                },
+                previewJV() {
+                    alert("Preview JV");
+                },
+                success(msg) {
+                    toastr.success(msg)
+                },
+                error(msg) {
+                    toastr.error(msg)
+                },
+                clearFields() {
+                    this.credit = [];
+                    this.debit = [];
+                    this.company_id = 0;
+                    this.reference = '{{ strtoupper(uniqid('JV-')) }}';
+                    this.narration = '';
                 }
             },
             computed: {
                 totalCredit() {
                     return this.credit.map(el => el.amount)
-                        .reduce((total, element) => total + element);
+                        .reduce((total, element) => parseFloat(total) + parseFloat(element));
+                },
+                totalDebit() {
+                    return this.debit.map(el => el.amount)
+                        .reduce((total, element) => parseFloat(total) + parseFloat(element));
                 }
             }
         });

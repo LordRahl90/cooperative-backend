@@ -1,27 +1,25 @@
 <div class="table-responsive">
     <table class="table" id="staff-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Password</th>
-        <th>Role</th>
-        <th>Address</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Company</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Address</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($staff as $staff)
             <tr>
-                <td>{{ $staff->company_id }}</td>
-            <td>{{ $staff->name }}</td>
-            <td>{{ $staff->email }}</td>
-            <td>{{ $staff->phone }}</td>
-            <td>{{ $staff->password }}</td>
-            <td>{{ $staff->role }}</td>
-            <td>{{ $staff->address }}</td>
+                <td>{{ $staff->company->name }}</td>
+                <td>{{ $staff->name }}</td>
+                <td>{{ $staff->email }}</td>
+                <td>{{ $staff->phone }}</td>
+                <td>{{ $staff->role }}</td>
+                <td>{{ $staff->address }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['staff.destroy', $staff->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

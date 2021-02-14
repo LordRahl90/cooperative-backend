@@ -73,10 +73,9 @@ class Staff extends Model
     use HasFactory;
 
     public $table = 'staff';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -120,5 +119,10 @@ class Staff extends Model
         'address' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

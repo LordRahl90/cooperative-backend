@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Org Account Head</h1>
+                    <h1>Create Account Head</h1>
                 </div>
             </div>
         </div>

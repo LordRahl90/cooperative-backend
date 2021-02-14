@@ -1,23 +1,23 @@
 <div class="table-responsive">
     <table class="table" id="receipts-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Reference</th>
-        <th>Payer</th>
-        <th>Phone</th>
-        <th>Email</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            <th>Company</th>
+            <th>Reference</th>
+            <th>Payer</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($receipts as $receipt)
             <tr>
-                <td>{{ $receipt->company_id }}</td>
-            <td>{{ $receipt->reference }}</td>
-            <td>{{ $receipt->payer }}</td>
-            <td>{{ $receipt->phone }}</td>
-            <td>{{ $receipt->email }}</td>
+                <td>{{ $receipt->company->name }}</td>
+                <td>{{ $receipt->reference }}</td>
+                <td>{{ $receipt->payer }}</td>
+                <td>{{ $receipt->phone }}</td>
+                <td>{{ $receipt->email }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['receipts.destroy', $receipt->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
