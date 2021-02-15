@@ -87,4 +87,9 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/payment', 'App\Http\Controllers\PaymentController@showReversePayment');
         Route::post('/payment', 'App\Http\Controllers\PaymentController@reversePayment');
     });
+
+    Route::group(['prefix' => 'reports'], function () {
+        Route::get('/general-ledger', 'App\Http\Controllers\AccountReport@showGeneralLedger');
+        Route::post('/general-ledger', 'App\Http\Controllers\AccountReport@generalLedger');
+    });
 });
