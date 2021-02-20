@@ -5,8 +5,8 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Savings Category Id</th>
-            <th>Account Head Id</th>
+            <th>Savings Category</th>
+            <th>Account Head</th>
             <th>Name</th>
             <th>Slug</th>
             <th>Description</th>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSavingsCategoryRequest;
 use App\Http\Requests\UpdateSavingsCategoryRequest;
+use App\Models\Company;
+use App\Models\OrgAccountCategory;
 use App\Repositories\SavingsCategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +44,12 @@ class SavingsCategoryController extends AppBaseController
      */
     public function create()
     {
-        return view('savings_categories.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
+        return view('savings_categories.create', [
+            'companies' => $companies,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -92,6 +99,8 @@ class SavingsCategoryController extends AppBaseController
      */
     public function edit($id)
     {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
         $savingsCategory = $this->savingsCategoryRepository->find($id);
 
         if (empty($savingsCategory)) {
@@ -100,7 +109,10 @@ class SavingsCategoryController extends AppBaseController
             return redirect(route('savingsCategories.index'));
         }
 
-        return view('savings_categories.edit')->with('savingsCategory', $savingsCategory);
+        return view('savings_categories.edit', [
+            'companies' => $companies,
+            'categories' => $categories
+        ])->with('savingsCategory', $savingsCategory);
     }
 
     /**
@@ -133,9 +145,9 @@ class SavingsCategoryController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

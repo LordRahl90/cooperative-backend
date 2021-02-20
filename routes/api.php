@@ -88,3 +88,5 @@ Route::resource('loan_repayments', App\Http\Controllers\API\LoanRepaymentAPICont
 Route::resource('customer_transactions', App\Http\Controllers\API\CustomerTransactionAPIController::class);
 
 Route::resource('states', App\Http\Controllers\API\StateAPIController::class);
+
+Route::resource('customer_bank_accounts', App\Http\Controllers\API\CustomerBankAccountAPIController::class);

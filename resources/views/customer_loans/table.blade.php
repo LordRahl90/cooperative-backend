@@ -5,10 +5,9 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Loan Application Id</th>
-            <th>Approved By</th>
+            <th>Loan Application</th>
+            <th>Approved</th>
             <th>Status</th>
-            <th>Total Repaid</th>
             <th>Narration</th>
             <th>Action</th>
         </tr>
@@ -21,8 +20,8 @@
                 @endif
                 <td>{{ $customerLoan->loan_application_id }}</td>
                 <td>{{ $customerLoan->approved_by }}</td>
+                <td>{{ number_format($customerLoan->amount,2) }}</td>
                 <td>{{ $customerLoan->status }}</td>
-                <td>{{ $customerLoan->total_repaid }}</td>
                 <td>{{ $customerLoan->narration }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customerLoans.destroy', $customerLoan->id], 'method' => 'delete']) !!}

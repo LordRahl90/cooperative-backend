@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCustomerLoansTable extends Migration
+class CreateCustomerBankAccountsTable extends Migration
 {
 
     /**
@@ -14,21 +14,19 @@ class CreateCustomerLoansTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_loans', function (Blueprint $table) {
+        Schema::create('customer_bank_accounts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
-            $table->integer('loan_application_id')->unsigned();
             $table->integer('customer_id')->unsigned();
-            $table->integer('approved_by')->unsigned();
-            $table->double('amount', 30, 2);
-            $table->enum('status', ['COMPLETED', 'RUNNING']);
-            $table->string('narration');
+            $table->integer('bank_id')->unsigned();
+            $table->string('account_name');
+            $table->string('account_number');
+            $table->string('sort_code');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('customer_id')->references('id')->on('customers');
-            $table->foreign('loan_application_id')->references('id')->on('loan_applications');
-            $table->foreign('approved_by')->references('id')->on('staff');
+            $table->foreign('bank_id')->references('id')->on('banks');
         });
     }
 
@@ -39,6 +37,6 @@ class CreateCustomerLoansTable extends Migration
      */
     public function down()
     {
-        Schema::drop('customer_loans');
+        Schema::drop('customer_bank_accounts');
     }
 }

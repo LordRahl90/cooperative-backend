@@ -6,8 +6,7 @@
                 <th>Company</th>
             @endif
             <th>Name</th>
-            <th>Category Id</th>
-            <th>Slug</th>
+            <th>Account Category</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -18,8 +17,7 @@
                     <td>{{ $savingsCategory->company->name }}</td>
                 @endif
                 <td>{{ $savingsCategory->name }}</td>
-                <td>{{ $savingsCategory->category_id }}</td>
-                <td>{{ $savingsCategory->slug }}</td>
+                <td>{{ $savingsCategory->category->name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['savingsCategories.destroy', $savingsCategory->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

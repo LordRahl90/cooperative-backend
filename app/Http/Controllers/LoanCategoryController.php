@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLoanCategoryRequest;
 use App\Http\Requests\UpdateLoanCategoryRequest;
+use App\Models\Company;
+use App\Models\OrgAccountCategory;
 use App\Repositories\LoanCategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -42,7 +44,12 @@ class LoanCategoryController extends AppBaseController
      */
     public function create()
     {
-        return view('loan_categories.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
+        return view('loan_categories.create', [
+            'companies' => $companies,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -133,9 +140,9 @@ class LoanCategoryController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

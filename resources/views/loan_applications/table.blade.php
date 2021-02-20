@@ -5,14 +5,14 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Customer Id</th>
-            <th>Loan Account Id</th>
+            <th>Customer</th>
+            <th>Loan Account</th>
             <th>Principal</th>
             <th>Rate</th>
             <th>Interest Type</th>
             <th>Tenor</th>
             <th>Status</th>
-            <th>Staff Id</th>
+            <th>Staff</th>
             <th>Action</th>
         </tr>
         </thead>

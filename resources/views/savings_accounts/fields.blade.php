@@ -11,14 +11,14 @@
 <!-- Savings Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('savings_category_id', 'Savings Category:') !!}
-    {!! Form::select('savings_category_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('savings_category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Account Head Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('account_head_id', 'Account Head:') !!}
-    {!! Form::select('account_head_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('account_head_id', $account_heads, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

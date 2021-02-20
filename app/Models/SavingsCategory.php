@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -55,14 +56,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SavingsCategory extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'savings_categories';
 
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -100,4 +100,20 @@ class SavingsCategory extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(OrgAccountCategory::class, "category_id", "id");
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
+
 }

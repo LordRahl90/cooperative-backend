@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @SWG\Definition(
- *      definition="LoanCategory",
- *      required={"company_id", "name", "category_id"},
+ *      definition="CustomerBankAccount",
+ *      required={"company_id", "customer_id", "bank_id", "account_name", "account_number", "sort_code"},
  *      @SWG\Property(
  *          property="id",
  *          description="id",
@@ -24,19 +23,30 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="name",
- *          description="name",
- *          type="string"
- *      ),
- *      @SWG\Property(
- *          property="category_id",
- *          description="category_id",
+ *          property="customer_id",
+ *          description="customer_id",
  *          type="integer",
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="slug",
- *          description="slug",
+ *          property="bank_id",
+ *          description="bank_id",
+ *          type="integer",
+ *          format="int32"
+ *      ),
+ *      @SWG\Property(
+ *          property="account_name",
+ *          description="account_name",
+ *          type="string"
+ *      ),
+ *      @SWG\Property(
+ *          property="account_number",
+ *          description="account_number",
+ *          type="string"
+ *      ),
+ *      @SWG\Property(
+ *          property="sort_code",
+ *          description="sort_code",
  *          type="string"
  *      ),
  *      @SWG\Property(
@@ -53,23 +63,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *      )
  * )
  */
-class LoanCategory extends Model
+class CustomerBankAccount extends Model
 {
     use SoftDeletes;
-    use Sluggable;
+
     use HasFactory;
 
-    public $table = 'loan_categories';
-
+    public $table = 'customer_bank_accounts';
+    
 
     protected $dates = ['deleted_at'];
 
 
+
     public $fillable = [
         'company_id',
-        'name',
-        'category_id',
-        'slug'
+        'customer_id',
+        'bank_id',
+        'account_name',
+        'account_number',
+        'sort_code'
     ];
 
     /**
@@ -80,9 +93,11 @@ class LoanCategory extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'name' => 'string',
-        'category_id' => 'integer',
-        'slug' => 'string'
+        'customer_id' => 'integer',
+        'bank_id' => 'integer',
+        'account_name' => 'string',
+        'account_number' => 'string',
+        'sort_code' => 'string'
     ];
 
     /**
@@ -91,27 +106,13 @@ class LoanCategory extends Model
      * @var array
      */
     public static $rules = [
-        'company_id' => 'required|exists:companies,id',
-        'name' => 'required',
-        'category_id' => 'required|exists:org_account_categories,id'
+        'company_id' => 'required',
+        'customer_id' => 'required',
+        'bank_id' => 'required',
+        'account_name' => 'required',
+        'account_number' => 'required',
+        'sort_code' => 'required'
     ];
 
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    public function sluggable(): array
-    {
-        return [
-            'slug' => [
-                'source' => 'name'
-            ]
-        ];
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(OrgAccountCategory::class, "category_id", "id");
-    }
+    
 }

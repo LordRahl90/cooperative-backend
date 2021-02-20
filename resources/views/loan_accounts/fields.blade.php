@@ -10,15 +10,15 @@
 
 <!-- Loan Category Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('loan_category_id', 'Loan Category Id:') !!}
-    {!! Form::select('loan_category_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('loan_category_id', 'Loan Category:') !!}
+    {!! Form::select('loan_category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Account Head Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('account_head_id', 'Account Head Id:') !!}
-    {!! Form::select('account_head_id', ], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('account_head_id', 'Account Head:') !!}
+    {!! Form::select('account_head_id', $account_heads, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

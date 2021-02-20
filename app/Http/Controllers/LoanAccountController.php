@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLoanAccountRequest;
 use App\Http\Requests\UpdateLoanAccountRequest;
+use App\Models\Company;
+use App\Models\LoanCategory;
 use App\Repositories\LoanAccountRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Utility;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -42,7 +45,15 @@ class LoanAccountController extends AppBaseController
      */
     public function create()
     {
-        return view('loan_accounts.create');
+        $companyID = session('company_id');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $accountHeads = Utility::getAccountHeads($companyID);
+        $savingsCategories = LoanCategory::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
+        return view('loan_accounts.create', [
+            'companies' => $companies,
+            'account_heads' => $accountHeads,
+            'categories' => $savingsCategories
+        ]);
     }
 
     /**
@@ -133,9 +144,9 @@ class LoanAccountController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

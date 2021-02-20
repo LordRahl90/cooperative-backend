@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateSavingsAccountRequest;
 use App\Http\Requests\UpdateSavingsAccountRequest;
+use App\Models\Company;
+use App\Models\SavingsCategory;
 use App\Repositories\SavingsAccountRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Utility;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -42,7 +45,15 @@ class SavingsAccountController extends AppBaseController
      */
     public function create()
     {
-        return view('savings_accounts.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $accountHeads = Utility::getAccountHeads($companyID);
+        $savingsCategories = SavingsCategory::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
+        return view('savings_accounts.create', [
+            'account_heads' => $accountHeads,
+            'categories' => $savingsCategories,
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -133,9 +144,9 @@ class SavingsAccountController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

@@ -17,5 +17,5 @@
 <!-- Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('category_id', 'Category:') !!}
-    {!! Form::select('category_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('category_id', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>

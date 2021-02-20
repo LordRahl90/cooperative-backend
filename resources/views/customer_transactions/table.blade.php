@@ -5,9 +5,9 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Customer Id</th>
-            <th>Savings Id</th>
-            <th>Loan Id</th>
+            <th>Customer</th>
+            <th>Savings</th>
+            <th>Loan</th>
             <th>Narration</th>
             <th>Action</th>
         </tr>

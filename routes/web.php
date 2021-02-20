@@ -131,3 +131,5 @@ Route::resource('loanRepayments', App\Http\Controllers\LoanRepaymentController::
 Route::resource('customerTransactions', App\Http\Controllers\CustomerTransactionController::class);
 
 Route::resource('states', App\Http\Controllers\StateController::class);
+
+Route::resource('customerBankAccounts', App\Http\Controllers\CustomerBankAccountController::class);

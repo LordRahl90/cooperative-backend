@@ -78,14 +78,8 @@ class LoanRepayment extends Model
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'loan_application_id',
-        'customer_id',
-        'count',
-        'amount',
-        'loan_id'
+    public $guarded = [
+        'deleted_at'
     ];
 
     /**
@@ -98,7 +92,6 @@ class LoanRepayment extends Model
         'company_id' => 'integer',
         'loan_application_id' => 'integer',
         'customer_id' => 'integer',
-        'count' => 'integer',
         'amount' => 'double',
         'loan_id' => 'integer'
     ];
@@ -112,7 +105,6 @@ class LoanRepayment extends Model
         'company_id' => 'required',
         'loan_application_id' => 'required',
         'customer_id' => 'required',
-        'count' => 'required',
         'amount' => 'required',
         'loan_id' => 'required|exists:customer_loans,id'
     ];
@@ -120,5 +112,20 @@ class LoanRepayment extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function loan_application()
+    {
+        return $this->belongsTo(LoanApplication::class);
+    }
+
+    public function loan()
+    {
+        return $this->belongsTo(CustomerLoan::class, "loan_id", "id");
     }
 }

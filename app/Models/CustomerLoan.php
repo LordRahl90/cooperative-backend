@@ -70,15 +70,7 @@ class CustomerLoan extends Model
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'loan_application_id',
-        'approved_by',
-        'status',
-        'total_repaid',
-        'narration'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -90,7 +82,7 @@ class CustomerLoan extends Model
         'company_id' => 'integer',
         'loan_application_id' => 'integer',
         'status' => 'string',
-        'total_repaid' => 'double',
+        'amount' => 'double',
         'narration' => 'string'
     ];
 
@@ -113,5 +105,14 @@ class CustomerLoan extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function loan_application()
+    {
+        return $this->belongsTo(LoanApplication::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 
 }

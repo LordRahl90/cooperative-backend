@@ -71,7 +71,6 @@ class CustomerTransaction extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
         'company_id',
         'customer_id',
@@ -110,6 +109,21 @@ class CustomerTransaction extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function savings()
+    {
+        return $this->belongsTo(CustomerSaving::class, "savings_id", "id");
+    }
+
+    public function loan()
+    {
+        return $this->belongsTo(CustomerLoan::class, "loan_id", "id");
     }
 
 

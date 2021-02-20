@@ -6,8 +6,7 @@
                 <th>Company</th>
             @endif
             <th>Name</th>
-            <th>Category Id</th>
-            <th>Slug</th>
+            <th>Category</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -18,9 +17,8 @@
                     <td>{{ $loanCategory->company->name }}</td>
                 @endif
                 <td>{{ $loanCategory->name }}</td>
-                <td>{{ $loanCategory->category_id }}</td>
-                <td>{{ $loanCategory->slug }}</td>
-                <td width="120">
+                <td>{{ $loanCategory->category->name }}</td>
+                <td>
                     {!! Form::open(['route' => ['loanCategories.destroy', $loanCategory->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
                         <a href="{{ route('loanCategories.show', [$loanCategory->id]) }}"
