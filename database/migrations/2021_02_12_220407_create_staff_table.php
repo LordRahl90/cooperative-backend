@@ -17,6 +17,7 @@ class CreateStaffTable extends Migration
         Schema::create('staff', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->string('name');
             $table->string('email');
             $table->string('phone');
@@ -27,6 +28,7 @@ class CreateStaffTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

@@ -23,13 +23,13 @@ class CustomerAddressFactory extends Factory
     {
         return [
             'company_id' => $this->faker->randomDigitNotNull,
-        'customer_id' => $this->faker->randomDigitNotNull,
-        'street' => $this->faker->word,
-        'street2' => $this->faker->word,
-        'state' => $this->faker->randomDigitNotNull,
-        'country' => $this->faker->randomDigitNotNull,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'customer_id' => $this->faker->randomDigitNotNull,
+            'street' => $this->faker->streetAddress,
+            'street2' => $this->faker->streetName,
+            'state' => $this->faker->randomDigitNotNull,
+            'country' => $this->faker->randomDigitNotNull,
+            'created_at' => now(),
+            'updated_at' => now()
         ];
     }
 }

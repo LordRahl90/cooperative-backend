@@ -112,7 +112,7 @@ class JournalVoucher extends Model
 
     public function staff()
     {
-        return $this->belongsTo(Staff::class, "created_by", "id");
+        return $this->belongsTo(Staff::class, "created_by", "user_id");
     }
 
     public function transactions()

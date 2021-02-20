@@ -65,7 +65,7 @@ class CustomerLoan extends Model
     use HasFactory;
 
     public $table = 'customer_loans';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -108,5 +108,10 @@ class CustomerLoan extends Model
         'narration' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

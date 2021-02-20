@@ -2,7 +2,9 @@
     <table class="table" id="configurations-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Income</th>
             <th>Expense</th>
             <th>Cash Account</th>
@@ -16,7 +18,9 @@
         <tbody>
         @foreach($configurations as $configuration)
             <tr>
-                <td>{{ $configuration->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $configuration->company->name }}</td>
+                @endif
                 <td>{{ $configuration->income->name }}</td>
                 <td>{{ $configuration->expense->name }}</td>
                 <td>{{ $configuration->cash_account->name }}</td>

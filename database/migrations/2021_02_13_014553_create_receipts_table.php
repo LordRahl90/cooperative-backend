@@ -17,6 +17,7 @@ class CreateReceiptsTable extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
+            $table->integer('processed_by')->unsigned();
             $table->string('reference');
             $table->string('payer');
             $table->string('phone');

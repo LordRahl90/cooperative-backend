@@ -16,6 +16,7 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();
             $table->integer('company_id')->unsigned();
             $table->string('surname');
             $table->string('other_names');
@@ -30,6 +31,7 @@ class CreateCustomersTable extends Migration
             $table->softDeletes();
 
             $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

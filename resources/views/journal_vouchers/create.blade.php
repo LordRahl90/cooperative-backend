@@ -20,17 +20,23 @@
 
         <div class="card" id="journalVoucherDiv">
 
-            {!! Form::open(['url' => '/income/create']) !!}
+            {!! Form::open(['url' => '/journalVoucher/create']) !!}
 
             <div class="card-body">
 
                 <div class="row">
-                    <div class="form-group col-sm-6">
-                        {!! Form::label('company_id', 'Company:') !!}
-                        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select',' v-model="company_id"']) !!}
-                    </div>
+                @if(session('company_id')==0)
+                    <!-- Company Id Field -->
+                        <div class="form-group col-sm-6">
+                            {!! Form::label('company_id', 'Company:') !!}
+                            {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select',' v-model="company_id"']) !!}
+                        </div>
+                    @else
+                        <input type="hidden" name="company_id" v-model="company_id"
+                               value="{{ session('company_id') }}"/>
+                @endif
 
-                    <!-- Narration Field -->
+                <!-- Narration Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('narration', 'Narration:') !!}
                         {!! Form::text('narration', null, ['class' => 'form-control','v-model="narration"']) !!}
@@ -144,7 +150,7 @@
     <script>
         function initialState() {
             return {
-                company_id: 1,
+                company_id: '{{ session('company_id') }}',
                 debitItem: {
                     accountHead: 0,
                     amount: 0,
@@ -214,7 +220,8 @@
                         narration: this.narration,
                         reference: this.reference,
                         credit: this.credit,
-                        debit: this.debit
+                        debit: this.debit,
+                        user_id: '{{ auth()->id() }}'
                     };
                     try {
                         let response = await axios.post('/api/payments/jv', payload);

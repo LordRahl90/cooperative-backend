@@ -50,7 +50,7 @@
                 },
                 pv: {
                     id: "{{ strtoupper(uniqid('PV-')) }}",
-                    company_id: "",
+                    company_id: "{{ session('company_id') }}",
                     payee: "",
                     address: "",
                     email: "",
@@ -138,15 +138,30 @@
                         details: this.pv,
                         items: this.items
                     };
-                    try{
+                    try {
                         let response = await axios.post('/api/payment_vouchers', payload);
                         window.location = `/paymentVouchers/${this.pv.id}/details`;
-                    }
-                    catch (e) {
+                        this.pv = {
+                            id: "{{ strtoupper(uniqid('PV-')) }}",
+                            company_id: "{{ session('company_id') }}",
+                            payee: "",
+                            address: "",
+                            email: "",
+                            website: "",
+                            phone: "",
+                            bank_id: "",
+                            account_name: "",
+                            account_number: ""
+                        };
+                        this.clearItem();
+                    } catch (e) {
                         console.log(e);
                         this.error(e.message);
                     }
                 }
+            },
+            created: function () {
+                this.loadOrgAccounts();
             },
             computed: {}
         });

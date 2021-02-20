@@ -2,7 +2,9 @@
     <table class="table" id="orgBankAccounts-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Bank</th>
             <th>Account Name</th>
             <th>Account Number</th>
@@ -13,7 +15,9 @@
         <tbody>
         @foreach($orgBankAccounts as $orgBankAccount)
             <tr>
-                <td>{{ $orgBankAccount->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $configuration->company->name }}</td>
+                @endif
                 <td>{{ $orgBankAccount->bank->name }}</td>
                 <td>{{ $orgBankAccount->account_name }}</td>
                 <td>{{ $orgBankAccount->account_number }}</td>

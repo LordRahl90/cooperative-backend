@@ -104,5 +104,10 @@ class Receipt extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function processor()
+    {
+        return $this->belongsTo(User::class, "processed_by", "id");
+    }
+
 
 }

@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             CountriesTableSeeder::class,
             CompaniesTableSeeder::class,
-            StaffTableSeeder::class
+            StaffTableSeeder::class,
+            CustomersTableSeeder::class
         ]);
     }
 }

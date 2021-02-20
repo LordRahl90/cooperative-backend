@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerFactory extends Factory
 {
@@ -21,18 +23,22 @@ class CustomerFactory extends Factory
      */
     public function definition()
     {
+        $user = User::factory()->create(['role' => 'CUSTOMER']);
+
         return [
-            'company_id' => $this->faker->randomDigitNotNull,
-        'surname' => $this->faker->word,
-        'othernames' => $this->faker->word,
-        'reference' => $this->faker->word,
-        'email' => $this->faker->word,
-        'phone' => $this->faker->word,
-        'gender' => $this->faker->randomElement(['FEMALE', 'MALE']),
-        'password' => $this->faker->word,
-        'religion' => $this->faker->word,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'user_id' => $user->id,
+            'company_id' => $this->faker->numberBetween(1, 2),
+            'surname' => $this->faker->unique()->lastName,
+            'other_names' => $this->faker->unique()->lastName,
+            'dob' => $this->faker->date('Y-m-d'),
+            'reference' => strtoupper(uniqid('CUS-')),
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'gender' => $this->faker->randomElement(['FEMALE', 'MALE']),
+            'password' => $user->password,
+            'religion' => $this->faker->word,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

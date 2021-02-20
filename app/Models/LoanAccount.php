@@ -75,7 +75,7 @@ class LoanAccount extends Model
     use HasFactory;
 
     public $table = 'loan_accounts';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -121,5 +121,9 @@ class LoanAccount extends Model
         'description' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
 }

@@ -2,7 +2,9 @@
     <table class="table" id="orgAccountHeads-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Category</th>
             <th>Name</th>
             <th>Slug</th>
@@ -14,7 +16,9 @@
         <tbody>
         @foreach($orgAccountHeads as $orgAccountHead)
             <tr>
-                <td>{{ $orgAccountHead->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $configuration->company->name }}</td>
+                @endif
                 <td>{{ $orgAccountHead->category->name }}</td>
                 <td>{{ $orgAccountHead->name }}</td>
                 <td>{{ $orgAccountHead->slug }}</td>

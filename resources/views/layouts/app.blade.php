@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+//dump(session()->all());
+//?>
+    <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">

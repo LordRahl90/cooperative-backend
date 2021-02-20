@@ -1,8 +1,11 @@
 <!-- Company Id Field -->
-<div class="col-sm-12">
-    {!! Form::label('company_id', 'Company Id:') !!}
-    <p>{{ $staff->company_id }}</p>
-</div>
+@if(session('company_id')==0)
+    <div class="col-sm-12">
+        {!! Form::label('company_id', 'Company Id:') !!}
+        <p>{{ $staff->company->name }}</p>
+    </div>
+@endif
+
 
 <!-- Name Field -->
 <div class="col-sm-12">
@@ -20,12 +23,6 @@
 <div class="col-sm-12">
     {!! Form::label('phone', 'Phone:') !!}
     <p>{{ $staff->phone }}</p>
-</div>
-
-<!-- Password Field -->
-<div class="col-sm-12">
-    {!! Form::label('password', 'Password:') !!}
-    <p>{{ $staff->password }}</p>
 </div>
 
 <!-- Role Field -->

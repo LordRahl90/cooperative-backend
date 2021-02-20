@@ -83,23 +83,12 @@ class Customer extends Model
     use HasFactory;
 
     public $table = 'customers';
-    
+
 
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'surname',
-        'othernames',
-        'reference',
-        'email',
-        'phone',
-        'gender',
-        'password',
-        'religion'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -127,7 +116,7 @@ class Customer extends Model
     public static $rules = [
         'company_id' => 'required|exists:companies,id',
         'surname' => 'required',
-        'othernames' => 'required',
+        'other_names' => 'required',
         'reference' => 'required',
         'email' => 'required',
         'phone' => 'required',
@@ -136,5 +125,8 @@ class Customer extends Model
         'religion' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

@@ -1,7 +1,3 @@
-<?php
-?>
-<?php
-?>
 @extends('layouts.app')
 
 @section('content')
@@ -26,10 +22,15 @@
 
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-sm-6">
-                        {!! Form::label('company_id', 'Company:') !!}
-                        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
-                    </div>
+                @if(session('company_id')==0)
+                    <!-- Company Id Field -->
+                        <div class="form-group col-sm-6">
+                            {!! Form::label('company_id', 'Company:') !!}
+                            {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
+                        </div>
+                    @else
+                        <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
+                @endif
 
 
                     <!-- Pv Id Field -->

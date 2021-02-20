@@ -2,8 +2,10 @@
     <table class="table" id="payments-table">
         <thead>
         <tr>
-            <th>Company</th>
-            <th>PV</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
+            <th>Payee</th>
             <th>Reference</th>
             <th>Confirmed By</th>
             <th>Authorized By</th>
@@ -15,7 +17,9 @@
         <tbody>
         @foreach($payments as $payment)
             <tr>
-                <td>{{ $payment->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $payment->company->name }}</td>
+                @endif
                 <td>{{ $payment->pv->payee }}</td>
                 <td>{{ $payment->reference }}</td>
                 <td>{{ $payment->confirmed->name }}</td>
@@ -31,7 +35,7 @@
                         <a href="{{ route('payments.edit', [$payment->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

@@ -1,8 +1,12 @@
-<!-- Company Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('company_id', 'Company Id:') !!}
-    {!! Form::select('company_id', ], null, ['class' => 'form-control custom-select']) !!}
-</div>
+@if(session('company_id')==0)
+    <!-- Company Id Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('company_id', 'Company:') !!}
+        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
+    </div>
+@else
+    <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
+@endif
 
 
 <!-- Surname Field -->
@@ -13,8 +17,8 @@
 
 <!-- Othernames Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('othernames', 'Othernames:') !!}
-    {!! Form::text('othernames', null, ['class' => 'form-control']) !!}
+    {!! Form::label('other_names', 'Othernames:') !!}
+    {!! Form::text('other_names', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Reference Field -->
@@ -45,7 +49,7 @@
 <!-- Password Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('password', 'Password:') !!}
-    {!! Form::text('password', null, ['class' => 'form-control']) !!}
+    <input type="password" name="password" class="form-control" value="{{ 'secret' }}"/>
 </div>
 
 <!-- Religion Field -->

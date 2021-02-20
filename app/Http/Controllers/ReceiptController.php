@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateReceiptRequest;
 use App\Http\Requests\UpdateReceiptRequest;
 use App\Models\Company;
+use App\Models\OrgAccountHead;
+use App\Models\OrgBankAccount;
 use App\Repositories\ReceiptRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Utility\Transactions;
@@ -46,8 +48,17 @@ class ReceiptController extends AppBaseController
     public function create()
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        $companyID = session('company_id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'account_head_id');
+        $acctHeadIDs = [];
+        foreach ($bankAccounts as $k => $v) {
+            $acctHeadIDs[] = $k;
+        }
+        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->where('company_id', $companyID)->whereNotIn('id', $acctHeadIDs)->pluck("name", "id");
         return view('receipts.create', [
-            'companies' => $companies
+            'companies' => $companies,
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray(),
+            'acctHeads' => [0 => 'Select Account Head'] + $acctHeads->toArray()
         ]);
     }
 

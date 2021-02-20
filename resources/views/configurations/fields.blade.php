@@ -1,9 +1,12 @@
-<!-- Company Id Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('company_id', 'Company:') !!}
-    {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
-</div>
-
+@if(session('company_id')==0)
+    <!-- Company Id Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('company_id', 'Company:') !!}
+        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
+    </div>
+@else
+    <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
+@endif
 
 <!-- Income Category Field -->
 <div class="form-group col-sm-6">
@@ -21,15 +24,15 @@
 
 <!-- Cash Account Categories Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('cash_account_categories', 'Cash Account Categories:') !!}
-    {!! Form::select('cash_account_categories', $categories, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('cash_account_category', 'Cash Account Categories:') !!}
+    {!! Form::select('cash_account_category', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Fixed Asset Categories Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('fixed_asset_categories', 'Fixed Asset Categories:') !!}
-    {!! Form::select('fixed_asset_categories', $categories, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('fixed_asset_category', 'Fixed Asset Categories:') !!}
+    {!! Form::select('fixed_asset_category', $categories, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

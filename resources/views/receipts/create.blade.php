@@ -1,4 +1,6 @@
 <?php
+//dd(session()->all());
+dd(auth()->id());
 ?>
 @extends('layouts.app')
 
@@ -20,17 +22,22 @@
 
         <div class="card" id="incomeRegisterDiv">
 
-            {!! Form::open(['url' => '/income/create']) !!}
+            {!! Form::open(['url' => '/income/create','target'=>'_blank']) !!}
 
             <div class="card-body">
 
                 <div class="row">
-                    <div class="form-group col-sm-6">
-                        {!! Form::label('company_id', 'Company:') !!}
-                        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select',' v-model="payments.company_id"']) !!}
-                    </div>
+                @if(session('company_id')==0)
+                    <!-- Company Id Field -->
+                        <div class="form-group col-sm-6">
+                            {!! Form::label('company_id', 'Company:') !!}
+                            {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
+                        </div>
+                    @else
+                        <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
+                @endif
 
-                    <!-- Name Field -->
+                <!-- Name Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('payer', 'Name:') !!}
                         {!! Form::text('payer', null, ['class' => 'form-control','v-model="payments.narration"']) !!}
@@ -62,7 +69,7 @@
                     <!-- Reference Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('reference', 'Reference:') !!}
-                        {!! Form::text('reference', uniqid('IN-'), ['class' => 'form-control','v-model="payments.reference"']) !!}
+                        {!! Form::text('reference', strtoupper(uniqid('IN-')), ['class' => 'form-control','v-model="payments.reference"']) !!}
                     </div>
 
                     <!-- Total Amount Field -->

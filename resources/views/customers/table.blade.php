@@ -1,31 +1,33 @@
 <div class="table-responsive">
     <table class="table" id="customers-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Surname</th>
-        <th>Othernames</th>
-        <th>Reference</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Gender</th>
-        <th>Password</th>
-        <th>Religion</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
+            <th>Surname</th>
+            <th>Othernames</th>
+            <th>Reference</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Gender</th>
+            <th>Religion</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($customers as $customer)
             <tr>
-                <td>{{ $customer->company_id }}</td>
-            <td>{{ $customer->surname }}</td>
-            <td>{{ $customer->othernames }}</td>
-            <td>{{ $customer->reference }}</td>
-            <td>{{ $customer->email }}</td>
-            <td>{{ $customer->phone }}</td>
-            <td>{{ $customer->gender }}</td>
-            <td>{{ $customer->password }}</td>
-            <td>{{ $customer->religion }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $customer->company->name }}</td>
+                @endif
+                <td>{{ $customer->surname }}</td>
+                <td>{{ $customer->other_names }}</td>
+                <td>{{ $customer->reference }}</td>
+                <td>{{ $customer->email }}</td>
+                <td>{{ $customer->phone }}</td>
+                <td>{{ $customer->gender }}</td>
+                <td>{{ $customer->religion }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customers.destroy', $customer->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

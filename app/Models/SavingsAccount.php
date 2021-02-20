@@ -70,7 +70,7 @@ class SavingsAccount extends Model
     use HasFactory;
 
     public $table = 'savings_accounts';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -114,5 +114,10 @@ class SavingsAccount extends Model
         'description' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

@@ -2,7 +2,9 @@
     <table class="table" id="staff-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
@@ -14,7 +16,9 @@
         <tbody>
         @foreach($staff as $staff)
             <tr>
-                <td>{{ $staff->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $staff->company->name }}</td>
+                @endif
                 <td>{{ $staff->name }}</td>
                 <td>{{ $staff->email }}</td>
                 <td>{{ $staff->phone }}</td>

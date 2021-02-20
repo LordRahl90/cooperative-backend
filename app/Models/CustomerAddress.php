@@ -71,7 +71,7 @@ class CustomerAddress extends Model
     use HasFactory;
 
     public $table = 'customer_addresses';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -115,5 +115,10 @@ class CustomerAddress extends Model
         'country' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

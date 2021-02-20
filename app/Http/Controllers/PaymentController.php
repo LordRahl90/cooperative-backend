@@ -53,10 +53,11 @@ class PaymentController extends AppBaseController
      */
     public function create()
     {
+        $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
-        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->pluck('account_name', 'id')->toArray();
-        $staff = Staff::orderBy('name', 'asc')->pluck('name', 'id')->toArray(); //TODO: Find staff by company please
-        $pvs = PaymentVoucher::orderBy('pv_id', 'asc')->where('status', 'UNPAID')->pluck('pv_id', 'id')->toArray(); //TODO: Find PV by company please
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'id')->toArray();
+        $staff = Staff::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id')->toArray();
+        $pvs = PaymentVoucher::orderBy('pv_id', 'asc')->where('status', 'UNPAID')->where('company_id', $companyID)->pluck('pv_id', 'id')->toArray();
         return view('payments.create', [
             'companies' => [0 => 'Select Company'] + $companies,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
@@ -196,7 +197,6 @@ class PaymentController extends AppBaseController
             $acctHeadIDs[] = $k;
         }
         //TODO: use the code below to sorth account head by companies.
-//        $acctHeads = OrgAccountHead::where("company_id", $id)->whereNotIn('id', $acctHeadIDs)->get();
         $acctHeads = OrgAccountHead::orderBy("name", 'asc')->whereNotIn('id', $acctHeadIDs)->pluck("name", "id");
 
         return view("payments.income", [
@@ -248,7 +248,7 @@ class PaymentController extends AppBaseController
         $id = decrypt($id);
         $details = Transaction::with(['company'])->whereRaw("reference=? and credit_amount>?", [$id, 0.0])->first();
         if ($details == null || $details->receipt == null) {
-            Flash::error("invalid rceipt reference, please try again.");
+            Flash::error("invalid receipt reference, please try again.");
             return redirect()->back();
         }
 

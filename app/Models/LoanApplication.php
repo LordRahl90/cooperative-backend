@@ -89,7 +89,7 @@ class LoanApplication extends Model
     use HasFactory;
 
     public $table = 'loan_applications';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -142,5 +142,10 @@ class LoanApplication extends Model
         'staff_id' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

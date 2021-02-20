@@ -1,25 +1,29 @@
 <div class="table-responsive">
     <table class="table" id="customerLoans-table">
         <thead>
-            <tr>
-                <th>Company Id</th>
-        <th>Loan Application Id</th>
-        <th>Approved By</th>
-        <th>Status</th>
-        <th>Total Repaid</th>
-        <th>Narration</th>
-                <th colspan="3">Action</th>
-            </tr>
+        <tr>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
+            <th>Loan Application Id</th>
+            <th>Approved By</th>
+            <th>Status</th>
+            <th>Total Repaid</th>
+            <th>Narration</th>
+            <th>Action</th>
+        </tr>
         </thead>
         <tbody>
         @foreach($customerLoans as $customerLoan)
             <tr>
-                <td>{{ $customerLoan->company_id }}</td>
-            <td>{{ $customerLoan->loan_application_id }}</td>
-            <td>{{ $customerLoan->approved_by }}</td>
-            <td>{{ $customerLoan->status }}</td>
-            <td>{{ $customerLoan->total_repaid }}</td>
-            <td>{{ $customerLoan->narration }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $customerLoan->company->name }}</td>
+                @endif
+                <td>{{ $customerLoan->loan_application_id }}</td>
+                <td>{{ $customerLoan->approved_by }}</td>
+                <td>{{ $customerLoan->status }}</td>
+                <td>{{ $customerLoan->total_repaid }}</td>
+                <td>{{ $customerLoan->narration }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customerLoans.destroy', $customerLoan->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

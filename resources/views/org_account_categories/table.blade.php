@@ -2,7 +2,9 @@
     <table class="table" id="orgAccountCategories-table">
         <thead>
             <tr>
-                <th>Company</th>
+                @if(session('company_id')==0)
+                    <th>Company</th>
+                @endif
                 <th>Name</th>
                 <th>Slug</th>
                 <th>Account Type</th>
@@ -13,7 +15,9 @@
         <tbody>
         @foreach($orgAccountCategories as $orgAccountCategory)
             <tr>
-                <td>{{ $orgAccountCategory->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $configuration->company->name }}</td>
+                @endif
                 <td>{{ $orgAccountCategory->name }}</td>
                 <td>{{ $orgAccountCategory->slug }}</td>
                 <td>{{ $orgAccountCategory->account_type }}</td>

@@ -56,6 +56,8 @@ class JournalVoucher
                 throw new \Exception("Total debit and credit amount doesn't match");
             }
 
+            Log::info("Got here!!");
+
             $jv = \App\Models\JournalVoucher::create([
                 'company_id' => $companyID,
                 'reference' => $reference,
@@ -66,10 +68,14 @@ class JournalVoucher
             if (!$jv) {
                 throw new \Exception("cannot create a new Journal Voucher Entry");
             }
+
+            Log::info("Hello world");
+
             DB::commit();
             return $jv;
         } catch (\Exception $ex) {
             DB::rollBack();
+            throw new \Exception($ex);
         }
     }
 

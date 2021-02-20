@@ -45,7 +45,7 @@
             el: "#paymentsDiv",
             data: {
                 payments: {
-                    company_id: 0,
+                    company_id: '{{ session('company_id') }}',
                     pv_id: 0,
                     reference: '{{ uniqid('REF-') }}',
                     confirmed_by: 0,

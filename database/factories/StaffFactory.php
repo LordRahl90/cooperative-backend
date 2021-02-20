@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,12 +23,14 @@ class StaffFactory extends Factory
      */
     public function definition()
     {
+        $user = User::factory()->create(['role' => 'STAFF']);
         return [
-            'company_id' => $this->faker->randomElement([1, 2]),
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
-            'phone' => $this->faker->unique()->phoneNumber,
-            'password' => Hash::make('secret'),
+            'user_id' => $user->id,
+            'company_id' => $this->faker->randomElement([1]),
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'password' => $user->password,
             'role' => $this->faker->randomElement(['REGULAR', 'SUPERVISOR', 'MANAGER', 'ADMIN']),
             'address' => $this->faker->address,
             'active' => $this->faker->randomElement([true, false]),

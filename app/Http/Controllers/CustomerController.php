@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Models\Company;
 use App\Repositories\CustomerRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\Hash;
 use Response;
 
 class CustomerController extends AppBaseController
@@ -42,7 +44,10 @@ class CustomerController extends AppBaseController
      */
     public function create()
     {
-        return view('customers.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('customers.create', [
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -55,6 +60,7 @@ class CustomerController extends AppBaseController
     public function store(CreateCustomerRequest $request)
     {
         $input = $request->all();
+        $input['password'] = Hash::make($input['password']);
 
         $customer = $this->customerRepository->create($input);
 
@@ -93,6 +99,7 @@ class CustomerController extends AppBaseController
     public function edit($id)
     {
         $customer = $this->customerRepository->find($id);
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
 
         if (empty($customer)) {
             Flash::error('Customer not found');
@@ -100,7 +107,9 @@ class CustomerController extends AppBaseController
             return redirect(route('customers.index'));
         }
 
-        return view('customers.edit')->with('customer', $customer);
+        return view('customers.edit', [
+            'companies' => $companies
+        ])->with('customer', $customer);
     }
 
     /**
@@ -133,9 +142,9 @@ class CustomerController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

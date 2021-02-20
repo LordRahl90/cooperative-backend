@@ -2,26 +2,40 @@
     <table class="table" id="paymentVouchers-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Payee</th>
             <th>Address</th>
             <th>Email</th>
-            <th>Website</th>
             <th>Phone</th>
             <th>Pv Ref</th>
-            <th colspan="3">Action</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
         @foreach($paymentVouchers as $paymentVoucher)
             <tr>
-                <td>{{ $paymentVoucher->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $paymentVoucher->company->name }}</td>
+                @endif
+                @php
+                    $amount=0;
+                    foreach ($paymentVoucher->items as $v){
+                    $amount+=$v->amount;
+                    }
+
+                @endphp
+
                 <td>{{ $paymentVoucher->payee }}</td>
                 <td>{{ $paymentVoucher->address }}</td>
                 <td>{{ $paymentVoucher->email }}</td>
-                <td>{{ $paymentVoucher->website }}</td>
                 <td>{{ $paymentVoucher->phone }}</td>
                 <td>{{ $paymentVoucher->pv_id }}</td>
+                <td>{{ number_format($amount,2) }}</td>
+                <td>{{ $paymentVoucher->status }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['paymentVouchers.destroy', $paymentVoucher->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

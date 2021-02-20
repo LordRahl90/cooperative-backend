@@ -59,7 +59,7 @@ class SavingsCategory extends Model
     use HasFactory;
 
     public $table = 'savings_categories';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -96,5 +96,8 @@ class SavingsCategory extends Model
         'category_id' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

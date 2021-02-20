@@ -59,7 +59,7 @@ class LoanCategory extends Model
     use HasFactory;
 
     public $table = 'loan_categories';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -96,5 +96,10 @@ class LoanCategory extends Model
         'category_id' => 'required|exists:org_account_categories,id'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

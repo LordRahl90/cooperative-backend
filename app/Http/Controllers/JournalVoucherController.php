@@ -46,9 +46,9 @@ class JournalVoucherController extends AppBaseController
      */
     public function create()
     {
+        $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
-        // Use the company to load content
-        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->pluck("name", "code");
+        $acctHeads = OrgAccountHead::orderBy("name", 'asc')->where('company_id', $companyID)->pluck("name", "code");
 
         return view('journal_vouchers.create', [
             'companies' => $companies,

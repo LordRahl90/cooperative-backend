@@ -66,7 +66,7 @@ class CustomerTransaction extends Model
     use HasFactory;
 
     public $table = 'customer_transactions';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -107,5 +107,10 @@ class CustomerTransaction extends Model
         'narration' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

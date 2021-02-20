@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateConfigurationRequest;
 use App\Http\Requests\UpdateConfigurationRequest;
 use App\Models\Company;
+use App\Models\Configuration;
 use App\Models\OrgAccountCategory;
 use App\Repositories\ConfigurationRepository;
 use App\Http\Controllers\AppBaseController;
@@ -31,7 +32,8 @@ class ConfigurationController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $configurations = $this->configurationRepository->all();
+        $companyID = session('company_id');
+        $configurations = $this->configurationRepository->where("company_id", $companyID);
 
         return view('configurations.index')
             ->with('configurations', $configurations);
@@ -45,8 +47,11 @@ class ConfigurationController extends AppBaseController
     public function create()
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
-        //TODO: Sort this by company ID
-        $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
+        $categories = [];
+
+        if (session('company_id') > 0) {
+            $categories = OrgAccountCategory::orderBy('name', 'asc')->where("company_id", session('company_id'))->pluck('name', 'id');
+        }
         return view('configurations.create', [
             'companies' => $companies,
             'categories' => $categories
@@ -63,6 +68,11 @@ class ConfigurationController extends AppBaseController
     public function store(CreateConfigurationRequest $request)
     {
         $input = $request->all();
+        $companyID = $input['company_id'];
+        if (Configuration::where("company_id", $companyID)->count() > 0) {
+            Flash::error("You can have only one configuration for your organization");
+            return redirect()->back()->withInput();
+        }
 
         //TODO: Prevent using same account id for different config.
         $configuration = $this->configurationRepository->create($input);

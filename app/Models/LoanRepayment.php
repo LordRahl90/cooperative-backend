@@ -73,7 +73,7 @@ class LoanRepayment extends Model
     use HasFactory;
 
     public $table = 'loan_repayments';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -117,5 +117,8 @@ class LoanRepayment extends Model
         'loan_id' => 'required|exists:customer_loans,id'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

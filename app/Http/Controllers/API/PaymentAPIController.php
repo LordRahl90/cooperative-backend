@@ -141,17 +141,20 @@ class PaymentAPIController extends AppBaseController
             'narration' => 'required',
             'reference' => 'required|unique:transactions,reference',
             'credit' => 'required',
-            'debit' => 'required'
+            'debit' => 'required',
+            'user_id' => 'required'
         ]);
         if ($v->fails()) {
             return $this->sendError($v->messages()->all(), 400);
         }
         try {
-            $userID = 1; //TODO: Use authenticated user information here.
+            $userID = $input['user_id']; //TODO: Use authenticated user information here.
             $trans = new JournalVoucher();
             $jv = $trans->create($input['company_id'], $input['reference'], $input['narration'], $input['credit'], $input['debit'], $userID);
+            Log::info($jv);
             return $this->sendResponse($jv, "JV Posted successfully");
         } catch (\Exception $ex) {
+            Log::error($ex);;
             return $this->sendError($ex->getMessage(), 500);
         }
     }

@@ -2,7 +2,9 @@
     <table class="table" id="journalVouchers-table">
         <thead>
         <tr>
-            <th>Company</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Reference</th>
             <th>Narration</th>
             <th>Total Amount</th>
@@ -13,7 +15,9 @@
         <tbody>
         @foreach($journalVouchers as $journalVoucher)
             <tr>
-                <td>{{ $journalVoucher->company->name }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $journalVoucher->company->name }}</td>
+                @endif
                 <td>{{ $journalVoucher->reference }}</td>
                 <td>{{ $journalVoucher->narration }}</td>
                 <td>{{ number_format($journalVoucher->total_amount,2) }}</td>
@@ -29,7 +33,7 @@
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

@@ -66,7 +66,7 @@ class CustomerSaving extends Model
     use HasFactory;
 
     public $table = 'customer_savings';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -107,5 +107,10 @@ class CustomerSaving extends Model
         'narration' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }

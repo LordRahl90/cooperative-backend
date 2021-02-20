@@ -74,7 +74,7 @@ class CustomerNextOfKin extends Model
     use HasFactory;
 
     public $table = 'customer_next_of_kins';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -121,5 +121,10 @@ class CustomerNextOfKin extends Model
         'relationship' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
 }
