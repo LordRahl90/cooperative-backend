@@ -202,13 +202,13 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reports/bank-report" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Account Statements</p>
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/reports/trial-balance" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Trial Balance</p>
             </a>

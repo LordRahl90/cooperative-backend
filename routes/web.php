@@ -91,5 +91,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'reports'], function () {
         Route::get('/general-ledger', 'App\Http\Controllers\AccountReport@showGeneralLedger');
         Route::post('/general-ledger', 'App\Http\Controllers\AccountReport@generalLedger');
+
+        Route::get('/bank-report', 'App\Http\Controllers\AccountReport@showBankReport');
+        Route::post('/bank-report', 'App\Http\Controllers\AccountReport@bankReport');
+
+        Route::get('/trial-balance', 'App\Http\Controllers\AccountReport@showTrialBalance');
+        Route::post('/trial-balance', 'App\Http\Controllers\AccountReport@trialBalance');
+
     });
 });
