@@ -222,3 +222,101 @@
         </li>
     </ul>
 </li>
+<li class="nav-item">
+    <a href="{{ route('customers.index') }}"
+       class="nav-link {{ Request::is('customers*') ? 'active' : '' }}">
+        <p>Customers</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('customerAddresses.index') }}"
+       class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
+        <p>Customer Addresses</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('customerNextOfKins.index') }}"
+       class="nav-link {{ Request::is('customerNextOfKins*') ? 'active' : '' }}">
+        <p>Customer Next Of Kins</p>
+    </a>
+</li>
+
+
+
+
+<li class="nav-item">
+    <a href="{{ route('savingsCategories.index') }}"
+       class="nav-link {{ Request::is('savingsCategories*') ? 'active' : '' }}">
+        <p>Savings Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('loanCategories.index') }}"
+       class="nav-link {{ Request::is('loanCategories*') ? 'active' : '' }}">
+        <p>Loan Categories</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('savingsAccounts.index') }}"
+       class="nav-link {{ Request::is('savingsAccounts*') ? 'active' : '' }}">
+        <p>Savings Accounts</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('loanAccounts.index') }}"
+       class="nav-link {{ Request::is('loanAccounts*') ? 'active' : '' }}">
+        <p>Loan Accounts</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('customerSavings.index') }}"
+       class="nav-link {{ Request::is('customerSavings*') ? 'active' : '' }}">
+        <p>Customer Savings</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('loanApplications.index') }}"
+       class="nav-link {{ Request::is('loanApplications*') ? 'active' : '' }}">
+        <p>Loan Applications</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('customerLoans.index') }}"
+       class="nav-link {{ Request::is('customerLoans*') ? 'active' : '' }}">
+        <p>Customer Loans</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('loanRepayments.index') }}"
+       class="nav-link {{ Request::is('loanRepayments*') ? 'active' : '' }}">
+        <p>Loan Repayments</p>
+    </a>
+</li>
+
+
+<li class="nav-item">
+    <a href="{{ route('customerTransactions.index') }}"
+       class="nav-link {{ Request::is('customerTransactions*') ? 'active' : '' }}">
+        <p>Customer Transactions</p>
+    </a>
+</li>
+
+

@@ -223,3 +223,11 @@ class AccountReport extends Controller
         $pdf->stream('trial_balance.pdf');
     }
 }
+
+// TODO: customers
+// TODO: savings_categories
+// TODO: loan_categories
+// savings
+// loans
+// loan_repayment
+// staff sign-in

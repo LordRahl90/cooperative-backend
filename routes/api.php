@@ -58,3 +58,31 @@ Route::resource('receipts', App\Http\Controllers\API\ReceiptAPIController::class
 
 
 Route::resource('journal_vouchers', App\Http\Controllers\API\JournalVoucherAPIController::class);
+
+Route::resource('customers', App\Http\Controllers\API\CustomerAPIController::class);
+
+Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAPIController::class);
+
+Route::resource('customer_next_of_kins', App\Http\Controllers\API\CustomerNextOfKinAPIController::class);
+
+
+
+
+
+Route::resource('savings_categories', App\Http\Controllers\API\SavingsCategoryAPIController::class);
+
+Route::resource('loan_categories', App\Http\Controllers\API\LoanCategoryAPIController::class);
+
+Route::resource('savings_accounts', App\Http\Controllers\API\SavingsAccountAPIController::class);
+
+Route::resource('loan_accounts', App\Http\Controllers\API\LoanAccountAPIController::class);
+
+Route::resource('customer_savings', App\Http\Controllers\API\CustomerSavingAPIController::class);
+
+Route::resource('loan_applications', App\Http\Controllers\API\LoanApplicationAPIController::class);
+
+Route::resource('customer_loans', App\Http\Controllers\API\CustomerLoanAPIController::class);
+
+Route::resource('loan_repayments', App\Http\Controllers\API\LoanRepaymentAPIController::class);
+
+Route::resource('customer_transactions', App\Http\Controllers\API\CustomerTransactionAPIController::class);
