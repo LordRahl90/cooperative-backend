@@ -18,9 +18,9 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerSaving->company->name }}</td>
                 @endif
-                <td>{{ $customerSaving->customer_id }}</td>
-                <td>{{ $customerSaving->savings_account_id }}</td>
-                <td>{{ $customerSaving->amount }}</td>
+                <td>{{ $customerSaving->customer->full_name }}</td>
+                <td>{{ $customerSaving->savings->name }}</td>
+                <td>{{ number_format($customerSaving->amount,2) }}</td>
                 <td>{{ $customerSaving->narration }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customerSavings.destroy', $customerSaving->id], 'method' => 'delete']) !!}

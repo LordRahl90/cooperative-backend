@@ -11,29 +11,29 @@
 
 <!-- Loan Application Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('loan_application_id', 'Loan Application Id:') !!}
-    {!! Form::select('loan_application_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::label('loan_application_id', 'Loan Application:') !!}
+    {!! Form::select('loan_application_id', $applications, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Approved By Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('approved_by', 'Approved By:') !!}
-    {!! Form::select('approved_by', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('approved_by', $staff, null, ['class' => 'form-control custom-select']) !!}
+</div>
+<input type="hidden" name="status" value="RUNNING"/>
+
+
+<!-- Debit Account Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('debit_account', 'Select Bank Account:') !!}
+    {!! Form::select('debit_account', $bankAccounts, null, ['class' => 'form-control custom-select','payments.debit_account']) !!}
 </div>
 
-
-<!-- Status Field -->
+<!-- Narration Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::select('status', ['COMPLETED' => 'COMPLETED', 'RUNNING' => 'RUNNING'], null, ['class' => 'form-control custom-select']) !!}
-</div>
-
-
-<!-- Total Repaid Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('total_repaid', 'Total Repaid:') !!}
-    {!! Form::text('total_repaid', null, ['class' => 'form-control']) !!}
+    {!! Form::label('reference', 'Reference:') !!}
+    {!! Form::text('reference', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Narration Field -->

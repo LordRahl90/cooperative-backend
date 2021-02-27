@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateCustomerAPIRequest;
 use App\Http\Requests\API\UpdateCustomerAPIRequest;
 use App\Models\Customer;
+use App\Models\CustomerLoan;
 use App\Repositories\CustomerRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
@@ -14,7 +15,6 @@ use Response;
  * Class CustomerController
  * @package App\Http\Controllers\API
  */
-
 class CustomerAPIController extends AppBaseController
 {
     /** @var  CustomerRepository */
@@ -277,5 +277,11 @@ class CustomerAPIController extends AppBaseController
         $customer->delete();
 
         return $this->sendSuccess('Customer deleted successfully');
+    }
+
+    public function customerLoans($id)
+    {
+        $loans = CustomerLoan::with(['loan_application.pv', 'customer'])->whereRaw('customer_id=? AND status=?', [$id, 'RUNNING'])->get();
+        return $this->sendResponse($loans, "Customer loans loaded successfully");
     }
 }

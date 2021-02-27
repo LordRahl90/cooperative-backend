@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLoanRepaymentRequest;
 use App\Http\Requests\UpdateLoanRepaymentRequest;
+use App\Models\Company;
+use App\Models\Customer;
 use App\Repositories\LoanRepaymentRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class LoanRepaymentController extends AppBaseController
@@ -29,7 +32,7 @@ class LoanRepaymentController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $loanRepayments = $this->loanRepaymentRepository->all();
+        $loanRepayments = $this->loanRepaymentRepository->where('company_id', session('company_id'));
 
         return view('loan_repayments.index')
             ->with('loanRepayments', $loanRepayments);
@@ -42,7 +45,13 @@ class LoanRepaymentController extends AppBaseController
      */
     public function create()
     {
-        return view('loan_repayments.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $customers = Customer::orderBy('surname', 'asc')->where('company_id', $companyID)->get()->pluck('full_name', 'id');
+        return view('loan_repayments.create', [
+            'customers' => [0 => 'Select Customer'] + $customers->toArray(),
+            'companies' => $companies
+        ]);
     }
 
     /**
@@ -55,6 +64,15 @@ class LoanRepaymentController extends AppBaseController
     public function store(CreateLoanRepaymentRequest $request)
     {
         $input = $request->all();
+
+        DB::beginTransaction();
+        try {
+
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            dd($ex);
+        }
+        dd($input);
 
         $loanRepayment = $this->loanRepaymentRepository->create($input);
 
@@ -133,9 +151,9 @@ class LoanRepaymentController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

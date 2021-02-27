@@ -71,13 +71,7 @@ class CustomerSaving extends Model
     protected $dates = ['deleted_at'];
 
 
-    public $fillable = [
-        'company_id',
-        'customer_id',
-        'savings_account_id',
-        'amount',
-        'narration'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -113,7 +107,7 @@ class CustomerSaving extends Model
 
     public function savings()
     {
-        return $this->belongsTo(SavingsAccount::class);
+        return $this->belongsTo(SavingsAccount::class, 'savings_account_id', 'id');
     }
 
     public function customer()

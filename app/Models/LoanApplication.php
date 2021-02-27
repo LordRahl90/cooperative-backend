@@ -94,17 +94,7 @@ class LoanApplication extends Model
     protected $dates = ['deleted_at'];
 
 
-    public $fillable = [
-        'company_id',
-        'customer_id',
-        'loan_account_id',
-        'principal',
-        'rate',
-        'interest_type',
-        'tenor',
-        'status',
-        'staff_id'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -156,5 +146,13 @@ class LoanApplication extends Model
         return $this->belongsTo(LoanAccount::class);
     }
 
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, 'staff_id', 'user_id');
+    }
 
+    public function pv()
+    {
+        return $this->belongsTo(PaymentVoucher::class, "pv_id", "id");
+    }
 }

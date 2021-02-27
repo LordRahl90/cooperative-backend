@@ -11,20 +11,20 @@
 <!-- Customer Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('customer_id', 'Customer:') !!}
-    {!! Form::select('customer_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('customer_id', $customers, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Savings Account Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('savings_account_id', 'Savings Account:') !!}
-    {!! Form::select('savings_account_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('savings_account_id', $savingsAccount, null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Amount Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('amount', 'Amount:') !!}
+    {!! Form::label('amount', 'Amount (Monthly):') !!}
     {!! Form::text('amount', null, ['class' => 'form-control']) !!}
 </div>
 

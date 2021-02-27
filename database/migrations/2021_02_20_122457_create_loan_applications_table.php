@@ -25,12 +25,13 @@ class CreateLoanApplicationsTable extends Migration
             $table->integer('tenor');
             $table->enum('status', ['APPROVED', 'DISAPPROVED', 'PENDING'])->default('PENDING');
             $table->integer('staff_id')->unsigned();
+            $table->integer('pv_id')->unsigned();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('loan_account_id')->references('id')->on('loan_accounts');
-            $table->foreign('staff_id')->references('id')->on('staff');
+            $table->foreign('staff_id')->references('id')->on('users');
         });
     }
 

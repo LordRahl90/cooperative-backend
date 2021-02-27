@@ -14,10 +14,11 @@
     <div class="content px-3">
 
         @include('adminlte-templates::common.errors')
+        @include('flash::message')
 
         <div class="card">
 
-            {!! Form::open(['route' => 'loanApplications.store']) !!}
+            {!! Form::open(['route' => 'loanApplications.store','target'=>'_blank']) !!}
 
             <div class="card-body">
 

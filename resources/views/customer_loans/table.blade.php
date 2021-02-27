@@ -7,6 +7,7 @@
             @endif
             <th>Loan Application</th>
             <th>Approved</th>
+            <th>Amount</th>
             <th>Status</th>
             <th>Narration</th>
             <th>Action</th>
@@ -18,8 +19,8 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerLoan->company->name }}</td>
                 @endif
-                <td>{{ $customerLoan->loan_application_id }}</td>
-                <td>{{ $customerLoan->approved_by }}</td>
+                <td>{{ $customerLoan->loan_application->pv->pv_id }}</td>
+                <td>{{ $customerLoan->staff->name }}</td>
                 <td>{{ number_format($customerLoan->amount,2) }}</td>
                 <td>{{ $customerLoan->status }}</td>
                 <td>{{ $customerLoan->narration }}</td>

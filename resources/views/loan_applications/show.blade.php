@@ -24,8 +24,11 @@
                 <div class="row">
                     @include('loan_applications.show_fields')
                 </div>
+                {{ Form::open(['url'=>'loan_applications/approve']) }}
+                {!! Form::submit('Approve Loan', ['class' => 'btn btn-primary']) !!}
+                <a href="{{ route('loanApplications.index') }}" class="btn btn-default">Cancel</a>
+                {!! Form::close() !!}
             </div>
-
         </div>
     </div>
 @endsection

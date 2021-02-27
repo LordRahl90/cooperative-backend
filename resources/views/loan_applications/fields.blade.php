@@ -44,14 +44,15 @@
 
 <!-- Tenor Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('tenor', 'Tenor:') !!}
+    {!! Form::label('tenor', 'Tenor (Months):') !!}
     {!! Form::number('tenor', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Status Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('status', 'Status:') !!}
-    {!! Form::select('status', ['APPROVED' => 'APPROVED', 'DISAPPROVED' => 'DISAPPROVED', 'PENDING' => 'PENDING'], null, ['class' => 'form-control custom-select']) !!}
+    <input type="hidden" name="status" value="PENDING"/>
+    {{--    {!! Form::label('status', 'Status:') !!}--}}
+    {{--    {!! Form::select('status', ['APPROVED' => 'APPROVED', 'DISAPPROVED' => 'DISAPPROVED', 'PENDING' => 'PENDING'], null, ['class' => 'form-control custom-select']) !!}--}}
 </div>
 
 

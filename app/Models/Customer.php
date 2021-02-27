@@ -99,7 +99,7 @@ class Customer extends Model
         'id' => 'integer',
         'company_id' => 'integer',
         'surname' => 'string',
-        'othernames' => 'string',
+        'other_names' => 'string',
         'reference' => 'string',
         'email' => 'string',
         'phone' => 'string',
@@ -125,8 +125,23 @@ class Customer extends Model
         'religion' => 'required'
     ];
 
+    public function getFullNameAttribute()
+    {
+        return ucfirst($this->surname . ' ' . $this->other_names);
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(CustomerAddress::class);
+    }
+
+    public function bank_accounts()
+    {
+        return $this->hasMany(CustomerBankAccount::class);
     }
 }

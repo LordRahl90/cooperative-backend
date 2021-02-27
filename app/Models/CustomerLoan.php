@@ -96,7 +96,7 @@ class CustomerLoan extends Model
         'loan_application_id' => 'required|exists:loan_applications,id',
         'approved_by' => 'required',
         'status' => 'required',
-        'total_repaid' => 'required',
+        'debit_account' => 'required|exists:org_bank_accounts,id',
         'narration' => 'required'
     ];
 
@@ -113,6 +113,11 @@ class CustomerLoan extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class, "approved_by", "id");
     }
 
 }

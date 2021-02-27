@@ -15,9 +15,9 @@
 
         @include('adminlte-templates::common.errors')
 
-        <div class="card">
+        <div class="card" id="loanRepaymentDiv">
 
-            {!! Form::open(['route' => 'loanRepayments.store']) !!}
+            {!! Form::open(['route' => 'loanRepayments.store','target'=>'_blank']) !!}
 
             <div class="card-body">
 
@@ -36,4 +36,35 @@
 
         </div>
     </div>
+@endsection
+@section('third_party_scripts')
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var loanRepaymentApp = new Vue({
+            el: '#loanRepaymentDiv',
+            data: {
+                company_id: 0,
+                customer_id: 0,
+                loan_id: 0,
+                amount: 0,
+                loans: [],
+            },
+            methods: {
+                async loadCustomerLoans() {
+                    this.loan_id = 0;
+                    this.loans = [];
+                    try {
+                        if (this.customer_id === 0) {
+                            return;
+                        }
+                        let response = await axios.get(`/api/customer-loans/${this.customer_id}`);
+                        this.loans = response.data.data;
+                        console.log(response.data);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

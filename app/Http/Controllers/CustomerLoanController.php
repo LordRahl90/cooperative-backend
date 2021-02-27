@@ -4,10 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCustomerLoanRequest;
 use App\Http\Requests\UpdateCustomerLoanRequest;
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\CustomerLoan;
+use App\Models\CustomerTransaction;
+use App\Models\LoanApplication;
+use App\Models\OrgBankAccount;
+use App\Models\Staff;
 use App\Repositories\CustomerLoanRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Response;
 
 class CustomerLoanController extends AppBaseController
@@ -42,7 +52,17 @@ class CustomerLoanController extends AppBaseController
      */
     public function create()
     {
-        return view('customer_loans.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $staff = Staff::where('company_id', $companyID)->pluck('name', 'id');
+        $applications = LoanApplication::with(['customer', 'pv'])->whereRaw('company_id=? and status=?', [$companyID, 'PENDING'])->get()->pluck('pv.pv_id', 'id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'id')->toArray();
+        return view('customer_loans.create', [
+            'companies' => $companies,
+            'staff' => [0 => 'Select Staff'] + $staff->toArray(),
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
+            'applications' => [0 => 'Select Application'] + $applications->toArray()
+        ]);
     }
 
     /**
@@ -55,12 +75,56 @@ class CustomerLoanController extends AppBaseController
     public function store(CreateCustomerLoanRequest $request)
     {
         $input = $request->all();
+//        dd($input);
 
-        $customerLoan = $this->customerLoanRepository->create($input);
+        DB::beginTransaction();
+        try {
+            $loanInfo = LoanApplication::with(['loan_account'])->find($input['loan_application_id']);
+            $bankAccount = $input['debit_account'];
+            $amount = $loanInfo->principal;
+            $staff = $input['approved_by'];
+            $reference = $input['reference'];
 
-        Flash::success('Customer Loan saved successfully.');
+            $trans = Transactions::makePayment($input['company_id'], $loanInfo->pv_id, $bankAccount, $reference, $input['narration'], $amount, $staff, $staff, auth()->id());
+            $input['customer_id'] = $loanInfo->customer_id;
+            $input['amount'] = $amount;
 
-        return redirect(route('customerLoans.index'));
+            unset($input['debit_account']);
+            unset($input['reference']);
+
+
+            $customerLoan = $this->customerLoanRepository->create($input);
+            if (!$customerLoan) {
+                throw new \Exception("cannot create the customer loan record.");
+            }
+
+            $customerTransaction = CustomerTransaction::create([
+                'company_id' => $input['company_id'],
+                'customer_id' => $loanInfo->customer_id,
+                'loan_id' => $customerLoan->id,
+                'debit' => $amount,
+                'narration' => $input['narration'],
+                'reference' => $reference
+            ]);
+            if (!$customerTransaction) {
+                throw new \Exception("Cannot process customer transaction record");
+            }
+
+            $loanInfo->status = 'APPROVED';
+            if (!$loanInfo->save()) {
+                throw new \Exception("cannot update the loan application information");
+            }
+
+            DB::commit();
+
+            Flash::success('Customer Loan saved successfully.');
+            return redirect(route('customerLoans.index'));
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Log::info($ex);
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -93,6 +157,11 @@ class CustomerLoanController extends AppBaseController
     public function edit($id)
     {
         $customerLoan = $this->customerLoanRepository->find($id);
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $staff = Staff::where('company_id', $companyID)->pluck('name', 'id');
+        $applications = LoanApplication::with(['customer', 'pv'])->whereRaw('company_id=? and status=?', [$companyID, 'PENDING'])->get()->pluck('pv.pv_id', 'id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'id')->toArray();
 
         if (empty($customerLoan)) {
             Flash::error('Customer Loan not found');
@@ -100,7 +169,12 @@ class CustomerLoanController extends AppBaseController
             return redirect(route('customerLoans.index'));
         }
 
-        return view('customer_loans.edit')->with('customerLoan', $customerLoan);
+        return view('customer_loans.edit', [
+            'companies' => $companies,
+            'staff' => [0 => 'Select Staff'] + $staff->toArray(),
+            'bankAccounts' => $bankAccounts,
+            'applications' => [0 => 'Select Application'] + $applications->toArray()
+        ])->with('customerLoan', $customerLoan);
     }
 
     /**
@@ -133,9 +207,9 @@ class CustomerLoanController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

@@ -22,14 +22,14 @@
                 @if(session('company_id')==0)
                     <td>{{ $loanApplication->company->name }}</td>
                 @endif
-                <td>{{ $loanApplication->customer_id }}</td>
-                <td>{{ $loanApplication->loan_account_id }}</td>
-                <td>{{ $loanApplication->principal }}</td>
+                <td>{{ $loanApplication->customer->full_name }}</td>
+                <td>{{ $loanApplication->loan_account->name }}</td>
+                <td>{{ number_format($loanApplication->principal,2) }}</td>
                 <td>{{ $loanApplication->rate }}</td>
-                <td>{{ $loanApplication->interest_type }}</td>
+                <td>{{ str_replace("_"," ",$loanApplication->interest_type) }}</td>
                 <td>{{ $loanApplication->tenor }}</td>
                 <td>{{ $loanApplication->status }}</td>
-                <td>{{ $loanApplication->staff_id }}</td>
+                <td>{{ $loanApplication->staff->name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['loanApplications.destroy', $loanApplication->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

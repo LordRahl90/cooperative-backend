@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCustomerSavingRequest;
 use App\Http\Requests\UpdateCustomerSavingRequest;
+use App\Models\Company;
+use App\Models\Customer;
+use App\Models\SavingsAccount;
 use App\Repositories\CustomerSavingRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -29,7 +32,8 @@ class CustomerSavingController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $customerSavings = $this->customerSavingRepository->all();
+        $companyID = session('company_id');
+        $customerSavings = $this->customerSavingRepository->where('company_id', $companyID);
 
         return view('customer_savings.index')
             ->with('customerSavings', $customerSavings);
@@ -42,7 +46,15 @@ class CustomerSavingController extends AppBaseController
      */
     public function create()
     {
-        return view('customer_savings.create');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $customers = Customer::orderBy('surname', 'asc')->where('company_id', $companyID)->get()->pluck('full_name', 'id');
+        $savings = SavingsAccount::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id')->toArray();
+        return view('customer_savings.create', [
+            'companies' => $companies,
+            'customers' => $customers,
+            'savingsAccount' => $savings
+        ]);
     }
 
     /**
@@ -133,9 +145,9 @@ class CustomerSavingController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

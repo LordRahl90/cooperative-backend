@@ -60,6 +60,7 @@ Route::resource('receipts', App\Http\Controllers\API\ReceiptAPIController::class
 Route::resource('journal_vouchers', App\Http\Controllers\API\JournalVoucherAPIController::class);
 
 Route::resource('customers', App\Http\Controllers\API\CustomerAPIController::class);
+Route::get('/customer-loans/{id}', 'CustomerAPIController@customerLoans');
 
 Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAPIController::class);
 

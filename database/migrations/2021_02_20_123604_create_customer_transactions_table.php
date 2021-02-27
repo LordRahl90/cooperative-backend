@@ -20,7 +20,8 @@ class CreateCustomerTransactionsTable extends Migration
             $table->integer('customer_id')->unsigned();
             $table->integer('savings_id')->unsigned()->nullable();
             $table->integer('loan_id')->unsigned()->nullable();
-            $table->double('amount', 30, 2);
+            $table->double('debit', 30, 2)->default(0.00);
+            $table->double('credit', 30, 2)->default(0.00);
             $table->string('narration');
             $table->string('reference')->unique();
             $table->timestamps();

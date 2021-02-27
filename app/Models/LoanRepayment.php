@@ -103,7 +103,7 @@ class LoanRepayment extends Model
      */
     public static $rules = [
         'company_id' => 'required',
-        'loan_application_id' => 'required',
+//        'loan_application_id' => 'required',
         'customer_id' => 'required',
         'amount' => 'required',
         'loan_id' => 'required|exists:customer_loans,id'
