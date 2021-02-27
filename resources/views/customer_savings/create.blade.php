@@ -37,3 +37,11 @@
         </div>
     </div>
 @endsection
+
+@section('third_party_scripts')
+    <script>
+        $(function(){
+           alert('hello world');
+        });
+    </script>
+@endsection

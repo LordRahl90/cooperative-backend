@@ -99,37 +99,32 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/trial-balance', 'App\Http\Controllers\AccountReport@trialBalance');
 
     });
+
+    Route::resource('customers', App\Http\Controllers\CustomerController::class);
+
+    Route::resource('customerAddresses', App\Http\Controllers\CustomerAddressController::class);
+
+    Route::resource('customerNextOfKins', App\Http\Controllers\CustomerNextOfKinController::class);
+
+    Route::resource('savingsCategories', App\Http\Controllers\SavingsCategoryController::class);
+
+    Route::resource('loanCategories', App\Http\Controllers\LoanCategoryController::class);
+
+    Route::resource('savingsAccounts', App\Http\Controllers\SavingsAccountController::class);
+
+    Route::resource('loanAccounts', App\Http\Controllers\LoanAccountController::class);
+
+    Route::resource('customerSavings', App\Http\Controllers\CustomerSavingController::class);
+
+    Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
+
+    Route::resource('customerLoans', App\Http\Controllers\CustomerLoanController::class);
+
+    Route::resource('loanRepayments', App\Http\Controllers\LoanRepaymentController::class);
+
+    Route::resource('customerTransactions', App\Http\Controllers\CustomerTransactionController::class);
+
+    Route::resource('states', App\Http\Controllers\StateController::class);
+
+    Route::resource('customerBankAccounts', App\Http\Controllers\CustomerBankAccountController::class);
 });
-
-
-Route::resource('customers', App\Http\Controllers\CustomerController::class);
-
-Route::resource('customerAddresses', App\Http\Controllers\CustomerAddressController::class);
-
-Route::resource('customerNextOfKins', App\Http\Controllers\CustomerNextOfKinController::class);
-
-
-
-
-
-Route::resource('savingsCategories', App\Http\Controllers\SavingsCategoryController::class);
-
-Route::resource('loanCategories', App\Http\Controllers\LoanCategoryController::class);
-
-Route::resource('savingsAccounts', App\Http\Controllers\SavingsAccountController::class);
-
-Route::resource('loanAccounts', App\Http\Controllers\LoanAccountController::class);
-
-Route::resource('customerSavings', App\Http\Controllers\CustomerSavingController::class);
-
-Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
-
-Route::resource('customerLoans', App\Http\Controllers\CustomerLoanController::class);
-
-Route::resource('loanRepayments', App\Http\Controllers\LoanRepaymentController::class);
-
-Route::resource('customerTransactions', App\Http\Controllers\CustomerTransactionController::class);
-
-Route::resource('states', App\Http\Controllers\StateController::class);
-
-Route::resource('customerBankAccounts', App\Http\Controllers\CustomerBankAccountController::class);

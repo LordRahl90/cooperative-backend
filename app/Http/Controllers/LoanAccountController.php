@@ -6,11 +6,15 @@ use App\Http\Requests\CreateLoanAccountRequest;
 use App\Http\Requests\UpdateLoanAccountRequest;
 use App\Models\Company;
 use App\Models\LoanCategory;
+use App\Models\OrgAccountHead;
+use App\Models\OrgBankAccount;
+use App\Models\SavingsCategory;
 use App\Repositories\LoanAccountRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Utility\Utility;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class LoanAccountController extends AppBaseController
@@ -45,14 +49,15 @@ class LoanAccountController extends AppBaseController
      */
     public function create()
     {
+        // TODO Load account heads only based off the selected category
         $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $accountHeads = Utility::getAccountHeads($companyID);
         $savingsCategories = LoanCategory::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
         return view('loan_accounts.create', [
             'companies' => $companies,
-            'account_heads' => $accountHeads,
-            'categories' => $savingsCategories
+            'account_heads' => [0 => 'Select Account Heads'] + $accountHeads->toArray(),
+            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray()
         ]);
     }
 
@@ -66,12 +71,55 @@ class LoanAccountController extends AppBaseController
     public function store(CreateLoanAccountRequest $request)
     {
         $input = $request->all();
+        $companyID = session('company_id');
+        $loanCategory = LoanCategory::with(['category'])->find($input['loan_category_id']);
 
-        $loanAccount = $this->loanAccountRepository->create($input);
+        DB::beginTransaction();
 
-        Flash::success('Loan Account saved successfully.');
+        try {
+            // create a new account head if code is provided
+            if (isset($input['code'])) {
 
-        return redirect(route('loanAccounts.index'));
+                $code = $loanCategory->category->prefix_digit . $input['code'];
+                $name = $input['name'];
+
+                if (OrgAccountHead::whereRaw('company_id=? and code=?', [$input['company_id'], $code])->count() > 0) {
+                    Flash::error("Code already exists, please provide a new account code or select an existing account");
+                    return redirect()->back()->withInput();
+                }
+
+                $accountHead = OrgAccountHead::create([
+                    'company_id' => $companyID,
+                    'name' => $name,
+                    'category_id' => $loanCategory->category_id,
+                    'code' => $code,
+                    'active' => true
+                ]);
+                if (!$accountHead) {
+                    throw new \Exception("cannot create account head.");
+                }
+                $input['account_head_id'] = $accountHead->id;
+            }
+            if (isset($input['account_head_id'])) {
+                // get the account code and populate input with it.
+                $accountHead = OrgAccountHead::find($input['account_head_id']);
+
+                $input['code'] = $accountHead->code;
+            }
+
+            $loanAccount = $this->loanAccountRepository->create($input);
+            if (!$loanAccount) {
+                throw new \Exception("Error creating the savings account");
+            }
+
+            Flash::success('Loan Account saved successfully.');
+            DB::commit();
+            return redirect(route('loanAccounts.index'));
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
+        }
     }
 
     /**

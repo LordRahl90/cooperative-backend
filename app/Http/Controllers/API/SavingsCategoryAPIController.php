@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Requests\API\CreateSavingsCategoryAPIRequest;
 use App\Http\Requests\API\UpdateSavingsCategoryAPIRequest;
+use App\Models\LoanCategory;
+use App\Models\OrgAccountHead;
 use App\Models\SavingsCategory;
 use App\Repositories\SavingsCategoryRepository;
 use Illuminate\Http\Request;
@@ -14,7 +16,6 @@ use Response;
  * Class SavingsCategoryController
  * @package App\Http\Controllers\API
  */
-
 class SavingsCategoryAPIController extends AppBaseController
 {
     /** @var  SavingsCategoryRepository */
@@ -277,5 +278,12 @@ class SavingsCategoryAPIController extends AppBaseController
         $savingsCategory->delete();
 
         return $this->sendSuccess('Savings Category deleted successfully');
+    }
+
+    public function loadCategoryAccount($categoryID, Request $request)
+    {
+        $loanCategory = SavingsCategory::find($categoryID);
+        $accountHeads = OrgAccountHead::where('category_id', $loanCategory->category_id)->pluck('name', 'id')->toArray();
+        return $this->sendResponse($accountHeads, 'hello world');
     }
 }

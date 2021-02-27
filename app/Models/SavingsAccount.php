@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,7 +67,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SavingsAccount extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'savings_accounts';
@@ -75,15 +76,7 @@ class SavingsAccount extends Model
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'savings_category_id',
-        'account_head_id',
-        'name',
-        'slug',
-        'description'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -108,15 +101,32 @@ class SavingsAccount extends Model
     public static $rules = [
         'company_id' => 'required',
         'savings_category_id' => 'required',
-        'account_head_id' => 'required',
         'name' => 'required',
-        'slug' => 'required',
         'description' => 'required'
     ];
 
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(SavingsCategory::class,'savings_category_id','id');
+    }
+
+    public function account_head()
+    {
+        return $this->belongsTo(OrgAccountHead::class, 'account_head_id', 'id');
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,7 +72,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class LoanAccount extends Model
 {
     use SoftDeletes;
-
+    use Sluggable;
     use HasFactory;
 
     public $table = 'loan_accounts';
@@ -80,16 +81,7 @@ class LoanAccount extends Model
     protected $dates = ['deleted_at'];
 
 
-
-    public $fillable = [
-        'company_id',
-        'loan_category_id',
-        'account_head_id',
-        'name',
-        'slug',
-        'code',
-        'description'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -115,9 +107,9 @@ class LoanAccount extends Model
     public static $rules = [
         'company_id' => 'required',
         'loan_category_id' => 'required',
-        'account_head_id' => 'required',
+//        'account_head_id' => 'required',
         'name' => 'required',
-        'code' => 'required',
+//        'code' => 'required',
         'description' => 'required'
     ];
 
@@ -125,5 +117,25 @@ class LoanAccount extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(LoanCategory::class, 'loan_category_id', 'id');
+    }
+
+    public function account_head()
+    {
+        return $this->belongsTo(OrgAccountHead::class, 'account_head_id', 'id');
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
 
 }

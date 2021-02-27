@@ -5,10 +5,9 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Loan Category Id</th>
-            <th>Account Head Id</th>
+            <th>Loan Category</th>
+            <th>Account Head</th>
             <th>Name</th>
-            <th>Slug</th>
             <th>Code</th>
             <th>Description</th>
             <th>Action</th>
@@ -20,10 +19,9 @@
                 @if(session('company_id')==0)
                     <td>{{ $loanAccount->company->name }}</td>
                 @endif
-                <td>{{ $loanAccount->loan_category_id }}</td>
-                <td>{{ $loanAccount->account_head_id }}</td>
+                <td>{{ $loanAccount->category->name }}</td>
+                <td>{{ $loanAccount->account_head->name }}</td>
                 <td>{{ $loanAccount->name }}</td>
-                <td>{{ $loanAccount->slug }}</td>
                 <td>{{ $loanAccount->code }}</td>
                 <td>{{ $loanAccount->description }}</td>
                 <td width="120">

@@ -10,22 +10,28 @@
 
 <!-- Customer Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('customer_id', 'Customer Id:') !!}
+    {!! Form::label('customer_id', 'Customer:') !!}
     {!! Form::select('customer_id', [], null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Savings Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('savings_id', 'Savings Id:') !!}
+    {!! Form::label('savings_id', 'Savings:') !!}
     {!! Form::select('savings_id', [], null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Loan Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('loan_id', 'Loan Id:') !!}
+    {!! Form::label('loan_id', 'Loan:') !!}
     {!! Form::select('loan_id', [], null, ['class' => 'form-control custom-select']) !!}
+</div>
+
+<!-- Narration Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('reference', 'Reference:') !!}
+    {!! Form::text('reference', null, ['class' => 'form-control']) !!}
 </div>
 
 

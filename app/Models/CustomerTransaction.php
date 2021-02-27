@@ -71,13 +71,7 @@ class CustomerTransaction extends Model
     protected $dates = ['deleted_at'];
 
 
-    public $fillable = [
-        'company_id',
-        'customer_id',
-        'savings_id',
-        'loan_id',
-        'narration'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.

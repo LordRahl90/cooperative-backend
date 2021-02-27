@@ -86,4 +86,9 @@ class OrgAccountHead extends Model
     {
         return $this->belongsTo(OrgAccountCategory::class, 'category_id', 'id');
     }
+
+    public function bank_account()
+    {
+        return $this->hasOne(OrgBankAccount::class, 'account_head_id', 'id');
+    }
 }

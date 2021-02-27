@@ -14,8 +14,9 @@
     <div class="content px-3">
 
         @include('adminlte-templates::common.errors')
+        @include('flash::message')
 
-        <div class="card">
+        <div class="card" id="savingsAccountDiv">
 
             {!! Form::open(['route' => 'savingsAccounts.store']) !!}
 
@@ -36,4 +37,41 @@
 
         </div>
     </div>
+@endsection
+
+@section('third_party_scripts')
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        var savingsAccount = new Vue({
+            el: '#savingsAccountDiv',
+            data: {
+                new_or_link: false,
+                account: {
+                    code: '',
+                    category_id: 0,
+                    company_id: '{{ session('company_id') }}',
+                    name: '',
+                    account_head_id: 0,
+                    description: '',
+                },
+                account_heads: {}
+            },
+            methods: {
+                async loadAccountHeads() {
+                    this.account_heads = {};
+                    this.account.account_head_id = 0;
+                    let categoryID = this.account.category_id;
+                    if (categoryID === 0) {
+                        return;
+                    }
+                    try {
+                        let response = await axios.get(`/api/savings-categories/${categoryID}/accounts`);
+                        this.account_heads = response.data.data;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

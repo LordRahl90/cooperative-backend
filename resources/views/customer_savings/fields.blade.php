@@ -10,14 +10,14 @@
 
 <!-- Customer Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('customer_id', 'Customer Id:') !!}
+    {!! Form::label('customer_id', 'Customer:') !!}
     {!! Form::select('customer_id', [], null, ['class' => 'form-control custom-select']) !!}
 </div>
 
 
 <!-- Savings Account Id Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('savings_account_id', 'Savings Account Id:') !!}
+    {!! Form::label('savings_account_id', 'Savings Account:') !!}
     {!! Form::select('savings_account_id', [], null, ['class' => 'form-control custom-select']) !!}
 </div>
 

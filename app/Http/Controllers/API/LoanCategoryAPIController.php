@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Requests\API\CreateLoanCategoryAPIRequest;
 use App\Http\Requests\API\UpdateLoanCategoryAPIRequest;
 use App\Models\LoanCategory;
+use App\Models\OrgAccountHead;
 use App\Repositories\LoanCategoryRepository;
+use App\Utility\Utility;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
@@ -14,7 +16,6 @@ use Response;
  * Class LoanCategoryController
  * @package App\Http\Controllers\API
  */
-
 class LoanCategoryAPIController extends AppBaseController
 {
     /** @var  LoanCategoryRepository */
@@ -277,5 +278,14 @@ class LoanCategoryAPIController extends AppBaseController
         $loanCategory->delete();
 
         return $this->sendSuccess('Loan Category deleted successfully');
+    }
+
+    public function loadCategoryAccount($categoryID, Request $request)
+    {
+        $loanCategory = LoanCategory::find($categoryID);
+        $accountHeads = OrgAccountHead::where('category_id', $loanCategory->category_id)
+            ->doesntHave('bank_account')
+            ->pluck('name', 'id')->toArray();
+        return $this->sendResponse($accountHeads, 'hello world');
     }
 }

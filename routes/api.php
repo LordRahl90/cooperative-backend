@@ -65,13 +65,11 @@ Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAP
 
 Route::resource('customer_next_of_kins', App\Http\Controllers\API\CustomerNextOfKinAPIController::class);
 
-
-
-
-
 Route::resource('savings_categories', App\Http\Controllers\API\SavingsCategoryAPIController::class);
+Route::get('/savings-categories/{id}/accounts', 'SavingsCategoryAPIController@loadCategoryAccount');
 
 Route::resource('loan_categories', App\Http\Controllers\API\LoanCategoryAPIController::class);
+Route::get('/loan-categories/{id}/accounts', 'LoanCategoryAPIController@loadCategoryAccount');
 
 Route::resource('savings_accounts', App\Http\Controllers\API\SavingsAccountAPIController::class);
 

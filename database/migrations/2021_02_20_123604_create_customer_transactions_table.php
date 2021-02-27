@@ -22,6 +22,7 @@ class CreateCustomerTransactionsTable extends Migration
             $table->integer('loan_id')->unsigned()->nullable();
             $table->double('amount', 30, 2);
             $table->string('narration');
+            $table->string('reference')->unique();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
