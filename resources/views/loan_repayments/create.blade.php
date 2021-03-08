@@ -46,7 +46,10 @@
                 company_id: 0,
                 customer_id: 0,
                 loan_id: 0,
+                principal: 0.0,
+                interest: 0,
                 amount: 0,
+                amountPayable: 0,
                 loans: [],
             },
             methods: {
@@ -63,8 +66,28 @@
                     } catch (e) {
                         console.log(e);
                     }
+                },
+                async loadLoanRepaymentAmount() {
+                    let loanID = this.loan_id;
+                    if (loanID === 0) {
+                        return;
+                    }
+                    try {
+                        let response = await axios.get(`/api/customer-loans/${loanID}/details`);
+                        this.principal = response.data.data.principal;
+                        this.interest = response.data.data.interest;
+                        console.log(this.principal);
+                        this.amountPayable = this.principal + this.interest
+                        this.amount = this.principal + this.interest;
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                updateAmount() {
+                    this.amount = parseFloat(this.principal) + parseFloat(this.interest);
                 }
-            }
+            },
+            computed: {}
         });
     </script>
 @endsection

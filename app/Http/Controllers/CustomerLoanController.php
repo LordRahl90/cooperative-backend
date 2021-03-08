@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCustomerLoanRequest;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\CustomerLoan;
+use App\Models\CustomerLoanLog;
 use App\Models\CustomerTransaction;
 use App\Models\LoanApplication;
 use App\Models\OrgBankAccount;
@@ -75,7 +76,6 @@ class CustomerLoanController extends AppBaseController
     public function store(CreateCustomerLoanRequest $request)
     {
         $input = $request->all();
-//        dd($input);
 
         DB::beginTransaction();
         try {
@@ -86,6 +86,9 @@ class CustomerLoanController extends AppBaseController
             $reference = $input['reference'];
 
             $trans = Transactions::makePayment($input['company_id'], $loanInfo->pv_id, $bankAccount, $reference, $input['narration'], $amount, $staff, $staff, auth()->id());
+            if (!$trans) {
+                throw new \Exception('cannot create this transaction at the moment.');
+            }
             $input['customer_id'] = $loanInfo->customer_id;
             $input['amount'] = $amount;
 

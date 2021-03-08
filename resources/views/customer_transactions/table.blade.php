@@ -8,6 +8,8 @@
             <th>Customer</th>
             <th>Savings</th>
             <th>Loan</th>
+            <th>Debit</th>
+            <th>Credit</th>
             <th>Narration</th>
             <th>Action</th>
         </tr>
@@ -18,10 +20,12 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerTransaction->company->name }}</td>
                 @endif
-                <td>{{ $customerTransaction->customer_id }}</td>
-                <td>{{ $customerTransaction->savings_id }}</td>
-                <td>{{ $customerTransaction->loan_id }}</td>
+                <td>{{ $customerTransaction->customer->full_name }}</td>
+                <td>{{ $customerTransaction->savings_id==null?"":$customerTransaction->savings->savings->name }}</td>
+                <td>{{ $customerTransaction->loan_id==null?"":$customerTransaction->loan->loan_application->loan_account->name }}</td>
                 <td>{{ $customerTransaction->narration }}</td>
+                <td>{{ number_format($customerTransaction->debit,2) }}</td>
+                <td>{{ number_format($customerTransaction->credit,2) }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customerTransactions.destroy', $customerTransaction->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

@@ -253,6 +253,13 @@ $role = session('role');
                 <p>Customer Next Of Kins</p>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="{{ route('customerBankAccounts.index') }}"
+               class="nav-link {{ Request::is('customerBankAccounts*') ? 'active' : '' }}">
+                <p>Customer Bank Accounts</p>
+            </a>
+        </li>
     </ul>
 </li>
 
@@ -284,6 +291,13 @@ $role = session('role');
             <a href="{{ route('customerSavings.index') }}"
                class="nav-link {{ Request::is('customerSavings*') ? 'active' : '' }}">
                 <p>Customer Savings</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/customer-savings/payment"
+               class="nav-link {{ Request::is('customer-savings*') ? 'active' : '' }}">
+                <p>Savings Payment</p>
             </a>
         </li>
 
@@ -358,9 +372,9 @@ $role = session('role');
 
 
 <li class="nav-item">
-    <a href="{{ route('customerBankAccounts.index') }}"
-       class="nav-link {{ Request::is('customerBankAccounts*') ? 'active' : '' }}">
-        <p>Customer Bank Accounts</p>
+    <a href="{{ route('customerLoanLogs.index') }}"
+       class="nav-link {{ Request::is('customerLoanLogs*') ? 'active' : '' }}">
+        <p>Customer Loan Logs</p>
     </a>
 </li>
 

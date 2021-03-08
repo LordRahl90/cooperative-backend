@@ -16,7 +16,7 @@
         @include('adminlte-templates::common.errors')
         @include('flash::message')
 
-        <div class="card">
+        <div class="card" id="loanApplicationDiv">
 
             {!! Form::open(['route' => 'loanApplications.store','target'=>'_blank']) !!}
 
@@ -37,4 +37,51 @@
 
         </div>
     </div>
+@endsection
+@section('third_party_scripts')
+    <script>
+        let loanApplication = new Vue({
+            el: '#loanApplicationDiv',
+            data: {
+                principal: 0,
+                rate: 0,
+                tenor: 0,
+                interest_type: '',
+                repayment_amount: 0,
+            },
+            methods: {
+                calculateRepaymentPlan() {
+                    let type = this.interest_type;
+                    if (type !== 'FLAT_RATE' || parseInt(this.tenor) === 0) {
+                        this.repayment_amount = 0;
+                        return 0;
+                    }
+
+                    let interest = parseInt(this.principal) * (parseFloat(this.rate) / 100);
+                    console.log(interest);
+                    this.repayment_amount = ((parseFloat(this.principal) + interest) / parseInt(this.tenor)).toFixed(2);
+                },
+                calculateTenor() {
+                    let amount = this.repayment_amount;
+                    let principal = parseFloat(this.principal);
+                    let rate = parseFloat(this.rate);
+
+                    if (principal === 0 || rate === 0) {
+                        return 0;
+                    }
+
+                    let tenor = principal / amount;
+                    this.tenor = Math.ceil(tenor);
+                }
+            },
+            computed: {
+                flatRate() {
+                    return this.interest_type === "FLAT_RATE"
+                },
+                reducingBalance() {
+                    return this.interest_type === "REDUCING_BALANCE"
+                }
+            }
+        });
+    </script>
 @endsection

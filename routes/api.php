@@ -61,6 +61,8 @@ Route::resource('journal_vouchers', App\Http\Controllers\API\JournalVoucherAPICo
 
 Route::resource('customers', App\Http\Controllers\API\CustomerAPIController::class);
 Route::get('/customer-loans/{id}', 'CustomerAPIController@customerLoans');
+Route::get('/customer-loans/{loanID}/details','CustomerAPIController@loadLoanDetails');
+Route::get('/customer-savings/{id}', 'CustomerAPIController@customerSavings');
 
 Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAPIController::class);
 
@@ -89,3 +91,6 @@ Route::resource('customer_transactions', App\Http\Controllers\API\CustomerTransa
 Route::resource('states', App\Http\Controllers\API\StateAPIController::class);
 
 Route::resource('customer_bank_accounts', App\Http\Controllers\API\CustomerBankAccountAPIController::class);
+
+
+Route::resource('customer_loan_logs', App\Http\Controllers\API\CustomerLoanLogAPIController::class);

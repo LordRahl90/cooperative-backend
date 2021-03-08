@@ -5,11 +5,10 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Loan Application</th>
-            <th>Customer</th>
-            <th>Count</th>
-            <th>Amount</th>
             <th>Loan</th>
+            <th>Customer</th>
+            <th>Loan Application</th>
+            <th>Amount</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -19,11 +18,12 @@
                 @if(session('company_id')==0)
                     <td>{{ $loanRepayment->company->name }}</td>
                 @endif
-                <td>{{ $loanRepayment->loan_application_id }}</td>
-                <td>{{ $loanRepayment->customer_id }}</td>
-                <td>{{ $loanRepayment->count }}</td>
-                <td>{{ $loanRepayment->amount }}</td>
-                <td>{{ $loanRepayment->loan_id }}</td>
+                <td>{{ $loanRepayment->loan_application->loan_account->name }}</td>
+                <td>{{ $loanRepayment->customer->full_name }}</td>
+                <td>{{ $loanRepayment->loan_application->pv->pv_id }}</td>
+
+                <td>{{ number_format($loanRepayment->amount,2) }}</td>
+
                 <td width="120">
                     {!! Form::open(['route' => ['loanRepayments.destroy', $loanRepayment->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

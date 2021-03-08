@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @SWG\Definition(
- *      definition="LoanRepayment",
- *      required={"company_id", "loan_application_id", "customer_id", "count", "amount", "loan_id"},
+ *      definition="CustomerLoanLog",
+ *      required={"company_id", "customer", "loan_id", "debit", "credit"},
  *      @SWG\Property(
  *          property="id",
  *          description="id",
@@ -23,34 +23,28 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="loan_application_id",
- *          description="loan_application_id",
+ *          property="customer",
+ *          description="customer",
  *          type="integer",
  *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="customer_id",
- *          description="customer_id",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="count",
- *          description="count",
- *          type="integer",
- *          format="int32"
- *      ),
- *      @SWG\Property(
- *          property="amount",
- *          description="amount",
- *          type="number",
- *          format="number"
  *      ),
  *      @SWG\Property(
  *          property="loan_id",
  *          description="loan_id",
  *          type="integer",
  *          format="int32"
+ *      ),
+ *      @SWG\Property(
+ *          property="debit",
+ *          description="debit",
+ *          type="number",
+ *          format="number"
+ *      ),
+ *      @SWG\Property(
+ *          property="credit",
+ *          description="credit",
+ *          type="number",
+ *          format="number"
  *      ),
  *      @SWG\Property(
  *          property="created_at",
@@ -66,21 +60,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *      )
  * )
  */
-class LoanRepayment extends Model
+class CustomerLoanLog extends Model
 {
     use SoftDeletes;
 
     use HasFactory;
 
-    public $table = 'loan_repayments';
+    public $table = 'customer_loan_logs';
 
 
     protected $dates = ['deleted_at'];
 
 
-    public $guarded = [
-        'deleted_at'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -90,10 +82,10 @@ class LoanRepayment extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'loan_application_id' => 'integer',
-        'customer_id' => 'integer',
-        'amount' => 'double',
-        'loan_id' => 'integer'
+        'customer' => 'integer',
+        'loan_id' => 'integer',
+        'debit' => 'double',
+        'credit' => 'double'
     ];
 
     /**
@@ -103,29 +95,11 @@ class LoanRepayment extends Model
      */
     public static $rules = [
         'company_id' => 'required',
-        'customer_id' => 'required',
-        'amount' => 'required',
-        'bank_account' => 'required|exists:org_bank_accounts,id',
-        'loan_id' => 'required|exists:customer_loans,id'
+        'customer' => 'required',
+        'loan_id' => 'required',
+        'debit' => 'required',
+        'credit' => 'required'
     ];
 
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
 
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
-    }
-
-    public function loan_application()
-    {
-        return $this->belongsTo(LoanApplication::class);
-    }
-
-    public function loan()
-    {
-        return $this->belongsTo(CustomerLoan::class, "loan_id", "id");
-    }
 }

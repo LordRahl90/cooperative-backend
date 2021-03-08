@@ -29,7 +29,12 @@ class CustomerTransactionController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $customerTransactions = $this->customerTransactionRepository->all();
+        $companyID = session('company_id');
+        if (isset($companyID)) {
+            $customerTransactions = $this->customerTransactionRepository->where('company_id', session('company_id'));
+        } else {
+            $customerTransactions = $this->customerTransactionRepository->all();
+        }
 
         return view('customer_transactions.index')
             ->with('customerTransactions', $customerTransactions);
@@ -133,9 +138,9 @@ class CustomerTransactionController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

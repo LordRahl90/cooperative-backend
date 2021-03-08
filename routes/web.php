@@ -116,6 +116,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('customerSavings', App\Http\Controllers\CustomerSavingController::class);
 
+    Route::get('/customer-savings/payment','App\Http\Controllers\CustomerSavingController@showSavingsPayment');
+    Route::post('/customer-savings/payment','App\Http\Controllers\CustomerSavingController@makeSavingsPayment');
+
     Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
 
     Route::resource('customerLoans', App\Http\Controllers\CustomerLoanController::class);
@@ -128,3 +131,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('customerBankAccounts', App\Http\Controllers\CustomerBankAccountController::class);
 });
+
+
+Route::resource('customerLoanLogs', App\Http\Controllers\CustomerLoanLogController::class);

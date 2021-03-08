@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLoanRepaymentsTable extends Migration
+class CreateCustomerLoanLogsTable extends Migration
 {
 
     /**
@@ -14,19 +14,18 @@ class CreateLoanRepaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('loan_repayments', function (Blueprint $table) {
+        Schema::create('customer_loan_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id')->unsigned();
-            $table->integer('loan_application_id')->unsigned();
-            $table->integer('loan_id')->unsigned();
             $table->integer('customer_id')->unsigned();
-            $table->double('principal', 30, 2);
-            $table->double('interest', 30, 2);
-            $table->double('amount_payable', 30, 2);
+            $table->integer('loan_id')->unsigned();
+            $table->string('reference');
+            $table->string('narration');
+            $table->double('debit', 20, 2);
+            $table->double('credit', 20, 2);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('loan_application_id')->references('id')->on('loan_applications');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('loan_id')->references('id')->on('customer_loans');
         });
@@ -39,6 +38,6 @@ class CreateLoanRepaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('loan_repayments');
+        Schema::drop('customer_loan_logs');
     }
 }

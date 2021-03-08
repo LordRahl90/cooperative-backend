@@ -3,11 +3,14 @@
 
 namespace App\Utility;
 
+use App\Models\CustomerLoan;
+use App\Models\CustomerLoanLog;
 use App\Models\OrgBankAccount;
 use App\Models\Payment;
 use App\Models\PaymentVoucher;
 use App\Models\Receipt;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -50,6 +53,7 @@ class Transactions
      * @param $user
      * @param string $phone
      * @param string $email
+     * @return
      * @throws \Exception
      */
     public static function processIncome($companyID, $acctHead, $bankAccount, $reference, $narration, $amount, $payer, $user, $phone = "", $email = "")
@@ -86,6 +90,7 @@ class Transactions
         }
 
         DB::commit();
+        return $receipt;
     }
 
     /**
@@ -179,7 +184,13 @@ class Transactions
         }
     }
 
-    static function reversePayment($companyID, $reference, $user)
+    /**
+     * @param $companyID
+     * @param $reference
+     * @param $user
+     * @throws \Exception
+     */
+    public static function reversePayment($companyID, $reference, $user)
     {
         DB::beginTransaction();
         try {
@@ -203,6 +214,73 @@ class Transactions
             DB::rollBack();
             throw new \Exception($ex);
         }
+    }
+
+    /**
+     * @param $loanID
+     * @return int
+     */
+    public static function getLoanInterest($loanID)
+    {
+        $loan = CustomerLoan::with(['repayments', 'loan_application', 'logs'])->find($loanID);
+        if ($loan->loan_application->interest_type === 'FLAT_RATE') {
+            return 0;
+        }
+        $loanAmount = $loan->loan_application->principal;
+        $repaidAmount = $loan->repayments->sum('principal');
+        $rate = $loan->loan_application->rate;
+
+        $newPrincipal = $loanAmount - $repaidAmount;
+        $interest = $rate * $newPrincipal;
+        return $interest;
+    }
+
+    public static function calculateInterest()
+    {
+        $customerLoans = CustomerLoan::with(['loan_application', 'logs', 'transactions'])->withCount(['transactions'])->where('status', 'RUNNING')->get();
+        foreach ($customerLoans as $customerLoan) {
+            $application = $customerLoan->loan_application;
+            $loanAmount = $application->principal;
+            $repaidAmount = $customerLoan->transactions->sum('credit');
+            $repaymentAmount = $application->repayment_amount;
+            $now = Carbon::now();
+            $year = $now->format('Y');
+            $month = $now->format('m');
+            $rate = $application->rate;
+
+            //check if we have debited this customer account for this loan this month already
+            $check = CustomerLoanLog::whereRaw('loan_id = ? and MONTH(created_at) = ? AND YEAR(created_at) = ?', [$customerLoan->id, $month, $year])->count();
+            if ($check > 0) {
+                Log::info("Amount payable has been calculated for this Loan account already " . $customerLoan->id);
+                continue;
+            }
+
+            dump($check . ' ' . $month . ' ' . $year);
+
+            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+            $payable = $repaymentAmount + $interest;
+
+            $debitCustomer = CustomerLoanLog::create([
+                'company_id' => $customerLoan->company_id,
+                'customer_id' => $customerLoan->customer_id,
+                'loan_id' => $customerLoan->id,
+                'reference' => strtoupper(uniqid('DB-')),
+                'narration' => 'Loan repayment amount for ' . $month . ', ' . $year,
+                'debit' => $payable,
+                'credit' => 0,
+            ]);
+
+            if (!$debitCustomer) {
+                Log::error("cannot create a debit record for " . $customerLoan->id);
+            }
+
+            Log::info("Customer Debited amount payable successfully.");
+        }
+    }
+
+    public static function debitCustomerAccount()
+    {
+
     }
 
 }

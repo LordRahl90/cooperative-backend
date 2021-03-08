@@ -21,6 +21,7 @@ class CreateLoanApplicationsTable extends Migration
             $table->integer('loan_account_id')->unsigned();
             $table->double('principal', 30, 2);
             $table->double('rate', 10, 2);
+            $table->double('repayment_amount', 10, 2)->nullable();
             $table->enum('interest_type', ['FLAT_RATE', 'REDUCING_BALANCE']);
             $table->integer('tenor');
             $table->enum('status', ['APPROVED', 'DISAPPROVED', 'PENDING'])->default('PENDING');

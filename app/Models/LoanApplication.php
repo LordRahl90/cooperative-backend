@@ -128,7 +128,8 @@ class LoanApplication extends Model
         'interest_type' => 'required',
         'tenor' => 'required',
         'status' => 'required',
-        'staff_id' => 'required'
+        'staff_id' => 'required',
+        'repayment_amount' => 'required'
     ];
 
     public function company()

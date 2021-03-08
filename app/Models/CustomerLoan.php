@@ -120,4 +120,18 @@ class CustomerLoan extends Model
         return $this->belongsTo(Staff::class, "approved_by", "id");
     }
 
+    public function logs()
+    {
+        return $this->hasMany(CustomerLoanLog::class, "loan_id", "id");
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(CustomerTransaction::class, "loan_id", "id");
+    }
+
+    public function repayments()
+    {
+        return $this->hasMany(LoanRepayment::class, "loan_id", "id");
+    }
 }

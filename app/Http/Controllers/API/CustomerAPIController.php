@@ -6,9 +6,13 @@ use App\Http\Requests\API\CreateCustomerAPIRequest;
 use App\Http\Requests\API\UpdateCustomerAPIRequest;
 use App\Models\Customer;
 use App\Models\CustomerLoan;
+use App\Models\CustomerSaving;
+use App\Models\LoanRepayment;
 use App\Repositories\CustomerRepository;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 /**
@@ -283,5 +287,33 @@ class CustomerAPIController extends AppBaseController
     {
         $loans = CustomerLoan::with(['loan_application.pv', 'customer'])->whereRaw('customer_id=? AND status=?', [$id, 'RUNNING'])->get();
         return $this->sendResponse($loans, "Customer loans loaded successfully");
+    }
+
+    public function customerSavings($customerID)
+    {
+        $savings = CustomerSaving::with(['savings'])->where('customer_id', $customerID)->get();
+        return $this->sendResponse($savings, 'Customer savings loaded successfully.');
+    }
+
+    public function loadLoanDetails($loanID)
+    {
+        $principal = $interest = 0;
+        $loanInfo = CustomerLoan::with(['loan_application'])->find($loanID);
+        $application = $loanInfo->loan_application;
+        if ($application->interest_type == "FLAT_RATE") {
+            $principal = $application->repayment_amount;
+        } else {
+//            $paymentInfo = DB::table('loan_repayments')
+//                ->selectRaw('COALESCE(sum(principal),0) as paid,COALESCE(sum(amount_payable),0) as payable')
+//                ->where("loan_id", $loanID)->get()->first();
+//            $principal = $application->principal - $paymentInfo->paid;
+//            $rate = $application->rate / 100;
+//            $interest = $principal * $rate;
+//            $repayment = $application->repayment_amount + $interest;
+            $principal = $application->repayment_amount;
+            $interest = Transactions::getLoanInterest($loanID);
+        }
+
+        return $this->sendResponse(['principal' => $principal, 'interest' => $interest], "Loan details loaded successfully.");
     }
 }

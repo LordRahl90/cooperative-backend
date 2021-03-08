@@ -6,8 +6,13 @@ use App\Http\Requests\CreateLoanRepaymentRequest;
 use App\Http\Requests\UpdateLoanRepaymentRequest;
 use App\Models\Company;
 use App\Models\Customer;
+use App\Models\CustomerLoan;
+use App\Models\CustomerLoanLog;
+use App\Models\CustomerTransaction;
+use App\Models\OrgBankAccount;
 use App\Repositories\LoanRepaymentRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;
@@ -48,9 +53,11 @@ class LoanRepaymentController extends AppBaseController
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
         $customers = Customer::orderBy('surname', 'asc')->where('company_id', $companyID)->get()->pluck('full_name', 'id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'id')->toArray();
         return view('loan_repayments.create', [
             'customers' => [0 => 'Select Customer'] + $customers->toArray(),
-            'companies' => $companies
+            'companies' => $companies,
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts
         ]);
     }
 
@@ -64,21 +71,76 @@ class LoanRepaymentController extends AppBaseController
     public function store(CreateLoanRepaymentRequest $request)
     {
         $input = $request->all();
+//        dd($input);
 
         DB::beginTransaction();
         try {
+            $companyID = $input['company_id'];
+            $loanInfo = CustomerLoan::with(['loan_application.loan_account'])->find($input['loan_id']);
+            $customer = $loanInfo->customer;
+            $accountHead = $loanInfo->loan_application->loan_account->account_head_id;
+            $bankAccount = $input['bank_account'];
+            $reference = $input['reference'];
+            $narration = $input['narration'];
+            $principal = $input['principal'];
+            $interest = $input['interest'];
+            $amount = $principal + $interest;
+            $bankAcc = OrgBankAccount::find($bankAccount);
+
+
+            $trans = Transactions::processIncome($companyID, $accountHead, $bankAcc->account_head_id, $reference, $narration, $amount, $customer->full_name, auth()->id(), $customer->phone, $customer->email);
+            if (!$trans) {
+                throw new \Exception("cannot create the transaction record");
+            }
+            $loanRepayment = $this->loanRepaymentRepository->create([
+                'company_id' => $companyID,
+                'loan_application_id' => $loanInfo->loan_application_id,
+                'loan_id' => $input['loan_id'],
+                'customer_id' => $customer->id,
+                'principal' => $principal,
+                'interest' => $interest
+            ]);
+
+            if (!$loanRepayment) {
+                throw new \Exception("cannot create the loan repayment record");
+            }
+
+            $newTransaction = CustomerTransaction::create([
+                'company_id' => $companyID,
+                'customer_id' => $customer->id,
+                'loan_id' => $input['loan_id'],
+                'debit' => 0.00,
+                'credit' => $amount,
+                'narration' => $narration,
+                'reference' => $reference
+            ]);
+
+            if (!$newTransaction) {
+                throw new \Exception("cannot create new customer transaction.");
+            }
+
+            $loanLog = CustomerLoanLog::create([
+                'company_id' => $companyID,
+                'customer_id' => $customer->id,
+                'loan_id' => $input['loan_id'],
+                'reference' => $reference,
+                'narration' => $narration,
+                'credit' => $amount,
+                'debit' => 0.0
+            ]);
+            if (!$loanLog) {
+                throw new \Exception('Cannot log this loan detail at the moment.');
+            }
+
+            DB::commit();
+            return response()->redirectTo("/income/" . encrypt($reference) . "/receipt");
 
         } catch (\Exception $ex) {
             DB::rollBack();
             dd($ex);
+            Flash::error($ex->getMessage());
+            return redirect()->back()->withInput();
         }
-        dd($input);
-
-        $loanRepayment = $this->loanRepaymentRepository->create($input);
-
-        Flash::success('Loan Repayment saved successfully.');
-
-        return redirect(route('loanRepayments.index'));
     }
 
     /**
