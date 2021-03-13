@@ -235,7 +235,7 @@ class Transactions
         return $interest;
     }
 
-    public static function calculateInterest()
+    public static function calculateMonthlyRepayment()
     {
         $customerLoans = CustomerLoan::with(['loan_application', 'logs', 'transactions'])->withCount(['transactions'])->where('status', 'RUNNING')->get();
         foreach ($customerLoans as $customerLoan) {
@@ -254,8 +254,6 @@ class Transactions
                 Log::info("Amount payable has been calculated for this Loan account already " . $customerLoan->id);
                 continue;
             }
-
-            dump($check . ' ' . $month . ' ' . $year);
 
             $interest = ($loanAmount - $repaidAmount) * $rate / 100;
             $payable = $repaymentAmount + $interest;
@@ -277,10 +275,4 @@ class Transactions
             Log::info("Customer Debited amount payable successfully.");
         }
     }
-
-    public static function debitCustomerAccount()
-    {
-
-    }
-
 }

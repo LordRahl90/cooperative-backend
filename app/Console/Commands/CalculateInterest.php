@@ -12,7 +12,7 @@ class CalculateInterest extends Command
      *
      * @var string
      */
-    protected $signature = 'coop:interest';
+    protected $signature = 'coop:repayment';
 
     /**
      * The console command description.
@@ -39,7 +39,7 @@ class CalculateInterest extends Command
      */
     public function handle()
     {
-        Transactions::calculateInterest();
+        Transactions::calculateMonthlyRepayment();
         $this->comment("hello calculating interest");
         return 0;
     }
