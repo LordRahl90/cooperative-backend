@@ -22,11 +22,11 @@ class StateFactory extends Factory
     public function definition()
     {
         return [
-            'country_id' => $this->faker->randomDigitNotNull,
-        'name' => $this->faker->word,
-        'code' => $this->faker->word,
-        'created_at' => $this->faker->date('Y-m-d H:i:s'),
-        'updated_at' => $this->faker->date('Y-m-d H:i:s')
+            'country_id' => 1,
+            'name' => $this->faker->state,
+            'code' => $this->faker->postcode,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

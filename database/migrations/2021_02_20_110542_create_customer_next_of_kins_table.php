@@ -20,8 +20,8 @@ class CreateCustomerNextOfKinsTable extends Migration
             $table->integer('customer_id')->unsigned();
             $table->string('name');
             $table->string('address');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('relationship');
             $table->timestamps();
             $table->softDeletes();

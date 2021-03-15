@@ -21,17 +21,17 @@ class CreateCustomersTable extends Migration
             $table->string('surname');
             $table->string('other_names');
             $table->string('reference')->nullable();
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->string('password');
             $table->string('phone');
             $table->string('dob')->nullable();
             $table->enum('gender', ['MALE', 'FEMALE']);
             $table->string('religion')->nullable();
+            $table->boolean('password_changed')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

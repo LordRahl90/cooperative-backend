@@ -28,6 +28,7 @@ Route::resource('org_account_categories', App\Http\Controllers\API\OrgAccountCat
 Route::resource('org_account_heads', App\Http\Controllers\API\OrgAccountHeadAPIController::class);
 
 Route::resource('countries', App\Http\Controllers\API\CountryAPIController::class);
+Route::get('/countries/{code}/states', 'CountryAPIController@loadState');
 
 Route::resource('banks', App\Http\Controllers\API\BankAPIController::class);
 
@@ -61,7 +62,7 @@ Route::resource('journal_vouchers', App\Http\Controllers\API\JournalVoucherAPICo
 
 Route::resource('customers', App\Http\Controllers\API\CustomerAPIController::class);
 Route::get('/customer-loans/{id}', 'CustomerAPIController@customerLoans');
-Route::get('/customer-loans/{loanID}/details','CustomerAPIController@loadLoanDetails');
+Route::get('/customer-loans/{loanID}/details', 'CustomerAPIController@loadLoanDetails');
 Route::get('/customer-savings/{id}', 'CustomerAPIController@customerSavings');
 
 Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAPIController::class);
@@ -94,3 +95,6 @@ Route::resource('customer_bank_accounts', App\Http\Controllers\API\CustomerBankA
 
 
 Route::resource('customer_loan_logs', App\Http\Controllers\API\CustomerLoanLogAPIController::class);
+
+
+Route::resource('loan_guarators', App\Http\Controllers\API\LoanGuaratorAPIController::class);

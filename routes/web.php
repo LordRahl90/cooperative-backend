@@ -101,6 +101,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::resource('customers', App\Http\Controllers\CustomerController::class);
+    Route::get('/customer/upload', 'App\Http\Controllers\CustomerController@showUpload');
+    Route::post('/customer/upload', 'App\Http\Controllers\CustomerController@upload');
 
     Route::resource('customerAddresses', App\Http\Controllers\CustomerAddressController::class);
 
@@ -116,8 +118,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('customerSavings', App\Http\Controllers\CustomerSavingController::class);
 
-    Route::get('/customer-savings/payment','App\Http\Controllers\CustomerSavingController@showSavingsPayment');
-    Route::post('/customer-savings/payment','App\Http\Controllers\CustomerSavingController@makeSavingsPayment');
+    Route::get('/customer-savings/payment', 'App\Http\Controllers\CustomerSavingController@showSavingsPayment');
+    Route::post('/customer-savings/payment', 'App\Http\Controllers\CustomerSavingController@makeSavingsPayment');
 
     Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
 
@@ -134,3 +136,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 Route::resource('customerLoanLogs', App\Http\Controllers\CustomerLoanLogController::class);
+
+
+Route::resource('loanGuarators', App\Http\Controllers\LoanGuaratorController::class);

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14ce5cf87f6460ecd524807cabbf5f1c",
+    "content-hash": "c4cdfbfbb9a8df03eb97a8dbf4d05369",
     "packages": [
         {
             "name": "antennaio/laravel-clyde",
@@ -1947,6 +1947,64 @@
                 "source": "https://github.com/Intervention/image/tree/master"
             },
             "time": "2019-11-02T09:15:47+00:00"
+        },
+        {
+            "name": "khsing/world",
+            "version": "v8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khsing/laravel-world.git",
+                "reference": "309dc2dcdafbb12ae59cdaf3e20fcfe1e992726d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khsing/laravel-world/zipball/309dc2dcdafbb12ae59cdaf3e20fcfe1e992726d",
+                "reference": "309dc2dcdafbb12ae59cdaf3e20fcfe1e992726d",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^8.0",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "phpunit/phpunit": "^8.5.8|^9.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Khsing\\World\\WorldServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Khsing\\World\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Guixing Bai",
+                    "email": "khsing.cn@gmail.com"
+                }
+            ],
+            "description": "Provide countries, states, and cities relations database.",
+            "keywords": [
+                "city",
+                "country",
+                "region",
+                "world"
+            ],
+            "support": {
+                "issues": "https://github.com/khsing/laravel-world/issues",
+                "source": "https://github.com/khsing/laravel-world/tree/v8.1"
+            },
+            "time": "2021-03-08T13:10:46+00:00"
         },
         {
             "name": "laracasts/flash",

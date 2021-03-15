@@ -114,15 +114,15 @@ class Customer extends Model
      * @var array
      */
     public static $rules = [
-        'company_id' => 'required|exists:companies,id',
-        'surname' => 'required',
-        'other_names' => 'required',
-        'reference' => 'required',
-        'email' => 'required',
-        'phone' => 'required',
-        'gender' => 'required',
-        'password' => 'required',
-        'religion' => 'required'
+//        'company_id' => 'required|exists:companies,id',
+//        'surname' => 'required',
+//        'other_names' => 'required',
+//        'reference' => 'required',
+//        'email' => 'required',
+//        'phone' => 'required',
+//        'gender' => 'required',
+//        'password' => 'required',
+//        'religion' => 'required'
     ];
 
     public function getFullNameAttribute()

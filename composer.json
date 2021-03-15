@@ -27,11 +27,13 @@
         "infyomlabs/adminlte-templates": "^2.0",
         "infyomlabs/laravel-generator": "8.0.x-dev",
         "infyomlabs/swagger-generator": "dev-master",
+        "khsing/world": "^8.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.2",
-        "phpoffice/phpspreadsheet": "^1.16"
+        "phpoffice/phpspreadsheet": "^1.16",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

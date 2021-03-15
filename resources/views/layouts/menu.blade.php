@@ -180,6 +180,13 @@ $role = session('role');
                 <p>Reverse Payment</p>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="/reverse/payment" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Monthly Payment Schedule</p>
+            </a>
+        </li>
     </ul>
 </li>
 
@@ -260,6 +267,14 @@ $role = session('role');
                 <p>Customer Bank Accounts</p>
             </a>
         </li>
+
+        <li class="nav-item">
+            <a href="/customer/upload"
+               class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
+                <p>Upload Customer List</p>
+            </a>
+        </li>
+
     </ul>
 </li>
 
@@ -352,6 +367,13 @@ $role = session('role');
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ route('customerAddresses.index') }}"
+               class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
+                <p>Loan Repayment Schedule</p>
+            </a>
+        </li>
+
     </ul>
 </li>
 
@@ -375,6 +397,12 @@ $role = session('role');
     <a href="{{ route('customerLoanLogs.index') }}"
        class="nav-link {{ Request::is('customerLoanLogs*') ? 'active' : '' }}">
         <p>Customer Loan Logs</p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="{{ route('loanGuarators.index') }}"
+       class="nav-link {{ Request::is('loanGuarators*') ? 'active' : '' }}">
+        <p>Loan Guarators</p>
     </a>
 </li>
 

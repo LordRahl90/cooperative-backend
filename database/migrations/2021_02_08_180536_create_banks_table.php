@@ -19,6 +19,7 @@ class CreateBanksTable extends Migration
             $table->integer('country_id')->unsigned();
             $table->string('name');
             $table->string('slug');
+            $table->string('code');
             $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();

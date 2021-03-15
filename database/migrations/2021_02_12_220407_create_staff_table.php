@@ -25,6 +25,7 @@ class CreateStaffTable extends Migration
             $table->enum('role', ['REGULAR', 'SUPERVISOR', 'MANAGER', 'ADMIN']);
             $table->string('address');
             $table->boolean('active')->default(true);
+            $table->boolean('password_changed')->default(false);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');

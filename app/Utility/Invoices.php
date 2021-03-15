@@ -38,7 +38,7 @@ define('EURO_VAL', 6.55957);
 //  function temporaire( $texte )
 // function convert_number_to_words
 
-class PDF_Invoice extends Fpdf
+class Invoices extends Fpdf
 {
 // private variables
     var $colonnes;

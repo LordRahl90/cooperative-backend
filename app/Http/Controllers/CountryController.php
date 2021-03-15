@@ -8,6 +8,7 @@ use App\Repositories\CountryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Khsing\World\World;
 use Response;
 
 class CountryController extends AppBaseController
@@ -133,9 +134,9 @@ class CountryController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

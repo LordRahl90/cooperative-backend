@@ -8,13 +8,13 @@ use App\Models\Country;
 use App\Repositories\CountryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Khsing\World\World;
 use Response;
 
 /**
  * Class CountryController
  * @package App\Http\Controllers\API
  */
-
 class CountryAPIController extends AppBaseController
 {
     /** @var  CountryRepository */
@@ -111,9 +111,9 @@ class CountryAPIController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {
@@ -127,5 +127,17 @@ class CountryAPIController extends AppBaseController
         $country->delete();
 
         return $this->sendSuccess('Country deleted successfully');
+    }
+
+    /**
+     * @param $code
+     * @return mixed
+     *
+     * code is a 2 alphabet code.
+     */
+    public function loadState($code)
+    {
+        $country = World::getCountryByCode($code);
+        return $this->sendResponse($country->divisions()->get(), "States loaded successfully.");
     }
 }
