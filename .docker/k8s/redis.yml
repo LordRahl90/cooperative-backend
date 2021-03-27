@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quesy-redis
+  namespace: quest
+  labels:
+    tier: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quest-redis
+
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+
+  template:
+    metadata:
+      labels:
+        app: quest-redis
+        tier: cache
+    spec:
+      containers:
+        - name: redis
+          image:  redis
+          ports:
+            - containerPort: 6379
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 30
+            periodSeconds: 10
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: quest-redis
+  name: quest-redis
+  namespace: quest
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: quest-redis
+

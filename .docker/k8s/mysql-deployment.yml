@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quest-db
+  namespace: quest
+  labels:
+    app: quest-db
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: quest-db
+  template:
+    metadata:
+      labels:
+        tier: database
+        app: quest-db
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          env:
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: db-password
+                  name: db-passwords
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: db-root-password
+                  name: db-passwords
+          envFrom:
+            - configMapRef:
+                name: quest-db-config
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-volume
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-volume
+          persistentVolumeClaim:
+            claimName: quest-db-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: quest-db
+  namespace: quest
+  labels:
+    tier: database
+
+spec:
+  selector:
+    app: quest-db
+  type: NodePort
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 32306
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: quest-db-config
+  namespace: quest
+  labels:
+    tier: config
+
+data:
+  MYSQL_DATABASE: "quest"
+  MYSQL_USER: "quest_user"

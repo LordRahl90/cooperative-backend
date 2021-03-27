@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: quest-db
+  namespace: quest
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  storageClassName: quest-db-pv
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    path: "/srv/nfs/questdata/db"
+    server: nfs-server.example.com
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: quest-db-pvc
+  namespace: quest
+  labels:
+    tier: database
+    app: quest-db
+spec:
+  storageClassName: quest-db-pv
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

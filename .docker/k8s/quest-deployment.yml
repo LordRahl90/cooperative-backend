@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quest-backend
+  namespace: quest
+  labels:
+    app: quest-backend
+    tier: backend
+
+spec:
+  selector:
+    matchLabels:
+      app: quest-backend
+  template:
+    metadata:
+      labels:
+        app: quest-backend
+        tier: backend
+
+    spec:
+      containers:
+        - name: app-backend
+          image: lordrahl/quest-backend:rvs2.7.1
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-passwords
+                  key: db-password
+          envFrom:
+            - configMapRef:
+                name: quest-config
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - mountPath: /app/storage/app
+              name: quest-storage
+            - mountPath: /app/storage/logs
+              name: quest-logs
+
+      volumes:
+        - name: quest-storage
+          persistentVolumeClaim:
+            claimName: quest-storage-pvc
+        - name: quest-logs
+          persistentVolumeClaim:
+            claimName: quest-logs-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: quest-backend
+  namespace: quest
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: quest-backend
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 31000

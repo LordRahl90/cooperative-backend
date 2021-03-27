@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: quest
+  name: quest-storage-pv
+  labels:
+    tier: storage
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+    - ReadOnlyMany
+  storageClassName: quest-storage-pv
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    path: "/srv/nfs/questdata/storage"
+    server: nfs-server.example.com
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: quest-storage-pvc
+  namespace: quest
+  labels:
+    tier: storage
+    app: quest-storage
+spec:
+  storageClassName: quest-storage-pv
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
