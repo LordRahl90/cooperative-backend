@@ -44,7 +44,13 @@ class CustomerController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $customers = $this->customerRepository->all();
+
+        $companyID = session('company_id');
+        if (isset($companyID)) {
+            $customers = $this->customerRepository->where("company_id", $companyID);
+        } else {
+            $customers = $this->customerRepository->all();
+        }
 
         return view('customers.index')
             ->with('customers', $customers);

@@ -6,7 +6,7 @@
                     <th>Company</th>
                 @endif
                 <th>Name</th>
-                <th>Slug</th>
+{{--                <th>Slug</th>--}}
                 <th>Account Type</th>
                 <th>Prefix Digit</th>
                 <th>Action</th>
@@ -19,7 +19,7 @@
                     <td>{{ $configuration->company->name }}</td>
                 @endif
                 <td>{{ $orgAccountCategory->name }}</td>
-                <td>{{ $orgAccountCategory->slug }}</td>
+{{--                <td>{{ $orgAccountCategory->slug }}</td>--}}
                 <td>{{ $orgAccountCategory->account_type }}</td>
                 <td>{{ $orgAccountCategory->prefix_digit }}</td>
                 <td width="120">

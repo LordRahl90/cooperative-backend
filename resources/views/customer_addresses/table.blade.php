@@ -5,7 +5,7 @@
             @if(session('company_id')==0)
                 <th>Company</th>
             @endif
-            <th>Customer Id</th>
+            <th>Customer</th>
             <th>Street</th>
             <th>Street2</th>
             <th>State</th>
@@ -19,7 +19,7 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerAddress->company->name }}</td>
                 @endif
-                <td>{{ $customerAddress->customer_id }}</td>
+                <td>{{ $customerAddress->customer->full_name }}</td>
                 <td>{{ $customerAddress->street }}</td>
                 <td>{{ $customerAddress->street2 }}</td>
                 <td>{{ $customerAddress->state }}</td>

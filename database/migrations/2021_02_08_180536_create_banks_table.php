@@ -23,7 +23,7 @@ class CreateBanksTable extends Migration
             $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('country_id')->references('id')->on('countries');
+//            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

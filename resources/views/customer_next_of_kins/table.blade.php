@@ -20,7 +20,7 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerNextOfKin->company->name }}</td>
                 @endif
-                <td>{{ $customerNextOfKin->customer_id }}</td>
+                <td>{{ $customerNextOfKin->customer->full_name }}</td>
                 <td>{{ $customerNextOfKin->name }}</td>
                 <td>{{ $customerNextOfKin->address }}</td>
                 <td>{{ $customerNextOfKin->phone }}</td>
@@ -37,7 +37,7 @@
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

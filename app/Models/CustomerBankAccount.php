@@ -70,7 +70,7 @@ class CustomerBankAccount extends Model
     use HasFactory;
 
     public $table = 'customer_bank_accounts';
-    
+
 
     protected $dates = ['deleted_at'];
 
@@ -114,5 +114,15 @@ class CustomerBankAccount extends Model
         'sort_code' => 'required'
     ];
 
-    
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
 }

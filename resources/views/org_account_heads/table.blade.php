@@ -7,7 +7,7 @@
             @endif
             <th>Category</th>
             <th>Name</th>
-            <th>Slug</th>
+{{--            <th>Slug</th>--}}
             <th>Code</th>
             <th>Active</th>
             <th colspan="3">Action</th>
@@ -21,7 +21,7 @@
                 @endif
                 <td>{{ $orgAccountHead->category->name }}</td>
                 <td>{{ $orgAccountHead->name }}</td>
-                <td>{{ $orgAccountHead->slug }}</td>
+{{--                <td>{{ $orgAccountHead->slug }}</td>--}}
                 <td>{{ $orgAccountHead->code }}</td>
                 <td>{{ $orgAccountHead->active?"Active":"InActive" }}</td>
                 <td width="120">

@@ -79,7 +79,6 @@ class CustomerNextOfKin extends Model
     protected $dates = ['deleted_at'];
 
 
-
     public $fillable = [
         'company_id',
         'customer_id',
@@ -126,5 +125,8 @@ class CustomerNextOfKin extends Model
         return $this->belongsTo(Company::class);
     }
 
-
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
