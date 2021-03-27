@@ -239,7 +239,7 @@ $role = session('role');
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="{{ route('customers.index') }}"
+            <a href="{{ route('members.index') }}"
                class="nav-link {{ Request::is('customers*') ? 'active' : '' }}">
                 <p>Customers</p>
             </a>
@@ -368,9 +368,16 @@ $role = session('role');
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('customerAddresses.index') }}"
+            <a href="/repayment/schedule"
                class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
-                <p>Loan Repayment Schedule</p>
+                <p>Download Repayment Schedule</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/repayment/upload"
+               class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
+                <p>Upload Repayment Schedule</p>
             </a>
         </li>
 

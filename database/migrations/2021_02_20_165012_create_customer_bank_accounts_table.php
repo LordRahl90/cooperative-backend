@@ -21,7 +21,7 @@ class CreateCustomerBankAccountsTable extends Migration
             $table->integer('bank_id')->unsigned();
             $table->string('account_name');
             $table->string('account_number');
-            $table->string('sort_code');
+            $table->string('sort_code')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('company_id')->references('id')->on('companies');

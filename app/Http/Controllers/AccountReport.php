@@ -52,7 +52,7 @@ class AccountReport extends Controller
         $sheet->setCellValue('D' . $rowCount, 'Debit');
         $sheet->setCellValue('E' . $rowCount, 'Credit');
         $sheet->setCellValue('F' . $rowCount, 'Balance');
-        $sheet->getStyle('A' . $rowCount . ':' . 'G' . $rowCount)->getFont()->setBold(true);
+//        $sheet->getStyle('A' . $rowCount . ':' . 'G' . $rowCount)->getFont()->setBold(true);
 
 
         $sheet->getColumnDimension('A')->setAutoSize(true);

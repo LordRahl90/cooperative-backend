@@ -22,7 +22,7 @@
                 <td>{{ $loanRepayment->customer->full_name }}</td>
                 <td>{{ $loanRepayment->loan_application->pv->pv_id }}</td>
 
-                <td>{{ number_format($loanRepayment->amount,2) }}</td>
+                <td>{{ number_format(($loanRepayment->principal+$loanRepayment->interest),2) }}</td>
 
                 <td width="120">
                     {!! Form::open(['route' => ['loanRepayments.destroy', $loanRepayment->id], 'method' => 'delete']) !!}

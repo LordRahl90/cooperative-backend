@@ -282,6 +282,9 @@ class CustomerController extends AppBaseController
         $spreadsheet = $reader->load(storage_path("app/" . $path));
         $sheet = $spreadsheet->getActiveSheet();
 
+        $counter = 0;
+        $failedRecords = [];
+
         $highestRow = $sheet->getHighestRow();
         for ($row = 2; $row <= $highestRow; $row++) {
             $surname = $sheet->getCellByColumnAndRow(1, $row)->getValue();
@@ -295,6 +298,7 @@ class CustomerController extends AppBaseController
                 continue;
             }
             $countryInfo = $countryInfo->first();
+//            dd($countryInfo->id);
 
 
             $stateInfo = DB::table('world_divisions')->where('country_id', $countryInfo->id)->where('name', $state)->get();
@@ -306,25 +310,33 @@ class CustomerController extends AppBaseController
             $reference = $sheet->getCellByColumnAndRow(6, $row)->getValue();
             $dob = $sheet->getCellByColumnAndRow(7, $row)->getValue();
             $gender = $sheet->getCellByColumnAndRow(8, $row)->getValue();
-
-            $phone = $sheet->getCellByColumnAndRow(13, $row)->getValue();
-            $email = $sheet->getCellByColumnAndRow(12, $row)->getValue();
+            $email = $sheet->getCellByColumnAndRow(9, $row)->getValue();
+            $phone = $sheet->getCellByColumnAndRow(10, $row)->getValue();
             if ($email == "" || $email == null) {
                 $email = strtolower(str_replace(" ", "", ($surname . '' . $otherNames))) . '@coop-backend.test';
             }
 
-            $religion = $sheet->getCellByColumnAndRow(14, $row)->getValue();
+            $religion = $sheet->getCellByColumnAndRow(11, $row)->getValue();
 
-            $bankName = $sheet->getCellByColumnAndRow(15, $row)->getValue();
-            $accountName = $sheet->getCellByColumnAndRow(16, $row)->getValue();
-            $accountNumber = $sheet->getCellByColumnAndRow(17, $row)->getValue();
+            $bankName = $sheet->getCellByColumnAndRow(12, $row)->getValue();
+            $accountName = $sheet->getCellByColumnAndRow(13, $row)->getValue();
+            $accountNumber = $sheet->getCellByColumnAndRow(14, $row)->getValue();
 
-            $nokName = $sheet->getCellByColumnAndRow(9, $row)->getValue();
-            $relationship = $sheet->getCellByColumnAndRow(10, $row)->getValue();
-            $nokAddress = $sheet->getCellByColumnAndRow(11, $row)->getValue();
+            $nokName = $sheet->getCellByColumnAndRow(15, $row)->getValue();
+            $relationship = $sheet->getCellByColumnAndRow(16, $row)->getValue();
+            $nokAddress = $sheet->getCellByColumnAndRow(17, $row)->getValue();
             if ($nokAddress === "AS ABOVE") {
                 $nokAddress = $address;
             }
+            $nokPhone = $sheet->getCellByColumnAndRow(18, $row)->getValue();
+            $nokEmail = $sheet->getCellByColumnAndRow(19, $row)->getValue();
+
+            $bankInfo = Bank::whereRaw('country_id = ? AND name = ? ', [$countryInfo->id, $bankName])->get();
+            if (count($bankInfo) == 0) {
+                Log::error("invalid bank provided");
+                continue;
+            }
+            $bankInfo = $bankInfo->first();
 
             DB::beginTransaction();
             try {
@@ -336,6 +348,7 @@ class CustomerController extends AppBaseController
                     'role' => 'CUSTOMER',
                 ]);
                 if (!$user) {
+                    $failedRecords[] = $surname . ' ' . $otherNames;
                     Log::error("cannot create user record " . $email . " " . $path);
                     continue;
                 }
@@ -354,6 +367,7 @@ class CustomerController extends AppBaseController
                     'religion' => $religion
                 ]);
                 if (!$customer) {
+                    $failedRecords[] = $surname . ' ' . $otherNames;
                     Log::error("cannot create customer record " . $path);
                     continue;
                 }
@@ -367,21 +381,51 @@ class CustomerController extends AppBaseController
                     'country' => $countryInfo->id
                 ]);
                 if (!$address) {
+                    $failedRecords[] = $surname . ' ' . $otherNames;
                     Log::error("cannot create customer address information " . $path);
+                    continue;
                 }
 
+                $nok = CustomerNextOfKin::create([
+                    'company_id' => $company,
+                    'customer_id' => $customer->id,
+                    'name' => $nokName,
+                    'address' => $nokAddress,
+                    'relationship' => $relationship,
+                    'phone' => $nokPhone,
+                    'email' => $nokEmail
+                ]);
 
+                if (!$nok) {
+                    $failedRecords[] = $surname . ' ' . $otherNames;
+                    Log::error("cannot create customer next if kin details");
+                    continue;
+                }
 
-//                $nok = CustomerNextOfKin::create([
-//                    'company_id'=>$company,
-//                    ''
-//                ]);
+                $bankDetails = CustomerBankAccount::create([
+                    'company_id' => $company,
+                    'customer_id' => $customer->id,
+                    'bank_id' => $bankInfo->id,
+                    'account_name' => $accountName,
+                    'account_number' => $accountNumber
+                ]);
 
+                if (!$bankDetails) {
+                    $failedRecords[] = $surname . ' ' . $otherNames;
+                    Log::error("cannot create the customer bank information " . json_encode($row));
+                    continue;
+                }
+
+                $counter++;
+                DB::commit();
             } catch (\Exception $ex) {
                 Log::error($ex->getMessage());
                 DB::rollBack();
             }
-
         }
+        Log::info($failedRecords);
+        Log::info("Customer upload completed successfully.");
+        Flash::success("Upload completed. ($counter) customers loaded successfully.");
+        return redirect()->back();
     }
 }

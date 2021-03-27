@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /public/reports
+/public/schedules
 /public/report.xlsx
 /storage/*.key
 /vendor

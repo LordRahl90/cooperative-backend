@@ -13,9 +13,13 @@ use App\Models\OrgBankAccount;
 use App\Repositories\LoanRepaymentRepository;
 use App\Http\Controllers\AppBaseController;
 use App\Utility\Transactions;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Response;
 
 class LoanRepaymentController extends AppBaseController
@@ -232,5 +236,71 @@ class LoanRepaymentController extends AppBaseController
         Flash::success('Loan Repayment deleted successfully.');
 
         return redirect(route('loanRepayments.index'));
+    }
+
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showRepaymentSchedule()
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        return view('loan_repayments.schedule', [
+            'companies' => $companies
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+    public function repaymentSchedule(Request $request)
+    {
+        $companyID = $request->get('company_id');
+        $startDate = $request->get('start_date');
+        $results = Transactions::calculateObligation($companyID);
+
+        if (count($results) == 0) {
+            Flash::error("No customer registered for savings/loan at the moment");
+            return redirect()->back()->withInput();
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $rowCount = 1;
+        $sheet->setCellValue('A' . $rowCount, 'Date');
+        $sheet->setCellValue('B' . $rowCount, 'Full name');
+        $sheet->setCellValue('C' . $rowCount, 'Amount');
+        $sheet->getStyle('A' . $rowCount . ':' . 'C' . $rowCount)->getFont()->setBold(true);
+        $sheet->getColumnDimension('A')->setAutoSize(true);
+        $sheet->getColumnDimension('B')->setAutoSize(true);
+        $sheet->getColumnDimension('C')->setAutoSize(true);
+
+        foreach ($results as $k => $result) {
+            $rowCount++;
+            $customer = Customer::find($k);
+            if (!$customer) {
+                Log::error("Customer not found $k");
+                continue;
+            }
+
+            $sheet->setCellValue('A' . $rowCount, Carbon::now()->format('d/m/Y'));
+            $sheet->setCellValue('B' . $rowCount, $customer->full_name);
+            $sheet->setCellValue('C' . $rowCount, $result);
+
+            Log::info($customer->full_name);
+        }
+
+        $f = public_path("/schedules/") . uniqid('sc-') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($f);
+
+        return response()->download($f);
+    }
+
+    public function showUploadRepayment()
+    {
+        return view('loan_repayments.upload');
     }
 }

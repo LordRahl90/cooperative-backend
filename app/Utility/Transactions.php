@@ -5,6 +5,7 @@ namespace App\Utility;
 
 use App\Models\CustomerLoan;
 use App\Models\CustomerLoanLog;
+use App\Models\CustomerSaving;
 use App\Models\OrgBankAccount;
 use App\Models\Payment;
 use App\Models\PaymentVoucher;
@@ -241,8 +242,8 @@ class Transactions
         foreach ($customerLoans as $customerLoan) {
             $application = $customerLoan->loan_application;
             $loanAmount = $application->principal;
-            $repaidAmount = $customerLoan->transactions->sum('credit');
-            $repaymentAmount = $application->repayment_amount;
+            $repaidAmount = $customerLoan->transactions->sum('credit'); // total amount repaid
+            $repaymentAmount = $application->repayment_amount; // expected monthly principal repayment
             $now = Carbon::now();
             $year = $now->format('Y');
             $month = $now->format('m');
@@ -274,5 +275,127 @@ class Transactions
 
             Log::info("Customer Debited amount payable successfully.");
         }
+    }
+
+    /**
+     *
+     * calculates the next savings obligation for a given company
+     *
+     * @param $companyID
+     * @return array
+     */
+    public static function calculateSavingsObligation($companyID)
+    {
+        $result = [];
+        $customerSavings = CustomerSaving::where('company_id', $companyID)->get();
+        foreach ($customerSavings as $customerSaving) {
+            if (count($result) == 0) {
+                $result[$customerSaving->customer_id] = $customerSaving->amount;
+            } else {
+                $prevData = $result[$customerSaving->id];
+                $result[$customerSaving->id] = $prevData + $customerSaving->amount;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Calculates the next loan obligation for a given company
+     *
+     * @param $companyID
+     * @return array
+     *
+     */
+    public static function calculateLoanObligation($companyID)
+    {
+        $result = [];
+        $customerLoans = CustomerLoan::with(['loan_application', 'transactions'])->whereRaw('company_id=? AND status=?', [$companyID, 'RUNNING'])->get();
+        foreach ($customerLoans as $customerLoan) {
+            $application = $customerLoan->loan_application;
+            $loanAmount = $application->principal;
+            $rate = $application->rate;
+            $repaidAmount = $customerLoan->transactions->sum('credit');
+            $repaymentAmount = $application->repayment_amount;
+
+            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+            $payable = $repaymentAmount + $interest;
+
+            if (!isset($result[$customerLoan->customer_id])) {
+                $result[$customerLoan->customer_id] = $payable;
+            } else {
+                $prevPayable = $result[$customerLoan->customer_id];
+                $result[$customerLoan->customer_id] = $prevPayable + $payable;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Calculates the monthly obligation for customers in a given company.
+     *
+     * @param $companyID
+     * @return array
+     */
+    public static function calculateObligation($companyID)
+    {
+        $result = [];
+        $savings = self::calculateSavingsObligation($companyID);
+        $loans = self::calculateLoanObligation($companyID);
+
+        foreach ($savings as $k => $v) {
+            if (!isset($result[$k])) {
+                $result[$k] = $v;
+            } else {
+                $oldResult = $result[$k];
+                $result[$k] = $oldResult + $v;
+            }
+        }
+        foreach ($loans as $k => $v) {
+            if (!isset($result[$k])) {
+                $result[$k] = $v;
+            } else {
+                $oldResult = $result[$k];
+                $result[$k] = $oldResult + $v;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     *This calculates obligations based on each user.
+     *
+     * It is achieved by summing the loan repayments and the savings obligation of the given customer
+     *
+     * @param $customerID
+     * @return array
+     */
+    public static function calculateCustomerNextObligation($customerID)
+    {
+        $totalSavings = 0;
+        $totalLoanRepayment = 0;
+        $savings = CustomerSaving::where('customer_id', $customerID)->get();
+        foreach ($savings as $saving) {
+            $totalSavings += $saving->amount;
+        }
+        $loans = CustomerLoan::with(['loan_application', 'transactions'])->whereRaw('customer_id=? AND status=?', [$customerID, 'RUNNING'])->get();
+        foreach ($loans as $loan) {
+            $application = $loan->loan_application;
+            $loanAmount = $application->principal;
+            $rate = $application->rate;
+            $repaidAmount = $loan->transactions->sum('credit');
+            $repaymentAmount = $application->repayment_amount;
+
+            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+            $payable = $repaymentAmount + $interest;
+
+            $totalLoanRepayment += $payable;
+        }
+
+        return [
+            "customer_id" => $customerID,
+            "savings" => $totalSavings,
+            "loans" => $totalLoanRepayment,
+            "total" => $totalLoanRepayment + $totalSavings
+        ];
     }
 }
