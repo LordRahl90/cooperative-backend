@@ -55,6 +55,7 @@ class UserController extends AppBaseController
     public function store(CreateUserRequest $request)
     {
         $input = $request->all();
+        $input['remember_token'] = uniqid('rm');
 
         $user = $this->userRepository->create($input);
 

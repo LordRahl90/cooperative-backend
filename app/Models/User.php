@@ -49,5 +49,7 @@ class User extends Authenticatable
         return $this->hasOne(Customer::class);
     }
 
-    public static $rules = [];
+    public static $rules = [
+        ''
+    ];
 }
