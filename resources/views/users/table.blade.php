@@ -5,8 +5,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th>Last Logon</th>
-            <th>Email Verified At</th>
+            <th>Role</th>
             <th>Action</th>
         </tr>
         </thead>
@@ -16,8 +15,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->phone }}</td>
-                <td>{{ $user->last_logon }}</td>
-                <td>{{ $user->email_verified_at }}</td>
+                <td>{{ $user->role }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['users.destroy', $user->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

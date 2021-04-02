@@ -31,3 +31,9 @@
     {!! Form::label('password', 'Password:') !!}
     {!! Form::password('password', ['class' => 'form-control','maxlength' => 255,'maxlength' => 255]) !!}
 </div>
+
+<!-- Role Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('role', 'Role:') !!}
+    {!! Form::select('role', ['REGULAR' => 'REGULAR', 'SUPERVISOR' => 'SUPERVISOR', 'MANAGER' => 'MANAGER', 'ADMIN' => 'ADMIN'], null, ['class' => 'form-control custom-select']) !!}
+</div>
