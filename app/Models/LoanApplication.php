@@ -156,4 +156,14 @@ class LoanApplication extends Model
     {
         return $this->belongsTo(PaymentVoucher::class, "pv_id", "id");
     }
+
+    public function loan()
+    {
+        return $this->hasOne(CustomerLoan::class, "loan_application_id", "id");
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(Staff::class, "approved_by", "id");
+    }
 }

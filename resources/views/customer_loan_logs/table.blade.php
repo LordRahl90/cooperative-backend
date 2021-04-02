@@ -1,3 +1,6 @@
+<?php
+//dd($customerLoanLogs->toArray());
+?>
 <div class="table-responsive">
     <table class="table" id="customerLoanLogs-table">
         <thead>
@@ -18,10 +21,10 @@
                 @if(session('company_id')==0)
                     <td>{{ $customerLoanLog->company->name }}</td>
                 @endif
-                <td>{{ $customerLoanLog->customer }}</td>
-                <td>{{ $customerLoanLog->loan_id }}</td>
-                <td>{{ $customerLoanLog->debit }}</td>
-                <td>{{ $customerLoanLog->credit }}</td>
+                <td>{{ $customerLoanLog->customer===null?$customerLoanLog->customer_id:$customerLoanLog->customer->full_name }}</td>
+                <td>{{ $customerLoanLog->loan->loan_application->pv->pv_id }}</td>
+                <td>{{ number_format($customerLoanLog->debit,2) }}</td>
+                <td>{{ number_format($customerLoanLog->credit,2) }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['customerLoanLogs.destroy', $customerLoanLog->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
@@ -29,11 +32,11 @@
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('customerLoanLogs.edit', [$customerLoanLog->id]) }}"
-                           class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
-                        </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        <a href="{{ route('customerLoanLogs.edit', [$customerLoanLog->id]) }}"--}}
+{{--                           class='btn btn-default btn-xs'>--}}
+{{--                            <i class="far fa-edit"></i>--}}
+{{--                        </a>--}}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

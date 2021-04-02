@@ -1,3 +1,6 @@
+<?php
+//dd($savingsAccount);
+?>
 @if(session('company_id')==0)
     <!-- Company Id Field -->
     <div class="form-group col-sm-6">
@@ -7,11 +10,6 @@
 @else
     <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
 @endif
-
-<div class="form-group col-sm-12">
-    <label>New Account Head</label>
-    <input type="checkbox" v-model="new_or_link" />
-</div>
 
 <!-- Savings Category Id Field -->
 <div class="form-group col-sm-6">
@@ -24,8 +22,13 @@
 <div class="form-group col-sm-6" v-if="new_or_link==0">
     {!! Form::label('account_head_id', 'Account Head:') !!}
     <select class="form-control" name="account_head_id" v-model="account.account_head_id">
-        <option value="0" selected disabled>Select Account Head</option>
-        <option v-for="(account,k) in account_heads" :value="k">@{{ account }}</option>
+        @if(isset($savingsAccount))
+            <option value="{{ $savingsAccount->account_head_id }}" selected
+                    disabled>{{ $savingsAccount->account_head->name }}</option>
+        @else
+            <option value="0" selected disabled>Select Account Head</option>
+            <option v-for="(account,k) in account_heads" :value="k">@{{ account }}</option>
+        @endif
     </select>
 </div>
 
@@ -33,7 +36,11 @@
 <!-- Code Field -->
 <div class="form-group col-sm-6" v-if="new_or_link==1">
     {!! Form::label('code', 'Code:') !!}
-    {!! Form::text('code', null, ['class' => 'form-control','v-model'=>'account.code']) !!}
+    @if(isset($savingsAccount))
+        <input type="text" value="{{ $savingsAccount->account_head->code }}" class="form-control" readonly/>
+    @else
+        {!! Form::text('code', null, ['class' => 'form-control','v-model'=>'account.code']) !!}
+    @endif
 </div>
 
 

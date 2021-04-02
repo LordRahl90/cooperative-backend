@@ -32,7 +32,8 @@ class OrgAccountHeadController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $orgAccountHeads = $this->orgAccountHeadRepository->all();
+        $companyID = session('company_id');
+        $orgAccountHeads = $this->orgAccountHeadRepository->where("company_id", $companyID);
 
         return view('org_account_heads.index')
             ->with('orgAccountHeads', $orgAccountHeads);

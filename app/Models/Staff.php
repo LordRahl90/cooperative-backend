@@ -85,7 +85,8 @@ class Staff extends Model
         'phone',
         'password',
         'role',
-        'address'
+        'address',
+        'user_id'
     ];
 
     /**
@@ -116,7 +117,7 @@ class Staff extends Model
         'phone' => 'required',
         'password' => 'required',
         'role' => 'required',
-        'address' => 'required'
+        'address' => 'required',
     ];
 
     public function company()

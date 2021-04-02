@@ -34,7 +34,8 @@ class ReceiptController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $receipts = $this->receiptRepository->all();
+        $companyID = session('company_id');
+        $receipts = $this->receiptRepository->where("company_id", $companyID);
 
         return view('receipts.index')
             ->with('receipts', $receipts);

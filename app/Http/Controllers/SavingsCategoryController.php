@@ -31,7 +31,8 @@ class SavingsCategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $savingsCategories = $this->savingsCategoryRepository->all();
+        $companyID = session('company_id');
+        $savingsCategories = $this->savingsCategoryRepository->where("company_id", $companyID);
 
         return view('savings_categories.index')
             ->with('savingsCategories', $savingsCategories);

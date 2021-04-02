@@ -30,7 +30,8 @@ class OrgAccountCategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $orgAccountCategories = $this->orgAccountCategoryRepository->all();
+        $companyID = session('company_id');
+        $orgAccountCategories = $this->orgAccountCategoryRepository->where("company_id",$companyID);
 
         return view('org_account_categories.index')
             ->with('orgAccountCategories', $orgAccountCategories);

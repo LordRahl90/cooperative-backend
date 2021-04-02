@@ -40,7 +40,8 @@ class CustomerLoanController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $customerLoans = $this->customerLoanRepository->all();
+        $companyID = session('company_id');
+        $customerLoans = $this->customerLoanRepository->where('company_id', $companyID);
 
         return view('customer_loans.index')
             ->with('customerLoans', $customerLoans);
@@ -147,7 +148,9 @@ class CustomerLoanController extends AppBaseController
             return redirect(route('customerLoans.index'));
         }
 
-        return view('customer_loans.show')->with('customerLoan', $customerLoan);
+        return view('customer_loans.show', [
+            'repayments' => $customerLoan->repayments,
+        ])->with('customerLoan', $customerLoan);
     }
 
     /**

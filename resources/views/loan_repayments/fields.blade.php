@@ -55,13 +55,13 @@
 <!-- Interest Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('principal', 'Principal:') !!}
-{{--    <input type="text" name="principal" class="form-control" v-model="principal" @change="updateAmount" />--}}
+    {{--    <input type="text" name="principal" class="form-control" v-model="principal" @change="updateAmount" />--}}
     {!! Form::text('principal', null, ['class' => 'form-control','v-model'=>'principal','@change="updateAmount"']) !!}
 </div>
 
 
 <!-- Interest Field -->
-<div class="form-group col-sm-6" v-if="interest>0">
+<div class="form-group col-sm-6" v-if="interest>=0">
     {!! Form::label('interest', 'Interest:') !!}
     {!! Form::text('interest', null, ['class' => 'form-control','v-model'=>'interest','readonly']) !!}
 </div>

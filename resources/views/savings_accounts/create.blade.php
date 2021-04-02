@@ -23,6 +23,11 @@
             <div class="card-body">
 
                 <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label>New Account Head</label>
+                        <input type="checkbox" v-model="new_or_link"/>
+                    </div>
+
                     @include('savings_accounts.fields')
                 </div>
 

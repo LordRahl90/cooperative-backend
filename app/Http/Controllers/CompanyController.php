@@ -6,10 +6,12 @@ use Antennaio\Clyde\Facades\ClydeUpload;
 use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Country;
+use App\Models\WorldCountry;
 use App\Repositories\CompanyRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Illuminate\Support\Facades\DB;
 use Response;
 
 class CompanyController extends AppBaseController
@@ -44,7 +46,7 @@ class CompanyController extends AppBaseController
      */
     public function create()
     {
-        $countries = Country::orderBy('name', 'asc')->pluck('name', 'id');
+        $countries = WorldCountry::orderBy('name', 'asc')->get();
         return view('companies.create', [
             'countries' => $countries
         ]);
@@ -103,7 +105,6 @@ class CompanyController extends AppBaseController
      */
     public function edit($id)
     {
-        $countries = Country::orderBy('name', 'asc')->pluck('name', 'id');
         $company = $this->companyRepository->find($id);
 
         if (empty($company)) {
@@ -111,6 +112,8 @@ class CompanyController extends AppBaseController
 
             return redirect(route('companies.index'));
         }
+
+        $countries = WorldCountry::orderBy('name', 'asc')->get();
 
         return view('companies.edit', [
             'countries' => $countries
@@ -134,8 +137,15 @@ class CompanyController extends AppBaseController
 
             return redirect(route('companies.index'));
         }
+        $input = $request->all();
+        if ($request->hasFile('logo')) {
+            $logoName = ClydeUpload::upload($request->file('logo'));
+            $input['logo'] = $logoName;
+        } else {
+            $input['logo'] = $company->logo;
+        }
 
-        $company = $this->companyRepository->update($request->all(), $id);
+        $company = $this->companyRepository->update($input, $id);
 
         Flash::success('Company updated successfully.');
 

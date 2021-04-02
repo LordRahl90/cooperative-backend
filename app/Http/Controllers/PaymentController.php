@@ -40,7 +40,8 @@ class PaymentController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $payments = $this->paymentRepository->all();
+        $companyID = session('company_id');
+        $payments = $this->paymentRepository->where("company_id", $companyID);
 
         return view('payments.index')
             ->with('payments', $payments);

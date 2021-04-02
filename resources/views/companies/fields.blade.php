@@ -1,7 +1,17 @@
 <!-- Country Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('country_id', 'Country:') !!}
-    {!! Form::select('country_id', $countries, null, ['class' => 'form-control custom-select']) !!}
+    {{--    {!! Form::select('country_id', $countries, null, ['class' => 'form-control custom-select']) !!}--}}
+    <select class="form-control" name="country_id">
+        <option selected disabled>Select Country</option>
+        @foreach($countries as $country)
+            @if(isset($company) && $company->country_id==$country->id)
+                <option selected value="{{ $country->id }}">{{ $country->name }}</option>
+            @else
+                <option value="{{ $country->id }}">{{ $country->name }}</option>
+            @endif
+        @endforeach
+    </select>
 </div>
 
 <!-- Name Field -->

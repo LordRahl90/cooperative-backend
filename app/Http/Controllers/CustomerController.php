@@ -10,6 +10,7 @@ use App\Models\Country;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\CustomerBankAccount;
+use App\Models\CustomerCompany;
 use App\Models\CustomerNextOfKin;
 use App\Models\User;
 use App\Repositories\CustomerRepository;
@@ -160,16 +161,23 @@ class CustomerController extends AppBaseController
                 throw new \Exception("cannot save customer's next-of-kin information");
             }
 
+            $customerLink = CustomerCompany::create([
+                'customer_id' => $customer->id,
+                'company_id' => $input['company_id']
+            ]);
+            if (!$customerLink) {
+                throw new \Exception("cannot link customer to company.");
+            }
+
             DB::commit();
             Flash::success('Customer saved successfully.');
-            return redirect(route('customers.index'));
+            return redirect(route('members.index'));
 
         } catch (\Exception $ex) {
             DB::rollBack();
             Log::error($ex);
             Flash::error($ex->getMessage());
             return redirect()->back()->withInput();
-//            dd($ex);
         }
     }
 

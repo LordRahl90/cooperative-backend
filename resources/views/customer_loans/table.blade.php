@@ -30,10 +30,10 @@
                         <a href="{{ route('customerLoans.show', [$customerLoan->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('customerLoans.edit', [$customerLoan->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
-                        </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        <a href="{{ route('customerLoans.edit', [$customerLoan->id]) }}" class='btn btn-default btn-xs'>--}}
+{{--                            <i class="far fa-edit"></i>--}}
+{{--                        </a>--}}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

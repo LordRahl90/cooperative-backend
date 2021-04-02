@@ -36,7 +36,8 @@ class OrgBankAccountController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $orgBankAccounts = $this->orgBankAccountRepository->all();
+        $companyID = session('company_id');
+        $orgBankAccounts = $this->orgBankAccountRepository->where("company_id", $companyID);
 
         return view('org_bank_accounts.index')
             ->with('orgBankAccounts', $orgBankAccounts);

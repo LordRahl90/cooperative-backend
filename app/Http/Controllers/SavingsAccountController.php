@@ -6,6 +6,7 @@ use App\Http\Requests\CreateSavingsAccountRequest;
 use App\Http\Requests\UpdateSavingsAccountRequest;
 use App\Models\Company;
 use App\Models\OrgAccountHead;
+use App\Models\SavingsAccount;
 use App\Models\SavingsCategory;
 use App\Repositories\SavingsAccountRepository;
 use App\Http\Controllers\AppBaseController;
@@ -34,7 +35,8 @@ class SavingsAccountController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $savingsAccounts = $this->savingsAccountRepository->all();
+        $companyID = session('company_id');
+        $savingsAccounts = $this->savingsAccountRepository->where("company_id", $companyID);
 
         return view('savings_accounts.index')
             ->with('savingsAccounts', $savingsAccounts);
@@ -148,15 +150,23 @@ class SavingsAccountController extends AppBaseController
      */
     public function edit($id)
     {
-        $savingsAccount = $this->savingsAccountRepository->find($id);
+        $savingsAccount = SavingsAccount::with(['account_head'])->find($id);
 
         if (empty($savingsAccount)) {
             Flash::error('Savings Account not found');
 
             return redirect(route('savingsAccounts.index'));
         }
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $accountHeads = Utility::getAccountHeads($companyID);
+        $savingsCategories = SavingsCategory::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
 
-        return view('savings_accounts.edit')->with('savingsAccount', $savingsAccount);
+        return view('savings_accounts.edit', [
+            'account_heads' => [0 => 'Select Account Head'] + $accountHeads->toArray(),
+            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray(),
+            'companies' => $companies
+        ])->with('savingsAccount', $savingsAccount);
     }
 
     /**

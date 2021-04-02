@@ -48,5 +48,6 @@ class LoginController extends Controller
             $customer = $user->customer;
             session(['company_id' => $customer->company_id, 'role' => $user->role, 'customer_id' => $customer->id]);
         }
+        session(['role' => $user->role]);
     }
 }

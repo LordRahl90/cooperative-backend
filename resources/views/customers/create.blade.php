@@ -21,7 +21,7 @@
 
         <div class="card" id="createCustomerForm">
 
-            {!! Form::open(['route' => 'customers.store','id'=>'createCustomerForm','ref'=>'createCustomerForm']) !!}
+            {!! Form::open(['route' => 'members.store','id'=>'createCustomerForm','ref'=>'createCustomerForm']) !!}
 
             <div class="card-body">
                 <form-wizard @on-complete="onComplete">
@@ -52,7 +52,9 @@
                     </tab-content>
                     <tab-content title="Preview"
                                  icon="ti-check">
-                        Yuhuuu! This seems pretty damn simple
+                        <div class="row">
+                            @include('customers.preview')
+                        </div>
                     </tab-content>
                 </form-wizard>
             </div>

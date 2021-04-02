@@ -8,33 +8,34 @@
     <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
 @endif
 
-<div class="form-group col-sm-12">
-    <label>New Account Head</label>
-    <input type="checkbox" v-model="new_or_link"/>
-</div>
-
 <!-- Savings Category Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('loan_category_id', 'Loans Category:') !!}
     {!! Form::select('loan_category_id', $categories, null, ['class' => 'form-control custom-select','v-model'=>'account.category_id','@change="loadAccountHeads"']) !!}
 </div>
 
-
-<!-- Account Head Id Field -->
 <div class="form-group col-sm-6" v-if="new_or_link==0">
     {!! Form::label('account_head_id', 'Account Head:') !!}
-    {{--    {!! Form::select('account_head_id', $account_heads, null, ['class' => 'form-control custom-select','v-model'=>'account.account_head_id']) !!}--}}
     <select class="form-control" name="account_head_id" v-model="account.account_head_id">
-        <option value="0" selected disabled>Select Account Head</option>
-        <option v-for="(account,k) in account_heads" :value="k">@{{ account }}</option>
+        @if(isset($loanAccount))
+            <option value="{{ $loanAccount->account_head_id }}" selected
+                    disabled>{{ $loanAccount->account_head->name }}</option>
+        @else
+            <option value="0" selected disabled>Select Account Head</option>
+            <option v-for="(account,k) in account_heads" :value="k">@{{ account }}</option>
+        @endif
     </select>
 </div>
 
 
 <!-- Code Field -->
 <div class="form-group col-sm-6" v-if="new_or_link==1">
-    {!! Form::label('code', 'New Account Code:') !!}
-    {!! Form::text('code', null, ['class' => 'form-control','v-model'=>'account.code']) !!}
+    {!! Form::label('code', 'Code:') !!}
+    @if(isset($loanAccount))
+        <input type="text" value="{{ $loanAccount->account_head->code }}" class="form-control" readonly/>
+    @else
+        {!! Form::text('code', null, ['class' => 'form-control','v-model'=>'account.code']) !!}
+    @endif
 </div>
 
 

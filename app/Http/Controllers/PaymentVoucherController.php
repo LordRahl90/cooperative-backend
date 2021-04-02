@@ -38,7 +38,8 @@ class PaymentVoucherController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $paymentVouchers = $this->paymentVoucherRepository->all();
+        $companyID = session('company_id');
+        $paymentVouchers = $this->paymentVoucherRepository->where("company_id", $companyID);
 
         return view('payment_vouchers.index')
             ->with('paymentVouchers', $paymentVouchers);

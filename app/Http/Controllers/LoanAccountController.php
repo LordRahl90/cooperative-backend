@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateLoanAccountRequest;
 use App\Http\Requests\UpdateLoanAccountRequest;
 use App\Models\Company;
+use App\Models\LoanAccount;
 use App\Models\LoanCategory;
 use App\Models\OrgAccountHead;
 use App\Models\OrgBankAccount;
@@ -36,7 +37,8 @@ class LoanAccountController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $loanAccounts = $this->loanAccountRepository->all();
+        $companyID = session('company_id');
+        $loanAccounts = $this->loanAccountRepository->where("company_id", $companyID);
 
         return view('loan_accounts.index')
             ->with('loanAccounts', $loanAccounts);
@@ -151,7 +153,7 @@ class LoanAccountController extends AppBaseController
      */
     public function edit($id)
     {
-        $loanAccount = $this->loanAccountRepository->find($id);
+        $loanAccount = LoanAccount::with(['account_head'])->find($id);
 
         if (empty($loanAccount)) {
             Flash::error('Loan Account not found');
@@ -159,7 +161,16 @@ class LoanAccountController extends AppBaseController
             return redirect(route('loanAccounts.index'));
         }
 
-        return view('loan_accounts.edit')->with('loanAccount', $loanAccount);
+        $companyID = session('company_id');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $accountHeads = Utility::getAccountHeads($companyID);
+        $savingsCategories = LoanCategory::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
+
+        return view('loan_accounts.edit', [
+            'companies' => $companies,
+            'account_heads' => [0 => 'Select Account Heads'] + $accountHeads->toArray(),
+            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray()
+        ])->with('loanAccount', $loanAccount);
     }
 
     /**

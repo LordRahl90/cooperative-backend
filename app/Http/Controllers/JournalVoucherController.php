@@ -33,7 +33,8 @@ class JournalVoucherController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $journalVouchers = $this->journalVoucherRepository->all();
+        $companyID = session('company_id');
+        $journalVouchers = $this->journalVoucherRepository->where("company_id", $companyID);
 
         return view('journal_vouchers.index')
             ->with('journalVouchers', $journalVouchers);

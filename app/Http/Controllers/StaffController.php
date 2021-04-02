@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
 use App\Models\Company;
+use App\Models\User;
 use App\Repositories\StaffRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -31,7 +32,13 @@ class StaffController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $staff = $this->staffRepository->all();
+        $companyID = session('company_id');
+        if (isset($companyID)) {
+            $staff = $this->staffRepository->where("company_id", $companyID);
+        } else {
+            $staff = $this->staffRepository->all();
+        }
+
 
         return view('staff.index')
             ->with('staff', $staff);
@@ -61,7 +68,16 @@ class StaffController extends AppBaseController
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        $user = User::create([
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'phone' => $input['phone'],
+            'password' => $input['password'],
+            'remember_token' => uniqid('rm'),
+            'role' => 'STAFF'
+        ]);
 
+        $input['user_id'] = $user->id;
         $staff = $this->staffRepository->create($input);
 
         Flash::success('Staff saved successfully.');

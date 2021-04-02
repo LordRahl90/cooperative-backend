@@ -111,14 +111,21 @@ class CustomerSavingController extends AppBaseController
     public function edit($id)
     {
         $customerSaving = $this->customerSavingRepository->find($id);
-
         if (empty($customerSaving)) {
             Flash::error('Customer Saving not found');
 
             return redirect(route('customerSavings.index'));
         }
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $customers = Customer::orderBy('surname', 'asc')->where('company_id', $companyID)->get()->pluck('full_name', 'id');
+        $savings = SavingsAccount::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id')->toArray();
 
-        return view('customer_savings.edit')->with('customerSaving', $customerSaving);
+        return view('customer_savings.edit', [
+            'companies' => $companies,
+            'customers' => $customers,
+            'savingsAccount' => $savings
+        ])->with('customerSaving', $customerSaving);
     }
 
     /**

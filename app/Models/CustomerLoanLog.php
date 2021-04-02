@@ -82,7 +82,7 @@ class CustomerLoanLog extends Model
     protected $casts = [
         'id' => 'integer',
         'company_id' => 'integer',
-        'customer' => 'integer',
+        'customer_id' => 'integer',
         'loan_id' => 'integer',
         'debit' => 'double',
         'credit' => 'double'
@@ -95,11 +95,24 @@ class CustomerLoanLog extends Model
      */
     public static $rules = [
         'company_id' => 'required',
-        'customer' => 'required',
+        'customer_id' => 'required',
         'loan_id' => 'required',
         'debit' => 'required',
         'credit' => 'required'
     ];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, "customer_id", "id");
+    }
+
+    public function loan()
+    {
+        return $this->belongsTo(CustomerLoan::class, "loan_id", "id");
+    }
 }

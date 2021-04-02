@@ -9,7 +9,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Role</th>
-            <th>Address</th>
+{{--            <th>Address</th>--}}
             <th>Action</th>
         </tr>
         </thead>
@@ -23,7 +23,7 @@
                 <td>{{ $staff->email }}</td>
                 <td>{{ $staff->phone }}</td>
                 <td>{{ $staff->role }}</td>
-                <td>{{ $staff->address }}</td>
+{{--                <td>{{ $staff->address }}</td>--}}
                 <td width="120">
                     {!! Form::open(['route' => ['staff.destroy', $staff->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

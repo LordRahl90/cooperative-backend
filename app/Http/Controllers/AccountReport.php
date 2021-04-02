@@ -19,8 +19,8 @@ class AccountReport extends Controller
     public function showGeneralLedger()
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
-        //TODO: Abiodun, sort the account heads with login companies
-        $accountHeads = Utility::getAccountHeads(1);
+        $companyID = session('company_id');
+        $accountHeads = Utility::getAccountHeads($companyID);
         return view('reports.general_ledger', [
             'companies' => $companies,
             'account_heads' => [0 => 'Select Account'] + $accountHeads->toArray()
@@ -104,10 +104,11 @@ class AccountReport extends Controller
     public function showBankReport()
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
-        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->pluck('account_name', 'account_head_id');
+        $companyID = session('company_id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'account_head_id');
         return view('reports.bank_report', [
             'companies' => $companies,
-            'bank_accounts' => $bankAccounts
+            'bank_accounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray()
         ]);
     }
 

@@ -256,8 +256,12 @@ class Transactions
                 continue;
             }
 
-            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
-            $payable = $repaymentAmount + $interest;
+            if ($application->interest_type === 'FLAT_RATE') {
+                $payable = $repaymentAmount;
+            } else {
+                $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+                $payable = $repaymentAmount + $interest;
+            }
 
             $debitCustomer = CustomerLoanLog::create([
                 'company_id' => $customerLoan->company_id,
@@ -289,11 +293,11 @@ class Transactions
         $result = [];
         $customerSavings = CustomerSaving::where('company_id', $companyID)->get();
         foreach ($customerSavings as $customerSaving) {
-            if (count($result) == 0) {
-                $result[$customerSaving->customer_id] = $customerSaving->amount;
+            if (isset($result[$customerSaving->customer_id])) {
+                $prevData = $result[$customerSaving->customer_id];
+                $result[$customerSaving->customer_id] = $prevData + $customerSaving->amount;
             } else {
-                $prevData = $result[$customerSaving->id];
-                $result[$customerSaving->id] = $prevData + $customerSaving->amount;
+                $result[$customerSaving->customer_id] = $customerSaving->amount;
             }
         }
         return $result;
@@ -317,8 +321,13 @@ class Transactions
             $repaidAmount = $customerLoan->transactions->sum('credit');
             $repaymentAmount = $application->repayment_amount;
 
-            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
-            $payable = $repaymentAmount + $interest;
+            if ($application->interest_type === 'FLAT_RATE') {
+                $payable = $repaymentAmount;
+            } else {
+                $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+                $payable = $repaymentAmount + $interest;
+            }
+
 
             if (!isset($result[$customerLoan->customer_id])) {
                 $result[$customerLoan->customer_id] = $payable;

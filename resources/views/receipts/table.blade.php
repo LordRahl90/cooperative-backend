@@ -25,7 +25,7 @@
                 <td>{{ $receipt->phone }}</td>
                 <td>{{ $receipt->email }}</td>
                 <td>{{ number_format($receipt->amount,2) }}</td>
-                <td>{{ $receipt->processor->name }}</td>
+                <td>{{ $receipt->processor==null?"":$receipt->processor->name }}</td>
                 <td>
                     {!! Form::open(['route' => ['receipts.destroy', $receipt->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

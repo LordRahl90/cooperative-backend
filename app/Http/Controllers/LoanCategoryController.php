@@ -31,7 +31,8 @@ class LoanCategoryController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $loanCategories = $this->loanCategoryRepository->all();
+        $companyID = session('company_id');
+        $loanCategories = $this->loanCategoryRepository->where('company_id', $companyID);
 
         return view('loan_categories.index')
             ->with('loanCategories', $loanCategories);
@@ -106,8 +107,13 @@ class LoanCategoryController extends AppBaseController
 
             return redirect(route('loanCategories.index'));
         }
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
 
-        return view('loan_categories.edit')->with('loanCategory', $loanCategory);
+        return view('loan_categories.edit', [
+            'companies' => $companies,
+            'categories' => $categories
+        ])->with('loanCategory', $loanCategory);
     }
 
     /**

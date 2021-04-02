@@ -153,8 +153,15 @@ class LoanApplicationController extends AppBaseController
 
             return redirect(route('loanApplications.index'));
         }
+        $repayments = [];
+        if ($loanApplication->loan !== null) {
+            $repayments = $loanApplication->loan->repayments;
+        }
+        dump($repayments);
 
-        return view('loan_applications.show')->with('loanApplication', $loanApplication);
+        return view('loan_applications.show', [
+            'repayments' => $repayments
+        ])->with('loanApplication', $loanApplication);
     }
 
     /**

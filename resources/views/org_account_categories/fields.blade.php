@@ -18,7 +18,7 @@
 <!-- Account Type Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('account_type', 'Account Type:') !!}
-    {!! Form::select('account_type', ['Select','DEBIT','CREDIT'], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('account_type', [''=>'Select','DEBIT'=>'DEBIT','CREDIT'=>'CREDIT'], !isset($orgAccountCategory) || $orgAccountCategory==null?null:$orgAccountCategory->account_type, ['class' => 'form-control custom-select']) !!}
 </div>
 
 

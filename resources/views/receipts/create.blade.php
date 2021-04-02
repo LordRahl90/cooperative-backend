@@ -1,6 +1,6 @@
 <?php
 //dd(session()->all());
-dd(auth()->id());
+//dd(auth()->id());
 ?>
 @extends('layouts.app')
 

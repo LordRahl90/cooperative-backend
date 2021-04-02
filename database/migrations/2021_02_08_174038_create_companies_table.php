@@ -27,8 +27,6 @@ class CreateCompaniesTable extends Migration
             $table->string('address');
             $table->timestamps();
             $table->softDeletes();
-
-//            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

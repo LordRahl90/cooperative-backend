@@ -8,9 +8,9 @@
             <th>Customer</th>
             <th>Savings</th>
             <th>Loan</th>
+            <th>Narration</th>
             <th>Debit</th>
             <th>Credit</th>
-            <th>Narration</th>
             <th>Action</th>
         </tr>
         </thead>
