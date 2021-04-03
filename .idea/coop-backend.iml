@@ -7,7 +7,6 @@
       <sourceFolder url="file://$MODULE_DIR$/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" packagePrefix="App\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/antennaio/laravel-clyde" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/appointer/swaggervel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/asm89/stack-cors" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/carlos-meneses/laravel-mpdf" />
@@ -16,9 +15,9 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/crabbly/fpdf-laravel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/cviebrock/eloquent-sluggable" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/deprecations" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/event-manager" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
@@ -40,7 +39,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infyomlabs/adminlte-templates" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/infyomlabs/laravel-generator" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/infyomlabs/swagger-generator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/intervention/image" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/khsing/world" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/laracasts/flash" />
@@ -81,6 +79,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-text-template" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-timer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/predis/predis" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-client" />
@@ -109,7 +108,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/version" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/setasign/fpdi" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/swagger-api/swagger-ui" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/swiftmailer/swiftmailer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/console" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/css-selector" />
@@ -143,7 +141,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/zircote/swagger-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

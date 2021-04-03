@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
+use App\Mail\NewStaffRegistered;
 use App\Models\Company;
 use App\Models\User;
 use App\Repositories\StaffRepository;
@@ -11,6 +12,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Response;
 
 class StaffController extends AppBaseController
@@ -78,9 +80,15 @@ class StaffController extends AppBaseController
         ]);
 
         $input['user_id'] = $user->id;
+        $input['active'] = false;
         $staff = $this->staffRepository->create($input);
 
         Flash::success('Staff saved successfully.');
+        $company = Company::find($input['company_id']);
+//        Mail::send(new NewStaffRegistered($company, $staff));
+        dispatch(function () use ($user, $company, $staff, $request) {
+            Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password')));
+        })->afterResponse();
 
         return redirect(route('staff.index'));
     }

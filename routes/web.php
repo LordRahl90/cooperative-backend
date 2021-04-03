@@ -17,9 +17,15 @@ Route::get('/', function () {
 //    dd("hello world");
     return view('welcome');
 });
+Route::get('/staff/activate');
 
-Route::get("/test", function () {
-    dd("Testing interface");
+Route::get('/custom', function () {
+    $company = \App\Models\Company::find(1);
+    $staff = \App\Models\Staff::find(36);
+//        dd($staff->user);
+//        dd($staff);
+    \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
+    dump("Mail sent successfully,");
 });
 
 Auth::routes();
@@ -100,11 +106,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     });
 
-    Route::get('/custom', function () {
-        $customerID = 36;
-        $total = \App\Utility\Transactions::calculateCustomerNextObligation($customerID);
-        dd($total);
-    });
     Route::resource('customers', App\Http\Controllers\CustomerController::class);
     Route::resource('members', App\Http\Controllers\CustomerController::class);
     Route::get('/customer/upload', 'App\Http\Controllers\CustomerController@showUpload');
@@ -134,8 +135,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('loanRepayments', App\Http\Controllers\LoanRepaymentController::class);
     Route::get('/repayment/schedule', 'App\Http\Controllers\LoanRepaymentController@showRepaymentSchedule');
     Route::post('/repayment/schedule', 'App\Http\Controllers\LoanRepaymentController@repaymentSchedule');
-    Route::get('/repayment/upload','App\Http\Controllers\LoanRepaymentController@showUploadRepayment');
-    Route::post('/repayment/upload','App\Http\Controllers\LoanRepaymentController@uploadRepayment');
+    Route::get('/repayment/upload', 'App\Http\Controllers\LoanRepaymentController@showUploadRepayment');
+    Route::post('/repayment/upload', 'App\Http\Controllers\LoanRepaymentController@uploadRepayment');
 
     Route::resource('customerTransactions', App\Http\Controllers\CustomerTransactionController::class);
 

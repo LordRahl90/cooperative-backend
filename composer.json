@@ -15,8 +15,8 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
+        "ext-json": "*",
         "antennaio/laravel-clyde": "~0.0.1",
-        "appointer/swaggervel": "dev-master",
         "carlos-meneses/laravel-mpdf": "^2.1",
         "crabbly/fpdf-laravel": "^1.0",
         "cviebrock/eloquent-sluggable": "^8.0",
@@ -26,15 +26,13 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "infyomlabs/adminlte-templates": "^2.0",
         "infyomlabs/laravel-generator": "8.0.x-dev",
-        "infyomlabs/swagger-generator": "dev-master",
         "khsing/world": "^8.1",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.0",
+        "laravel/ui": "^3.2",
         "laravelcollective/html": "^6.2",
         "phpoffice/phpspreadsheet": "^1.16",
-        "predis/predis": "^1.1",
-        "ext-json": "*"
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

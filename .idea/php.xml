@@ -116,11 +116,6 @@
       <path value="$PROJECT_DIR$/vendor/laracasts/flash" />
       <path value="$PROJECT_DIR$/vendor/laravelcollective/html" />
       <path value="$PROJECT_DIR$/vendor/laravel/ui" />
-      <path value="$PROJECT_DIR$/vendor/infyomlabs/swagger-generator" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
-      <path value="$PROJECT_DIR$/vendor/appointer/swaggervel" />
-      <path value="$PROJECT_DIR$/vendor/zircote/swagger-php" />
-      <path value="$PROJECT_DIR$/vendor/swagger-api/swagger-ui" />
       <path value="$PROJECT_DIR$/vendor/cocur/slugify" />
       <path value="$PROJECT_DIR$/vendor/cviebrock/eloquent-sluggable" />
       <path value="$PROJECT_DIR$/vendor/intervention/image" />
@@ -140,6 +135,8 @@
       <path value="$PROJECT_DIR$/vendor/markbaker/matrix" />
       <path value="$PROJECT_DIR$/vendor/markbaker/complex" />
       <path value="$PROJECT_DIR$/vendor/khsing/world" />
+      <path value="$PROJECT_DIR$/vendor/predis/predis" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
     </include_path>
   </component>
   <component name="PhpUnit">
