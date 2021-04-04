@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-//    dd("hello world");
+    dd(gethostname());
     return view('welcome');
 });
 Route::get('/staff/activate');
@@ -22,8 +22,6 @@ Route::get('/staff/activate');
 Route::get('/custom', function () {
     $company = \App\Models\Company::find(1);
     $staff = \App\Models\Staff::find(36);
-//        dd($staff->user);
-//        dd($staff);
     \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
     dump("Mail sent successfully,");
 });
