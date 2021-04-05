@@ -9,7 +9,7 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Role</th>
-{{--            <th>Address</th>--}}
+            {{--            <th>Address</th>--}}
             <th>Action</th>
         </tr>
         </thead>
@@ -17,13 +17,12 @@
         @foreach($staff as $staff)
             <tr>
                 @if(session('company_id')==0)
-                    <td>{{ $staff->company->name }}</td>
+                    <td>{{ $staff->company==null?"":$staff->company->name }}</td>
                 @endif
                 <td>{{ $staff->name }}</td>
                 <td>{{ $staff->email }}</td>
                 <td>{{ $staff->phone }}</td>
                 <td>{{ $staff->role }}</td>
-{{--                <td>{{ $staff->address }}</td>--}}
                 <td width="120">
                     {!! Form::open(['route' => ['staff.destroy', $staff->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

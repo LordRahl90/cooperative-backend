@@ -1,6 +1,9 @@
 
 ci: build-image push
 
+start:
+	php artisan serve
+
 push:
 	docker push lordrahl/coop-backend:latest
 

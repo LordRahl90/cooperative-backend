@@ -45,6 +45,7 @@ class ResetPasswordController extends Controller
                 $staff->password = $user->password;
                 $staff->active = true;
                 $staff->save();
+                session(['company_id' => $staff->company_id, 'staff_id' => $staff->id]);
             } catch (\Exception $ex) {
                 Log::info($ex);
                 DB::rollBack();

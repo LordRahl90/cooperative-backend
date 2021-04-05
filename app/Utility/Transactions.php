@@ -394,8 +394,12 @@ class Transactions
             $repaidAmount = $loan->transactions->sum('credit');
             $repaymentAmount = $application->repayment_amount;
 
-            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
-            $payable = $repaymentAmount + $interest;
+            if ($application->interest_type === 'FLAT_RATE') {
+                $payable = $repaymentAmount;
+            } else {
+                $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+                $payable = $repaymentAmount + $interest;
+            }
 
             $totalLoanRepayment += $payable;
         }
@@ -405,6 +409,29 @@ class Transactions
             "savings" => $totalSavings,
             "loans" => $totalLoanRepayment,
             "total" => $totalLoanRepayment + $totalSavings
+        ];
+    }
+
+    public static function calculateLoanRepaymentAmount($loanID)
+    {
+        $loan = CustomerLoan::find($loanID);
+        $application = $loan->loan_application;
+        $loanAmount = $application->principal;
+        $rate = $application->rate;
+        $repaidAmount = $loan->transactions->sum('credit');
+        $repaymentAmount = $application->repayment_amount;
+        $interest = 0;
+
+        if ($application->interest_type === 'FLAT_RATE') {
+            $payable = $repaymentAmount;
+        } else {
+            $interest = ($loanAmount - $repaidAmount) * $rate / 100;
+            $payable = $repaymentAmount + $interest;
+        }
+
+        return [
+            'principal' => $repaymentAmount,
+            'interest' => $interest
         ];
     }
 }

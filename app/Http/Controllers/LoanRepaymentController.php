@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateLoanRepaymentRequest;
 use App\Http\Requests\UpdateLoanRepaymentRequest;
+use App\Jobs\ProcessRepaymentSchedule;
 use App\Models\Company;
 use App\Models\Customer;
 use App\Models\CustomerLoan;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Response;
@@ -270,12 +272,14 @@ class LoanRepaymentController extends AppBaseController
 
         $rowCount = 1;
         $sheet->setCellValue('A' . $rowCount, 'Date');
-        $sheet->setCellValue('B' . $rowCount, 'Full name');
-        $sheet->setCellValue('C' . $rowCount, 'Amount');
-        $sheet->getStyle('A' . $rowCount . ':' . 'C' . $rowCount)->getFont()->setBold(true);
+        $sheet->setCellValue('B' . $rowCount, 'Staff Number');
+        $sheet->setCellValue('C' . $rowCount, 'Full name');
+        $sheet->setCellValue('D' . $rowCount, 'Amount');
+        $sheet->getStyle('A' . $rowCount . ':' . 'D' . $rowCount)->getFont()->setBold(true);
         $sheet->getColumnDimension('A')->setAutoSize(true);
         $sheet->getColumnDimension('B')->setAutoSize(true);
         $sheet->getColumnDimension('C')->setAutoSize(true);
+        $sheet->getColumnDimension('D')->setAutoSize(true);
 
         foreach ($results as $k => $result) {
             $rowCount++;
@@ -286,10 +290,9 @@ class LoanRepaymentController extends AppBaseController
             }
 
             $sheet->setCellValue('A' . $rowCount, Carbon::now()->format('d/m/Y'));
-            $sheet->setCellValue('B' . $rowCount, $customer->full_name);
-            $sheet->setCellValue('C' . $rowCount, $result);
-
-            Log::info($customer->full_name);
+            $sheet->setCellValue('B' . $rowCount, $customer->reference);
+            $sheet->setCellValue('C' . $rowCount, $customer->full_name);
+            $sheet->setCellValue('D' . $rowCount, $result);
         }
 
         $f = public_path("/schedules/") . uniqid('sc-') . '.xlsx';
@@ -301,6 +304,34 @@ class LoanRepaymentController extends AppBaseController
 
     public function showUploadRepayment()
     {
-        return view('loan_repayments.upload');
+        $companyID = session('company_id');
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $bankAccounts = OrgBankAccount::where('company_id', $companyID)->orderBy('account_name', 'asc')->pluck('account_name', 'id');
+
+        return view('loan_repayments.upload', [
+            'companies' => $companies,
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray()
+        ]);
+    }
+
+    public function uploadRepayment(Request $request)
+    {
+        $companyID = $request->company_id;
+        $date = $request->start_date;
+        $bankAccountID = $request->bank_account_id;
+        $upload = $request->file('upload');
+        if ($upload === null) {
+            Flash::error("Invalid customer list, try again.");
+            return redirect()->back();
+        }
+        $bankAccount = OrgBankAccount::find($bankAccountID);
+
+        $filename = uniqid('cus-') . '.xlsx';
+        $path = Storage::putFileAs('schedules', $upload, $filename);
+        $filename = 'app/' . $path;
+        ProcessRepaymentSchedule::dispatch($companyID, auth()->id(), $bankAccount->account_head_id, $filename, $date)->onQueue('repayment');
+
+        Flash::success("Upload completed successfully, disbursing will start shortly.");
+        return redirect()->back();
     }
 }

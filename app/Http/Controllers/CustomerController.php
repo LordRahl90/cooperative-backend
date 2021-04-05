@@ -312,7 +312,6 @@ class CustomerController extends AppBaseController
                 continue;
             }
             $countryInfo = $countryInfo->first();
-//            dd($countryInfo->id);
 
 
             $stateInfo = DB::table('world_divisions')->where('country_id', $countryInfo->id)->where('name', $state)->get();

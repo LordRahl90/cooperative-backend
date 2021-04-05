@@ -23,17 +23,18 @@
     <div class="content px-3">
 
         @include('adminlte-templates::common.errors')
+        @include('flash::message')
 
         <div class="card">
 
-            {!! Form::open(['url' => '/repayment/upload']) !!}
+            {!! Form::open(['url' => '/repayment/upload','files'=>'true']) !!}
 
             <div class="card-body">
 
                 <div class="row">
                 @if(session('company_id')==0)
                     <!-- Company Id Field -->
-                        <div class="form-group col-sm-6">
+                        <div class="form-group col-sm-12">
                             {!! Form::label('company_id', 'Company:') !!}
                             {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select']) !!}
                         </div>
@@ -46,6 +47,11 @@
                         <div class="form-group col-sm-12">
                             {!! Form::label('start_date', 'Select Month and Year:') !!}
                             {!! Form::text('start_date', null, ['class' => 'form-control']) !!}
+                        </div>
+
+                        <div class="form-group col-sm-12">
+                            {!! Form::label('bank_account_id', 'Select Bank Account:') !!}
+                            {!! Form::select('bank_account_id', $bankAccounts, null, ['class' => 'form-control custom-select']) !!}
                         </div>
 
                         <div class="form-group col-sm-12">
