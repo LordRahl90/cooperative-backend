@@ -27,12 +27,13 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $customerAddresses = $this->customerAddressRepository->all();
 
-        return view('customer_addresses.index')
-            ->with('customerAddresses', $customerAddresses);
+        return view('customer_addresses.index', [
+            'account' => $account
+        ])->with('customerAddresses', $customerAddresses);
     }
 
     /**
@@ -40,9 +41,11 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
-        return view('customer_addresses.create');
+        return view('customer_addresses.create', [
+            'account' => $account
+        ]);
     }
 
     /**
@@ -52,7 +55,7 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateCustomerAddressRequest $request)
+    public function store(CreateCustomerAddressRequest $request, $account)
     {
         $input = $request->all();
 
@@ -60,7 +63,7 @@ class CustomerAddressController extends AppBaseController
 
         Flash::success('Customer Address saved successfully.');
 
-        return redirect(route('customerAddresses.index'));
+        return redirect(route('customerAddresses.index', $account));
     }
 
     /**
@@ -70,17 +73,19 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customerAddress = $this->customerAddressRepository->find($id);
 
         if (empty($customerAddress)) {
             Flash::error('Customer Address not found');
 
-            return redirect(route('customerAddresses.index'));
+            return redirect(route('customerAddresses.index', $account));
         }
 
-        return view('customer_addresses.show')->with('customerAddress', $customerAddress);
+        return view('customer_addresses.show', [
+            'account' => $account
+        ])->with('customerAddress', $customerAddress);
     }
 
     /**
@@ -90,17 +95,19 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $customerAddress = $this->customerAddressRepository->find($id);
 
         if (empty($customerAddress)) {
             Flash::error('Customer Address not found');
 
-            return redirect(route('customerAddresses.index'));
+            return redirect(route('customerAddresses.index', $account));
         }
 
-        return view('customer_addresses.edit')->with('customerAddress', $customerAddress);
+        return view('customer_addresses.edit', [
+            'account' => $account
+        ])->with('customerAddress', $customerAddress);
     }
 
     /**
@@ -111,21 +118,21 @@ class CustomerAddressController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCustomerAddressRequest $request)
+    public function update($account, $id, UpdateCustomerAddressRequest $request)
     {
         $customerAddress = $this->customerAddressRepository->find($id);
 
         if (empty($customerAddress)) {
             Flash::error('Customer Address not found');
 
-            return redirect(route('customerAddresses.index'));
+            return redirect(route('customerAddresses.index', $account));
         }
 
         $customerAddress = $this->customerAddressRepository->update($request->all(), $id);
 
         Flash::success('Customer Address updated successfully.');
 
-        return redirect(route('customerAddresses.index'));
+        return redirect(route('customerAddresses.index', $account));
     }
 
     /**
@@ -133,11 +140,11 @@ class CustomerAddressController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $customerAddress = $this->customerAddressRepository->find($id);
 
@@ -151,6 +158,6 @@ class CustomerAddressController extends AppBaseController
 
         Flash::success('Customer Address deleted successfully.');
 
-        return redirect(route('customerAddresses.index'));
+        return redirect(route('customerAddresses.index', $account));
     }
 }

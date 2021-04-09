@@ -27,11 +27,11 @@ class LoanGuaratorController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $loanGuarators = $this->loanGuaratorRepository->all();
 
-        return view('loan_guarators.index')
+        return view('loan_guarators.index', ['account' => $account])
             ->with('loanGuarators', $loanGuarators);
     }
 
@@ -40,9 +40,9 @@ class LoanGuaratorController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
-        return view('loan_guarators.create');
+        return view('loan_guarators.create', ['account' => $account]);
     }
 
     /**
@@ -52,7 +52,7 @@ class LoanGuaratorController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateLoanGuaratorRequest $request)
+    public function store(CreateLoanGuaratorRequest $request, $account)
     {
         $input = $request->all();
 
@@ -60,7 +60,7 @@ class LoanGuaratorController extends AppBaseController
 
         Flash::success('Loan Guarator saved successfully.');
 
-        return redirect(route('loanGuarators.index'));
+        return redirect(route('loanGuarators.index', $account));
     }
 
     /**
@@ -70,17 +70,17 @@ class LoanGuaratorController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $loanGuarator = $this->loanGuaratorRepository->find($id);
 
         if (empty($loanGuarator)) {
             Flash::error('Loan Guarator not found');
 
-            return redirect(route('loanGuarators.index'));
+            return redirect(route('loanGuarators.index', $account));
         }
 
-        return view('loan_guarators.show')->with('loanGuarator', $loanGuarator);
+        return view('loan_guarators.show', ['account' => $account])->with('loanGuarator', $loanGuarator);
     }
 
     /**
@@ -133,9 +133,9 @@ class LoanGuaratorController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
     public function destroy($id)
     {

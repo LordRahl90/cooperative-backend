@@ -7,12 +7,12 @@
                 <div class="col-sm-6">
                     <h1>Customer Transactions</h1>
                 </div>
-                <div class="col-sm-6">
-                    <a class="btn btn-primary float-right"
-                       href="{{ route('customerTransactions.create') }}">
-                        Add New
-                    </a>
-                </div>
+{{--                <div class="col-sm-6">--}}
+{{--                    <a class="btn btn-primary float-right"--}}
+{{--                       href="{{ route('customerTransactions.create',$account) }}">--}}
+{{--                        Add New--}}
+{{--                    </a>--}}
+{{--                </div>--}}
             </div>
         </div>
     </section>
@@ -29,7 +29,7 @@
 
                 <div class="card-footer clearfix float-right">
                     <div class="float-right">
-                        
+
                     </div>
                 </div>
             </div>

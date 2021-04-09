@@ -25,9 +25,10 @@ class CustomerTransactionController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         if (isset($companyID)) {
@@ -36,7 +37,9 @@ class CustomerTransactionController extends AppBaseController
             $customerTransactions = $this->customerTransactionRepository->all();
         }
 
-        return view('customer_transactions.index')
+        return view('customer_transactions.index', [
+            'account' => $account
+        ])
             ->with('customerTransactions', $customerTransactions);
     }
 
@@ -45,9 +48,9 @@ class CustomerTransactionController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
-        return view('customer_transactions.create');
+        return view('customer_transactions.create', ['account' => $account]);
     }
 
     /**
@@ -57,7 +60,7 @@ class CustomerTransactionController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateCustomerTransactionRequest $request)
+    public function store(CreateCustomerTransactionRequest $request, $account)
     {
         $input = $request->all();
 
@@ -65,7 +68,7 @@ class CustomerTransactionController extends AppBaseController
 
         Flash::success('Customer Transaction saved successfully.');
 
-        return redirect(route('customerTransactions.index'));
+        return redirect(route('customerTransactions.index', $account));
     }
 
     /**
@@ -75,17 +78,17 @@ class CustomerTransactionController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customerTransaction = $this->customerTransactionRepository->find($id);
 
         if (empty($customerTransaction)) {
             Flash::error('Customer Transaction not found');
 
-            return redirect(route('customerTransactions.index'));
+            return redirect(route('customerTransactions.index', $account));
         }
 
-        return view('customer_transactions.show')->with('customerTransaction', $customerTransaction);
+        return view('customer_transactions.show', ['account' => $account])->with('customerTransaction', $customerTransaction);
     }
 
     /**

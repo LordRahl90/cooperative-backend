@@ -27,13 +27,13 @@
                 <td>{{ number_format($customerTransaction->debit,2) }}</td>
                 <td>{{ number_format($customerTransaction->credit,2) }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['customerTransactions.destroy', $customerTransaction->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['customerTransactions.destroy',$account, $customerTransaction->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('customerTransactions.show', [$customerTransaction->id]) }}"
+                        <a href="{{ route('customerTransactions.show', [$account,$customerTransaction->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('customerTransactions.edit', [$customerTransaction->id]) }}"
+                        <a href="{{ route('customerTransactions.edit', [$account,$customerTransaction->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

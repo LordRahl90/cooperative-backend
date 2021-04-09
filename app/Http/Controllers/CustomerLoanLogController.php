@@ -25,24 +25,30 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $customerLoanLogs = $this->customerLoanLogRepository->all();
 
-        return view('customer_loan_logs.index')
+        return view('customer_loan_logs.index', [
+            'account' => $account
+        ])
             ->with('customerLoanLogs', $customerLoanLogs);
     }
 
     /**
      * Show the form for creating a new CustomerLoanLog.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
-        return view('customer_loan_logs.create');
+        return view('customer_loan_logs.create', [
+            'account' => $account
+        ]);
     }
 
     /**
@@ -50,9 +56,10 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @param CreateCustomerLoanLogRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreateCustomerLoanLogRequest $request)
+    public function store(CreateCustomerLoanLogRequest $request, $account)
     {
         $input = $request->all();
 
@@ -60,7 +67,7 @@ class CustomerLoanLogController extends AppBaseController
 
         Flash::success('Customer Loan Log saved successfully.');
 
-        return redirect(route('customerLoanLogs.index'));
+        return redirect(route('customerLoanLogs.index', $account));
     }
 
     /**
@@ -70,7 +77,7 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customerLoanLog = $this->customerLoanLogRepository->find($id);
 
@@ -80,7 +87,7 @@ class CustomerLoanLogController extends AppBaseController
             return redirect(route('customerLoanLogs.index'));
         }
 
-        return view('customer_loan_logs.show')->with('customerLoanLog', $customerLoanLog);
+        return view('customer_loan_logs.show', ['account' => $account])->with('customerLoanLog', $customerLoanLog);
     }
 
     /**
@@ -90,7 +97,7 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $customerLoanLog = $this->customerLoanLogRepository->find($id);
 
@@ -100,7 +107,7 @@ class CustomerLoanLogController extends AppBaseController
             return redirect(route('customerLoanLogs.index'));
         }
 
-        return view('customer_loan_logs.edit')->with('customerLoanLog', $customerLoanLog);
+        return view('customer_loan_logs.edit', ['account' => $account])->with('customerLoanLog', $customerLoanLog);
     }
 
     /**
@@ -111,7 +118,7 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCustomerLoanLogRequest $request)
+    public function update($account, $id, UpdateCustomerLoanLogRequest $request)
     {
         $customerLoanLog = $this->customerLoanLogRepository->find($id);
 
@@ -125,7 +132,7 @@ class CustomerLoanLogController extends AppBaseController
 
         Flash::success('Customer Loan Log updated successfully.');
 
-        return redirect(route('customerLoanLogs.index'));
+        return redirect(route('customerLoanLogs.index', $account));
     }
 
     /**
@@ -133,24 +140,24 @@ class CustomerLoanLogController extends AppBaseController
      *
      * @param int $id
      *
+     * @return Response
      * @throws \Exception
      *
-     * @return Response
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $customerLoanLog = $this->customerLoanLogRepository->find($id);
 
         if (empty($customerLoanLog)) {
             Flash::error('Customer Loan Log not found');
 
-            return redirect(route('customerLoanLogs.index'));
+            return redirect(route('customerLoanLogs.index', $account));
         }
 
         $this->customerLoanLogRepository->delete($id);
 
         Flash::success('Customer Loan Log deleted successfully.');
 
-        return redirect(route('customerLoanLogs.index'));
+        return redirect(route('customerLoanLogs.index', $account));
     }
 }

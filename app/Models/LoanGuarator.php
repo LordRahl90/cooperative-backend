@@ -60,11 +60,10 @@ class LoanGuarator extends Model
 
     use HasFactory;
 
-    public $table = 'loan_guarators';
-    
+    public $table = 'loan_guarantors';
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -99,5 +98,5 @@ class LoanGuarator extends Model
         'guarantor' => 'required'
     ];
 
-    
+
 }
