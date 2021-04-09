@@ -29,6 +29,7 @@ class UserController extends AppBaseController
      */
     public function index(Request $request)
     {
+        dd('hello world');
         $users = $this->userRepository->all();
 
         return view('users.index')
