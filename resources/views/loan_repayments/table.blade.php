@@ -27,7 +27,7 @@
                 <td width="120">
                     {!! Form::open(['route' => ['loanRepayments.destroy', $loanRepayment->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('loanRepayments.show', [$loanRepayment->id]) }}"
+                        <a href="{{ route('loanRepayments.show', [$account,$loanRepayment->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>

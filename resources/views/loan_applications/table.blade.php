@@ -31,17 +31,17 @@
                 <td>{{ $loanApplication->status }}</td>
                 <td>{{ $loanApplication->staff->name }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['loanApplications.destroy', $loanApplication->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['loanApplications.destroy',$account, $loanApplication->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('loanApplications.show', [$loanApplication->id]) }}"
+                        <a href="{{ route('loanApplications.show', [$account,$loanApplication->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-{{--                        <a href="{{ route('loanApplications.edit', [$loanApplication->id]) }}"--}}
-{{--                           class='btn btn-default btn-xs'>--}}
-{{--                            <i class="far fa-edit"></i>--}}
-{{--                        </a>--}}
-{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
+                        {{--                        <a href="{{ route('loanApplications.edit', [$loanApplication->id]) }}"--}}
+                        {{--                           class='btn btn-default btn-xs'>--}}
+                        {{--                            <i class="far fa-edit"></i>--}}
+                        {{--                        </a>--}}
+                        {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

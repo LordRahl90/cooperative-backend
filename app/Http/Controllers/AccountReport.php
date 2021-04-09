@@ -7,27 +7,32 @@ use App\Models\OrgAccountHead;
 use App\Models\OrgBankAccount;
 use App\Models\Transaction;
 use App\Utility\Utility;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PDF;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class AccountReport extends Controller
 {
-    public function showGeneralLedger()
+    public function showGeneralLedger($account)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $companyID = session('company_id');
         $accountHeads = Utility::getAccountHeads($companyID);
         return view('reports.general_ledger', [
             'companies' => $companies,
+            'account' => $account,
             'account_heads' => [0 => 'Select Account'] + $accountHeads->toArray()
         ]);
     }
 
-    public function generalLedger(Request $request)
+    public function generalLedger(Request $request, $account)
     {
         $input = $request->all();
         $companyID = $input['company_id'];
@@ -101,17 +106,29 @@ class AccountReport extends Controller
         return response()->download($f);
     }
 
-    public function showBankReport()
+    /**
+     * @param $account
+     * @return Factory|View
+     */
+    public function showBankReport($account)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $companyID = session('company_id');
         $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'account_head_id');
         return view('reports.bank_report', [
             'companies' => $companies,
+            'account' => $account,
             'bank_accounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray()
         ]);
     }
 
+
+    /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws Exception
+     */
     public function bankReport(Request $request)
     {
         $input = $request->all();
@@ -189,15 +206,19 @@ class AccountReport extends Controller
 
     }
 
-    public function showTrialBalance()
+    public function showTrialBalance($account)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         return view('reports.show_trial_balance', [
+            'account' => $account,
             'companies' => $companies
         ]);
     }
 
-    public function trialBalance(Request $request)
+    /**
+     * @param Request $request
+     */
+    public function trialBalance(Request $request, $account)
     {
         $input = $request->all();
 
@@ -219,7 +240,8 @@ class AccountReport extends Controller
             'company' => $company,
             'results' => $results,
             'start_date' => $startDate,
-            'end_date' => $endDate
+            'end_date' => $endDate,
+            'account' => $account
         ]);
         $pdf->stream('trial_balance.pdf');
     }

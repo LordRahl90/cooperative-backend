@@ -18,7 +18,7 @@
 
         <div class="card" id="loanApplicationDiv">
 
-            {!! Form::open(['route' => 'loanApplications.store','target'=>'_blank']) !!}
+            {!! Form::open(['route' => ['loanApplications.store',$account],'target'=>'_blank']) !!}
 
             <div class="card-body">
 
@@ -30,7 +30,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('loanApplications.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('loanApplications.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

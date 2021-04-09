@@ -36,23 +36,25 @@ class CustomerLoanController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $customerLoans = $this->customerLoanRepository->where('company_id', $companyID);
 
-        return view('customer_loans.index')
+        return view('customer_loans.index', ['account' => $account])
             ->with('customerLoans', $customerLoans);
     }
 
     /**
      * Show the form for creating a new CustomerLoan.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -63,7 +65,8 @@ class CustomerLoanController extends AppBaseController
             'companies' => $companies,
             'staff' => [0 => 'Select Staff'] + $staff->toArray(),
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
-            'applications' => [0 => 'Select Application'] + $applications->toArray()
+            'applications' => [0 => 'Select Application'] + $applications->toArray(),
+            'account' => $account
         ]);
     }
 
@@ -72,9 +75,10 @@ class CustomerLoanController extends AppBaseController
      *
      * @param CreateCustomerLoanRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreateCustomerLoanRequest $request)
+    public function store(CreateCustomerLoanRequest $request, $account)
     {
         $input = $request->all();
 
@@ -122,7 +126,7 @@ class CustomerLoanController extends AppBaseController
             DB::commit();
 
             Flash::success('Customer Loan saved successfully.');
-            return redirect(route('customerLoans.index'));
+            return redirect(route('customerLoans.index', $account));
         } catch (\Exception $ex) {
             DB::rollBack();
             Log::info($ex);
@@ -138,18 +142,19 @@ class CustomerLoanController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customerLoan = $this->customerLoanRepository->find($id);
 
         if (empty($customerLoan)) {
             Flash::error('Customer Loan not found');
 
-            return redirect(route('customerLoans.index'));
+            return redirect(route('customerLoans.index', $account));
         }
 
         return view('customer_loans.show', [
             'repayments' => $customerLoan->repayments,
+            'account' => $account
         ])->with('customerLoan', $customerLoan);
     }
 
@@ -160,7 +165,7 @@ class CustomerLoanController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $customerLoan = $this->customerLoanRepository->find($id);
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
@@ -172,14 +177,15 @@ class CustomerLoanController extends AppBaseController
         if (empty($customerLoan)) {
             Flash::error('Customer Loan not found');
 
-            return redirect(route('customerLoans.index'));
+            return redirect(route('customerLoans.index', $account));
         }
 
         return view('customer_loans.edit', [
             'companies' => $companies,
             'staff' => [0 => 'Select Staff'] + $staff->toArray(),
             'bankAccounts' => $bankAccounts,
-            'applications' => [0 => 'Select Application'] + $applications->toArray()
+            'applications' => [0 => 'Select Application'] + $applications->toArray(),
+            'account' => $account
         ])->with('customerLoan', $customerLoan);
     }
 
@@ -191,21 +197,21 @@ class CustomerLoanController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCustomerLoanRequest $request)
+    public function update($account, $id, UpdateCustomerLoanRequest $request)
     {
         $customerLoan = $this->customerLoanRepository->find($id);
 
         if (empty($customerLoan)) {
             Flash::error('Customer Loan not found');
 
-            return redirect(route('customerLoans.index'));
+            return redirect(route('customerLoans.index', $account));
         }
 
         $customerLoan = $this->customerLoanRepository->update($request->all(), $id);
 
         Flash::success('Customer Loan updated successfully.');
 
-        return redirect(route('customerLoans.index'));
+        return redirect(route('customerLoans.index', $account));
     }
 
     /**
@@ -217,7 +223,7 @@ class CustomerLoanController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $customerLoan = $this->customerLoanRepository->find($id);
 

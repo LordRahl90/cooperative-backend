@@ -29,13 +29,13 @@
                 <td>{{ $configuration->account_payable->name }}</td>
                 <td>{{ $configuration->account_receivable->name }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['configurations.destroy', $configuration->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['configurations.destroy',$account, $configuration->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('configurations.show', [$configuration->id]) }}"
+                        <a href="{{ route('configurations.show', [$account,$configuration->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('configurations.edit', [$configuration->id]) }}"
+                        <a href="{{ route('configurations.edit', [$account,$configuration->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

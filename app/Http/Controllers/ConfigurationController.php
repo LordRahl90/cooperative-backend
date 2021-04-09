@@ -72,7 +72,7 @@ class ConfigurationController extends AppBaseController
      * @param $account
      * @return Response
      */
-    public function store(CreateConfigurationRequest $request,$account)
+    public function store(CreateConfigurationRequest $request, $account)
     {
         $input = $request->all();
         $companyID = $input['company_id'];
@@ -86,7 +86,7 @@ class ConfigurationController extends AppBaseController
 
         Flash::success('Configuration saved successfully.');
 
-        return redirect(route('configurations.index',$account));
+        return redirect(route('configurations.index', $account));
     }
 
     /**
@@ -96,27 +96,28 @@ class ConfigurationController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $configuration = $this->configurationRepository->find($id);
 
         if (empty($configuration)) {
             Flash::error('Configuration not found');
 
-            return redirect(route('configurations.index'));
+            return redirect(route('configurations.index', $account));
         }
 
-        return view('configurations.show')->with('configuration', $configuration);
+        return view('configurations.show', ['account' => $account])->with('configuration', $configuration);
     }
 
     /**
      * Show the form for editing the specified Configuration.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
@@ -125,63 +126,65 @@ class ConfigurationController extends AppBaseController
         if (empty($configuration)) {
             Flash::error('Configuration not found');
 
-            return redirect(route('configurations.index'));
+            return redirect(route('configurations.index', $account));
         }
 
         return view('configurations.edit', [
             'companies' => $companies,
-            'categories' => $categories
+            'categories' => $categories,
+            'account' => $account
         ])->with('configuration', $configuration);
     }
 
     /**
      * Update the specified Configuration in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdateConfigurationRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateConfigurationRequest $request)
+    public function update($account, $id, UpdateConfigurationRequest $request)
     {
         $configuration = $this->configurationRepository->find($id);
 
         if (empty($configuration)) {
             Flash::error('Configuration not found');
 
-            return redirect(route('configurations.index'));
+            return redirect(route('configurations.index', $account));
         }
 
         $configuration = $this->configurationRepository->update($request->all(), $id);
 
         Flash::success('Configuration updated successfully.');
 
-        return redirect(route('configurations.index'));
+        return redirect(route('configurations.index', $account));
     }
 
     /**
      * Remove the specified Configuration from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $configuration = $this->configurationRepository->find($id);
 
         if (empty($configuration)) {
             Flash::error('Configuration not found');
 
-            return redirect(route('configurations.index'));
+            return redirect(route('configurations.index', $account));
         }
 
         $this->configurationRepository->delete($id);
 
         Flash::success('Configuration deleted successfully.');
 
-        return redirect(route('configurations.index'));
+        return redirect(route('configurations.index', $account));
     }
 }

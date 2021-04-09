@@ -36,21 +36,22 @@ class LoanApplicationController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $loanApplications = $this->loanApplicationRepository->where('company_id', $companyID);
 
-        return view('loan_applications.index')
+        return view('loan_applications.index', ['account' => $account])
             ->with('loanApplications', $loanApplications);
     }
 
     /**
      * Show the form for creating a new LoanApplication.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -58,7 +59,8 @@ class LoanApplicationController extends AppBaseController
         $loanAccount = LoanAccount::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id')->toArray();
         return view('loan_applications.create', [
             'customers' => [0 => 'Select Customer'] + $customers->toArray(),
-            'loanAccount' => [0 => 'Select Loan Account'] + $loanAccount
+            'loanAccount' => [0 => 'Select Loan Account'] + $loanAccount,
+            'account' => $account
         ]);
     }
 
@@ -140,11 +142,12 @@ class LoanApplicationController extends AppBaseController
     /**
      * Display the specified LoanApplication.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $loanApplication = $this->loanApplicationRepository->find($id);
 
@@ -157,10 +160,10 @@ class LoanApplicationController extends AppBaseController
         if ($loanApplication->loan !== null) {
             $repayments = $loanApplication->loan->repayments;
         }
-        dump($repayments);
 
         return view('loan_applications.show', [
-            'repayments' => $repayments
+            'repayments' => $repayments,
+            'account' => $account
         ])->with('loanApplication', $loanApplication);
     }
 
@@ -171,67 +174,68 @@ class LoanApplicationController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $loanApplication = $this->loanApplicationRepository->find($id);
 
         if (empty($loanApplication)) {
             Flash::error('Loan Application not found');
 
-            return redirect(route('loanApplications.index'));
+            return redirect(route('loanApplications.index', $account));
         }
 
-        return view('loan_applications.edit')->with('loanApplication', $loanApplication);
+        return view('loan_applications.edit', ['account' => $account])->with('loanApplication', $loanApplication);
     }
 
     /**
      * Update the specified LoanApplication in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdateLoanApplicationRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateLoanApplicationRequest $request)
+    public function update($account, $id, UpdateLoanApplicationRequest $request)
     {
         $loanApplication = $this->loanApplicationRepository->find($id);
 
         if (empty($loanApplication)) {
             Flash::error('Loan Application not found');
 
-            return redirect(route('loanApplications.index'));
+            return redirect(route('loanApplications.index', $account));
         }
 
         $loanApplication = $this->loanApplicationRepository->update($request->all(), $id);
 
         Flash::success('Loan Application updated successfully.');
 
-        return redirect(route('loanApplications.index'));
+        return redirect(route('loanApplications.index', $account));
     }
 
     /**
      * Remove the specified LoanApplication from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $loanApplication = $this->loanApplicationRepository->find($id);
 
         if (empty($loanApplication)) {
             Flash::error('Loan Application not found');
 
-            return redirect(route('loanApplications.index'));
+            return redirect(route('loanApplications.index', $account));
         }
 
         $this->loanApplicationRepository->delete($id);
 
         Flash::success('Loan Application deleted successfully.');
 
-        return redirect(route('loanApplications.index'));
+        return redirect(route('loanApplications.index', $account));
     }
 }

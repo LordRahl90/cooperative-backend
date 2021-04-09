@@ -41,11 +41,11 @@ class LoanRepaymentController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $loanRepayments = $this->loanRepaymentRepository->where('company_id', session('company_id'));
 
-        return view('loan_repayments.index')
+        return view('loan_repayments.index', ['account' => $account])
             ->with('loanRepayments', $loanRepayments);
     }
 
@@ -54,7 +54,7 @@ class LoanRepaymentController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -63,6 +63,7 @@ class LoanRepaymentController extends AppBaseController
         return view('loan_repayments.create', [
             'customers' => [0 => 'Select Customer'] + $customers->toArray(),
             'companies' => $companies,
+            'account' => $account,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts
         ]);
     }
@@ -156,17 +157,17 @@ class LoanRepaymentController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $loanRepayment = $this->loanRepaymentRepository->find($id);
 
         if (empty($loanRepayment)) {
             Flash::error('Loan Repayment not found');
 
-            return redirect(route('loanRepayments.index'));
+            return redirect(route('loanRepayments.index', $account));
         }
 
-        return view('loan_repayments.show')->with('loanRepayment', $loanRepayment);
+        return view('loan_repayments.show', ['account' => $account])->with('loanRepayment', $loanRepayment);
     }
 
     /**
@@ -176,17 +177,17 @@ class LoanRepaymentController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $loanRepayment = $this->loanRepaymentRepository->find($id);
 
         if (empty($loanRepayment)) {
             Flash::error('Loan Repayment not found');
 
-            return redirect(route('loanRepayments.index'));
+            return redirect(route('loanRepayments.index', $account));
         }
 
-        return view('loan_repayments.edit')->with('loanRepayment', $loanRepayment);
+        return view('loan_repayments.edit', ['account' => $account])->with('loanRepayment', $loanRepayment);
     }
 
     /**
@@ -197,21 +198,21 @@ class LoanRepaymentController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateLoanRepaymentRequest $request)
+    public function update($account, $id, UpdateLoanRepaymentRequest $request)
     {
         $loanRepayment = $this->loanRepaymentRepository->find($id);
 
         if (empty($loanRepayment)) {
             Flash::error('Loan Repayment not found');
 
-            return redirect(route('loanRepayments.index'));
+            return redirect(route('loanRepayments.index', $account));
         }
 
         $loanRepayment = $this->loanRepaymentRepository->update($request->all(), $id);
 
         Flash::success('Loan Repayment updated successfully.');
 
-        return redirect(route('loanRepayments.index'));
+        return redirect(route('loanRepayments.index', $account));
     }
 
     /**
@@ -223,31 +224,32 @@ class LoanRepaymentController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $loanRepayment = $this->loanRepaymentRepository->find($id);
 
         if (empty($loanRepayment)) {
             Flash::error('Loan Repayment not found');
 
-            return redirect(route('loanRepayments.index'));
+            return redirect(route('loanRepayments.index', $account));
         }
 
         $this->loanRepaymentRepository->delete($id);
 
         Flash::success('Loan Repayment deleted successfully.');
 
-        return redirect(route('loanRepayments.index'));
+        return redirect(route('loanRepayments.index', $account));
     }
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function showRepaymentSchedule()
+    public function showRepaymentSchedule($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         return view('loan_repayments.schedule', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ]);
     }
 
@@ -302,7 +304,7 @@ class LoanRepaymentController extends AppBaseController
         return response()->download($f);
     }
 
-    public function showUploadRepayment()
+    public function showUploadRepayment($account)
     {
         $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
@@ -310,6 +312,7 @@ class LoanRepaymentController extends AppBaseController
 
         return view('loan_repayments.upload', [
             'companies' => $companies,
+            'account'=>$account,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray()
         ]);
     }

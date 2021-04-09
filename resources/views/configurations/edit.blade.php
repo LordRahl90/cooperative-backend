@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($configuration, ['route' => ['configurations.update', $configuration->id], 'method' => 'patch']) !!}
+            {!! Form::model($configuration, ['route' => ['configurations.update',$account, $configuration->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">
