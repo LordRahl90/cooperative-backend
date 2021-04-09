@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'customerSavings.store']) !!}
+            {!! Form::open(['route' => ['customerSavings.store',$account]]) !!}
 
             <div class="card-body">
 
@@ -29,7 +29,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('customerSavings.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('customerSavings.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}
@@ -38,10 +38,14 @@
     </div>
 @endsection
 
+@section('third_party_styles')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+@endsection
 @section('third_party_scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        $(function(){
-           // alert('hello world');
+        $(function () {
+            $('#customer_id').select2();
         });
     </script>
 @endsection

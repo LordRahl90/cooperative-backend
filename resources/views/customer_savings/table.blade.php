@@ -23,17 +23,17 @@
                 <td>{{ number_format($customerSaving->amount,2) }}</td>
                 <td>{{ $customerSaving->narration }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['customerSavings.destroy', $customerSaving->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['customerSavings.destroy',$account, $customerSaving->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('customerSavings.show', [$customerSaving->id]) }}"
+                        <a href="{{ route('customerSavings.show', [$account,$customerSaving->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('customerSavings.edit', [$customerSaving->id]) }}"
+                        <a href="{{ route('customerSavings.edit', [$account,$customerSaving->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

@@ -19,13 +19,13 @@
                 <td>{{ $loanCategory->name }}</td>
                 <td>{{ $loanCategory->category->name }}</td>
                 <td>
-                    {!! Form::open(['route' => ['loanCategories.destroy', $loanCategory->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['loanCategories.destroy',$account, $loanCategory->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('loanCategories.show', [$loanCategory->id]) }}"
+                        <a href="{{ route('loanCategories.show', [$account,$loanCategory->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('loanCategories.edit', [$loanCategory->id]) }}"
+                        <a href="{{ route('loanCategories.edit', [$account,$loanCategory->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

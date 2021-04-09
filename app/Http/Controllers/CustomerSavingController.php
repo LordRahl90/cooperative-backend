@@ -36,12 +36,12 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $customerSavings = $this->customerSavingRepository->where('company_id', $companyID);
 
-        return view('customer_savings.index')
+        return view('customer_savings.index', ['account' => $account])
             ->with('customerSavings', $customerSavings);
     }
 
@@ -50,7 +50,7 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -59,7 +59,8 @@ class CustomerSavingController extends AppBaseController
         return view('customer_savings.create', [
             'companies' => $companies,
             'customers' => $customers,
-            'savingsAccount' => $savings
+            'savingsAccount' => $savings,
+            'account' => $account
         ]);
     }
 
@@ -70,7 +71,7 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateCustomerSavingRequest $request)
+    public function store(CreateCustomerSavingRequest $request, $account)
     {
         $input = $request->all();
 
@@ -78,7 +79,7 @@ class CustomerSavingController extends AppBaseController
 
         Flash::success('Customer Saving saved successfully.');
 
-        return redirect(route('customerSavings.index'));
+        return redirect(route('customerSavings.index', $account));
     }
 
     /**
@@ -88,17 +89,17 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customerSaving = $this->customerSavingRepository->find($id);
 
         if (empty($customerSaving)) {
             Flash::error('Customer Saving not found');
 
-            return redirect(route('customerSavings.index'));
+            return redirect(route('customerSavings.index', $account));
         }
 
-        return view('customer_savings.show')->with('customerSaving', $customerSaving);
+        return view('customer_savings.show', ['account' => $account])->with('customerSaving', $customerSaving);
     }
 
     /**
@@ -108,13 +109,13 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $customerSaving = $this->customerSavingRepository->find($id);
         if (empty($customerSaving)) {
             Flash::error('Customer Saving not found');
 
-            return redirect(route('customerSavings.index'));
+            return redirect(route('customerSavings.index', $account));
         }
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -124,7 +125,8 @@ class CustomerSavingController extends AppBaseController
         return view('customer_savings.edit', [
             'companies' => $companies,
             'customers' => $customers,
-            'savingsAccount' => $savings
+            'savingsAccount' => $savings,
+            'account' => $account
         ])->with('customerSaving', $customerSaving);
     }
 
@@ -136,21 +138,21 @@ class CustomerSavingController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateCustomerSavingRequest $request)
+    public function update($account, $id, UpdateCustomerSavingRequest $request)
     {
         $customerSaving = $this->customerSavingRepository->find($id);
 
         if (empty($customerSaving)) {
             Flash::error('Customer Saving not found');
 
-            return redirect(route('customerSavings.index'));
+            return redirect(route('customerSavings.index', $account));
         }
 
         $customerSaving = $this->customerSavingRepository->update($request->all(), $id);
 
         Flash::success('Customer Saving updated successfully.');
 
-        return redirect(route('customerSavings.index'));
+        return redirect(route('customerSavings.index', $account));
     }
 
     /**
@@ -162,24 +164,28 @@ class CustomerSavingController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $customerSaving = $this->customerSavingRepository->find($id);
 
         if (empty($customerSaving)) {
             Flash::error('Customer Saving not found');
 
-            return redirect(route('customerSavings.index'));
+            return redirect(route('customerSavings.index', $account));
         }
 
         $this->customerSavingRepository->delete($id);
 
         Flash::success('Customer Saving deleted successfully.');
 
-        return redirect(route('customerSavings.index'));
+        return redirect(route('customerSavings.index', $account));
     }
 
-    public function showSavingsPayment()
+    /**
+     * @param $account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showSavingsPayment($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $companyID = session('company_id');
@@ -188,11 +194,17 @@ class CustomerSavingController extends AppBaseController
         return view('customer_savings.payment', [
             'customers' => [0 => 'Select Customer'] + $customers->toArray(),
             'companies' => $companies,
-            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts
+            'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
+            'account' => $account
         ]);
     }
 
-    public function makeSavingsPayment(Request $request)
+    /**
+     * @param Request $request
+     * @param $account
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function makeSavingsPayment(Request $request, $account)
     {
         $input = $request->all();
         try {

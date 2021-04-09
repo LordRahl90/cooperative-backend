@@ -44,6 +44,7 @@
                     <!-- Loan Id Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('savings_id', 'Savings Plan:') !!}
+{{--                        <v-select name="savings_id" v-model="savings_id" :options="savings"></v-select>--}}
                         <select name="savings_id" v-model="savings_id" class="form-control">
                             <option value="0" selected disabled>Select Savings Plan</option>
                             <option v-for="saving in savings" :value="saving.id">@{{ saving.savings.name }}
@@ -82,7 +83,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('customerSavings.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('customerSavings.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}
@@ -90,9 +91,14 @@
         </div>
     </div>
 @endsection
+@section('third_party_styles')
+    <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
+@endsection
 @section('third_party_scripts')
+    <script src="https://unpkg.com/vue-select@latest"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        Vue.component('v-select', VueSelect.VueSelect);
         var loanRepaymentApp = new Vue({
             el: '#loanRepaymentDiv',
             data: {

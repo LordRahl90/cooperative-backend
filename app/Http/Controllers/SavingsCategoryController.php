@@ -29,12 +29,12 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $savingsCategories = $this->savingsCategoryRepository->where("company_id", $companyID);
 
-        return view('savings_categories.index')
+        return view('savings_categories.index', ['account' => $account])
             ->with('savingsCategories', $savingsCategories);
     }
 
@@ -43,13 +43,14 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
         return view('savings_categories.create', [
             'companies' => $companies,
-            'categories' => $categories
+            'categories' => $categories,
+            'account' => $account
         ]);
     }
 
@@ -60,7 +61,7 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateSavingsCategoryRequest $request)
+    public function store(CreateSavingsCategoryRequest $request, $account)
     {
         $input = $request->all();
 
@@ -68,7 +69,7 @@ class SavingsCategoryController extends AppBaseController
 
         Flash::success('Savings Category saved successfully.');
 
-        return redirect(route('savingsCategories.index'));
+        return redirect(route('savingsCategories.index', $account));
     }
 
     /**
@@ -78,17 +79,17 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $savingsCategory = $this->savingsCategoryRepository->find($id);
 
         if (empty($savingsCategory)) {
             Flash::error('Savings Category not found');
 
-            return redirect(route('savingsCategories.index'));
+            return redirect(route('savingsCategories.index', $account));
         }
 
-        return view('savings_categories.show')->with('savingsCategory', $savingsCategory);
+        return view('savings_categories.show', ['account' => $account])->with('savingsCategory', $savingsCategory);
     }
 
     /**
@@ -98,7 +99,7 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $categories = OrgAccountCategory::where('company_id', session('company_id'))->pluck('name', 'id');
@@ -107,12 +108,13 @@ class SavingsCategoryController extends AppBaseController
         if (empty($savingsCategory)) {
             Flash::error('Savings Category not found');
 
-            return redirect(route('savingsCategories.index'));
+            return redirect(route('savingsCategories.index', $account));
         }
 
         return view('savings_categories.edit', [
             'companies' => $companies,
-            'categories' => $categories
+            'categories' => $categories,
+            'account' => $account
         ])->with('savingsCategory', $savingsCategory);
     }
 
@@ -124,21 +126,21 @@ class SavingsCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateSavingsCategoryRequest $request)
+    public function update($account, $id, UpdateSavingsCategoryRequest $request)
     {
         $savingsCategory = $this->savingsCategoryRepository->find($id);
 
         if (empty($savingsCategory)) {
             Flash::error('Savings Category not found');
 
-            return redirect(route('savingsCategories.index'));
+            return redirect(route('savingsCategories.index', $account));
         }
 
         $savingsCategory = $this->savingsCategoryRepository->update($request->all(), $id);
 
         Flash::success('Savings Category updated successfully.');
 
-        return redirect(route('savingsCategories.index'));
+        return redirect(route('savingsCategories.index', $account));
     }
 
     /**

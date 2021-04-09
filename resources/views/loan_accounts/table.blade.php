@@ -25,12 +25,12 @@
                 <td>{{ $loanAccount->code }}</td>
                 <td>{{ $loanAccount->description }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['loanAccounts.destroy', $loanAccount->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['loanAccounts.destroy',$account, $loanAccount->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('loanAccounts.show', [$loanAccount->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('loanAccounts.show', [$account,$loanAccount->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('loanAccounts.edit', [$loanAccount->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('loanAccounts.edit', [$account,$loanAccount->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
                         {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}

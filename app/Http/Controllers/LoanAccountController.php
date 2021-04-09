@@ -35,12 +35,12 @@ class LoanAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $loanAccounts = $this->loanAccountRepository->where("company_id", $companyID);
 
-        return view('loan_accounts.index')
+        return view('loan_accounts.index', ['account' => $account])
             ->with('loanAccounts', $loanAccounts);
     }
 
@@ -49,9 +49,8 @@ class LoanAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
-        // TODO Load account heads only based off the selected category
         $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $accountHeads = Utility::getAccountHeads($companyID);
@@ -59,7 +58,8 @@ class LoanAccountController extends AppBaseController
         return view('loan_accounts.create', [
             'companies' => $companies,
             'account_heads' => [0 => 'Select Account Heads'] + $accountHeads->toArray(),
-            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray()
+            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray(),
+            'account' => $account
         ]);
     }
 
@@ -70,7 +70,7 @@ class LoanAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateLoanAccountRequest $request)
+    public function store(CreateLoanAccountRequest $request, $account)
     {
         $input = $request->all();
         $companyID = session('company_id');
@@ -116,7 +116,7 @@ class LoanAccountController extends AppBaseController
 
             Flash::success('Loan Account saved successfully.');
             DB::commit();
-            return redirect(route('loanAccounts.index'));
+            return redirect(route('loanAccounts.index', $account));
         } catch (\Exception $ex) {
             DB::rollBack();
             Flash::error($ex->getMessage());
@@ -131,34 +131,35 @@ class LoanAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $loanAccount = $this->loanAccountRepository->find($id);
 
         if (empty($loanAccount)) {
             Flash::error('Loan Account not found');
 
-            return redirect(route('loanAccounts.index'));
+            return redirect(route('loanAccounts.index', $account));
         }
 
-        return view('loan_accounts.show')->with('loanAccount', $loanAccount);
+        return view('loan_accounts.show', ['account' => $account])->with('loanAccount', $loanAccount);
     }
 
     /**
      * Show the form for editing the specified LoanAccount.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $loanAccount = LoanAccount::with(['account_head'])->find($id);
 
         if (empty($loanAccount)) {
             Flash::error('Loan Account not found');
 
-            return redirect(route('loanAccounts.index'));
+            return redirect(route('loanAccounts.index', $account));
         }
 
         $companyID = session('company_id');
@@ -169,58 +170,60 @@ class LoanAccountController extends AppBaseController
         return view('loan_accounts.edit', [
             'companies' => $companies,
             'account_heads' => [0 => 'Select Account Heads'] + $accountHeads->toArray(),
-            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray()
+            'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray(),
+            'account' => $account
         ])->with('loanAccount', $loanAccount);
     }
 
     /**
      * Update the specified LoanAccount in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdateLoanAccountRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateLoanAccountRequest $request)
+    public function update($account, $id, UpdateLoanAccountRequest $request)
     {
         $loanAccount = $this->loanAccountRepository->find($id);
 
         if (empty($loanAccount)) {
             Flash::error('Loan Account not found');
 
-            return redirect(route('loanAccounts.index'));
+            return redirect(route('loanAccounts.index', $account));
         }
 
         $loanAccount = $this->loanAccountRepository->update($request->all(), $id);
 
         Flash::success('Loan Account updated successfully.');
 
-        return redirect(route('loanAccounts.index'));
+        return redirect(route('loanAccounts.index', $account));
     }
 
     /**
      * Remove the specified LoanAccount from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $loanAccount = $this->loanAccountRepository->find($id);
 
         if (empty($loanAccount)) {
             Flash::error('Loan Account not found');
 
-            return redirect(route('loanAccounts.index'));
+            return redirect(route('loanAccounts.index', $account));
         }
 
         $this->loanAccountRepository->delete($id);
 
         Flash::success('Loan Account deleted successfully.');
 
-        return redirect(route('loanAccounts.index'));
+        return redirect(route('loanAccounts.index', $account));
     }
 }

@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($loanAccount, ['route' => ['loanAccounts.update', $loanAccount->id], 'method' => 'patch']) !!}
+            {!! Form::model($loanAccount, ['route' => ['loanAccounts.update',$account, $loanAccount->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">
@@ -27,10 +27,10 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('loanAccounts.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('loanAccounts.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
-           {!! Form::close() !!}
+            {!! Form::close() !!}
 
         </div>
     </div>

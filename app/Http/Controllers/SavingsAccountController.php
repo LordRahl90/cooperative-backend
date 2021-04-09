@@ -31,23 +31,25 @@ class SavingsAccountController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $savingsAccounts = $this->savingsAccountRepository->where("company_id", $companyID);
 
-        return view('savings_accounts.index')
+        return view('savings_accounts.index', ['account' => $account])
             ->with('savingsAccounts', $savingsAccounts);
     }
 
     /**
      * Show the form for creating a new SavingsAccount.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         // TODO: Loan account heads only based off the account category selected
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
@@ -57,7 +59,8 @@ class SavingsAccountController extends AppBaseController
         return view('savings_accounts.create', [
             'account_heads' => [0 => 'Select Account Head'] + $accountHeads->toArray(),
             'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray(),
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ]);
     }
 
@@ -68,7 +71,7 @@ class SavingsAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateSavingsAccountRequest $request)
+    public function store(CreateSavingsAccountRequest $request, $account)
     {
         $input = $request->all();
         $companyID = session('company_id');
@@ -113,7 +116,7 @@ class SavingsAccountController extends AppBaseController
 
             Flash::success('Savings Account saved successfully.');
             DB::commit();
-            return redirect(route('savingsAccounts.index'));
+            return redirect(route('savingsAccounts.index', $account));
         } catch (\Exception $ex) {
             DB::rollBack();
             Flash::error($ex->getMessage());
@@ -124,11 +127,12 @@ class SavingsAccountController extends AppBaseController
     /**
      * Display the specified SavingsAccount.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $savingsAccount = $this->savingsAccountRepository->find($id);
 
@@ -138,7 +142,7 @@ class SavingsAccountController extends AppBaseController
             return redirect(route('savingsAccounts.index'));
         }
 
-        return view('savings_accounts.show')->with('savingsAccount', $savingsAccount);
+        return view('savings_accounts.show', ['account' => $account])->with('savingsAccount', $savingsAccount);
     }
 
     /**
@@ -148,7 +152,7 @@ class SavingsAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $savingsAccount = SavingsAccount::with(['account_head'])->find($id);
 
@@ -165,7 +169,8 @@ class SavingsAccountController extends AppBaseController
         return view('savings_accounts.edit', [
             'account_heads' => [0 => 'Select Account Head'] + $accountHeads->toArray(),
             'categories' => [0 => 'Select Account Category'] + $savingsCategories->toArray(),
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ])->with('savingsAccount', $savingsAccount);
     }
 

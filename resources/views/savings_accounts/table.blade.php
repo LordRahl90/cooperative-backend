@@ -23,17 +23,17 @@
                 <td>{{ $savingsAccount->name }}</td>
                 <td>{{ $savingsAccount->description }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['savingsAccounts.destroy', $savingsAccount->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['savingsAccounts.destroy',$account, $savingsAccount->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('savingsAccounts.show', [$savingsAccount->id]) }}"
+                        <a href="{{ route('savingsAccounts.show', [$account,$savingsAccount->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('savingsAccounts.edit', [$savingsAccount->id]) }}"
+                        <a href="{{ route('savingsAccounts.edit', [$account,$savingsAccount->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
+                        {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>
