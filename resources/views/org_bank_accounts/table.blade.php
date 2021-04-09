@@ -23,13 +23,13 @@
                 <td>{{ $orgBankAccount->account_number }}</td>
                 <td>{{ $orgBankAccount->account_head->code }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['orgBankAccounts.destroy', $orgBankAccount->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['orgBankAccounts.destroy',$account, $orgBankAccount->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('orgBankAccounts.show', [$orgBankAccount->id]) }}"
+                        <a href="{{ route('orgBankAccounts.show', [$account,$orgBankAccount->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('orgBankAccounts.edit', [$orgBankAccount->id]) }}"
+                        <a href="{{ route('orgBankAccounts.edit', [$account,$orgBankAccount->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

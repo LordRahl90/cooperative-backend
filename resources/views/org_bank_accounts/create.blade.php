@@ -18,7 +18,7 @@
 
         <div class="card">
 
-            {!! Form::open(['route' => 'orgBankAccounts.store']) !!}
+            {!! Form::open(['route' => ['orgBankAccounts.store',$account]]) !!}
 
             <div class="card-body">
 
@@ -30,7 +30,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('orgBankAccounts.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('orgBankAccounts.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

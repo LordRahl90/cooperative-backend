@@ -20,10 +20,13 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
+     * @param string $account
      * @return Response
      */
-    public function index()
+    public function index($account = "")
     {
-        return view('home');
+        return view('home', [
+            "account" => $account
+        ]);
     }
 }

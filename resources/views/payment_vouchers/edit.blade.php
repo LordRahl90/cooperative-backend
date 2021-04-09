@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($paymentVoucher, ['route' => ['paymentVouchers.update', $paymentVoucher->id], 'method' => 'patch']) !!}
+            {!! Form::model($paymentVoucher, ['route' => ['paymentVouchers.update',$account, $paymentVoucher->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">

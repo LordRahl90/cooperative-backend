@@ -28,23 +28,28 @@ class ConfigurationController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $configurations = $this->configurationRepository->where("company_id", $companyID);
 
-        return view('configurations.index')
+        return view('configurations.index', [
+            'account' => $account
+        ])
             ->with('configurations', $configurations);
     }
 
     /**
      * Show the form for creating a new Configuration.
      *
+     * @param Request $request
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create(Request $request, $account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $categories = [];
@@ -53,6 +58,7 @@ class ConfigurationController extends AppBaseController
             $categories = OrgAccountCategory::orderBy('name', 'asc')->where("company_id", session('company_id'))->pluck('name', 'id');
         }
         return view('configurations.create', [
+            'account' => $account,
             'companies' => $companies,
             'categories' => $categories
         ]);
@@ -63,9 +69,10 @@ class ConfigurationController extends AppBaseController
      *
      * @param CreateConfigurationRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreateConfigurationRequest $request)
+    public function store(CreateConfigurationRequest $request,$account)
     {
         $input = $request->all();
         $companyID = $input['company_id'];
@@ -79,7 +86,7 @@ class ConfigurationController extends AppBaseController
 
         Flash::success('Configuration saved successfully.');
 
-        return redirect(route('configurations.index'));
+        return redirect(route('configurations.index',$account));
     }
 
     /**

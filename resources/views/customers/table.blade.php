@@ -29,15 +29,17 @@
                 <td>{{ $customer->gender }}</td>
                 <td>{{ $customer->religion }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['customers.destroy', $customer->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['customers.destroy',$account, $customer->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('customers.show', [$customer->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('customers.show', [$account,$customer->id]) }}"
+                           class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('customers.edit', [$customer->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('customers.edit', [$account,$customer->id]) }}"
+                           class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
-                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}
+                        {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

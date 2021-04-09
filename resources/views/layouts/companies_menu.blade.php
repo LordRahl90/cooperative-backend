@@ -1,4 +1,5 @@
 <?php
+//dd($account);
 ?>
 <li class="nav-item has-treeview">
     <a href="#" class="nav-link">
@@ -10,7 +11,7 @@
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="{{ route('configurations.index') }}"
+            <a href="{{ route('configurations.index',[$account]) }}"
                class="nav-link {{ Request::is('configurations*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Balance Sheet Setup</p>
@@ -18,7 +19,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('orgAccountCategories.index') }}"
+            <a href="{{ route('orgAccountCategories.index',[$account]) }}"
                class="nav-link {{ Request::is('orgAccountCategories*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Account Categories</p>
@@ -26,7 +27,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('orgAccountHeads.index') }}"
+            <a href="{{ route('orgAccountHeads.index',[$account]) }}"
                class="nav-link {{ Request::is('orgAccountHeads*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Account Heads</p>
@@ -34,7 +35,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('orgBankAccounts.index') }}"
+            <a href="{{ route('orgBankAccounts.index',[$account]) }}"
                class="nav-link {{ Request::is('orgBankAccounts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Bank Accounts</p>
@@ -42,7 +43,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('staff.index') }}"
+            <a href="{{ route('staff.index',[$account]) }}"
                class="nav-link {{ Request::is('staff*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Staff</p>
@@ -70,7 +71,7 @@
         {{--        </li>--}}
 
         <li class="nav-item">
-            <a href="{{ route('receipts.index') }}"
+            <a href="{{ route('receipts.index',[$account]) }}"
                class="nav-link {{ Request::is('receipts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Receipts</p>
@@ -78,7 +79,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('paymentVouchers.index') }}"
+            <a href="{{ route('paymentVouchers.index',[$account]) }}"
                class="nav-link {{ Request::is('paymentVouchers*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Payment Vouchers</p>
@@ -86,7 +87,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('payments.index') }}"
+            <a href="{{ route('payments.index',[$account]) }}"
                class="nav-link {{ Request::is('payments*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Payments</p>
@@ -94,7 +95,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('journalVouchers.index') }}"
+            <a href="{{ route('journalVouchers.index',[$account]) }}"
                class="nav-link {{ Request::is('journalVouchers*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Journal Vouchers</p>
@@ -163,7 +164,7 @@
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="{{ route('members.index') }}"
+            <a href="{{ route('members.index',[$account]) }}"
                class="nav-link {{ Request::is('members*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customers</p>
@@ -172,7 +173,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('customerAddresses.index') }}"
+            <a href="{{ route('customerAddresses.index',[$account]) }}"
                class="nav-link {{ Request::is('customerAddresses*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Addresses</p>
@@ -181,7 +182,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('customerNextOfKins.index') }}"
+            <a href="{{ route('customerNextOfKins.index',[$account]) }}"
                class="nav-link {{ Request::is('customerNextOfKins*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Next Of Kins</p>
@@ -189,7 +190,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('customerBankAccounts.index') }}"
+            <a href="{{ route('customerBankAccounts.index',[$account]) }}"
                class="nav-link {{ Request::is('customerBankAccounts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Bank Accounts</p>
@@ -205,7 +206,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('customerTransactions.index') }}"
+            <a href="{{ route('customerTransactions.index',[$account]) }}"
                class="nav-link {{ Request::is('customerTransactions*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Transactions</p>
@@ -213,7 +214,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('customerLoanLogs.index') }}"
+            <a href="{{ route('customerLoanLogs.index',[$account]) }}"
                class="nav-link {{ Request::is('customerLoanLogs*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Loan Logs</p>
@@ -221,7 +222,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('loanGuarators.index') }}"
+            <a href="{{ route('loanGuarators.index',[$account]) }}"
                class="nav-link {{ Request::is('loanGuarators*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Guarators</p>
@@ -241,7 +242,7 @@
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="{{ route('savingsCategories.index') }}"
+            <a href="{{ route('savingsCategories.index',[$account]) }}"
                class="nav-link {{ Request::is('savingsCategories*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Savings Categories</p>
@@ -249,7 +250,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('savingsAccounts.index') }}"
+            <a href="{{ route('savingsAccounts.index',[$account]) }}"
                class="nav-link {{ Request::is('savingsAccounts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Savings Accounts</p>
@@ -258,7 +259,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('customerSavings.index') }}"
+            <a href="{{ route('customerSavings.index',[$account]) }}"
                class="nav-link {{ Request::is('customerSavings*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Savings</p>
@@ -287,7 +288,7 @@
     </a>
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
-            <a href="{{ route('loanCategories.index') }}"
+            <a href="{{ route('loanCategories.index',[$account]) }}"
                class="nav-link {{ Request::is('loanCategories*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Categories</p>
@@ -296,7 +297,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('loanAccounts.index') }}"
+            <a href="{{ route('loanAccounts.index',[$account]) }}"
                class="nav-link {{ Request::is('loanAccounts*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Accounts</p>
@@ -304,7 +305,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('loanApplications.index') }}"
+            <a href="{{ route('loanApplications.index',[$account]) }}"
                class="nav-link {{ Request::is('loanApplications*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Applications</p>
@@ -312,7 +313,7 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('customerLoans.index') }}"
+            <a href="{{ route('customerLoans.index',[$account]) }}"
                class="nav-link {{ Request::is('customerLoans*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Customer Loans</p>
@@ -321,7 +322,7 @@
 
 
         <li class="nav-item">
-            <a href="{{ route('loanRepayments.index') }}"
+            <a href="{{ route('loanRepayments.index',[$account]) }}"
                class="nav-link {{ Request::is('loanRepayments*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Repayments</p>

@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($customerLoanLog, ['route' => ['customerLoanLogs.update', $customerLoanLog->id], 'method' => 'patch']) !!}
+            {!! Form::model($customerLoanLog, ['route' => ['customerLoanLogs.update',$account, $customerLoanLog->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">
@@ -27,7 +27,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('customerLoanLogs.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('customerLoanLogs.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
            {!! Form::close() !!}

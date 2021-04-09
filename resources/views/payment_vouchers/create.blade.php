@@ -17,7 +17,7 @@
 
         <div class="card" id="paymentVoucherDiv">
 
-            {!! Form::open(['route' => 'paymentVouchers.store','id'=>'paymentVoucherForm']) !!}
+            {!! Form::open(['route' => ['paymentVouchers.store',$account],'id'=>'paymentVoucherForm']) !!}
 
             <div class="card-body">
                 <div class="row">
@@ -27,7 +27,7 @@
 
             <div class="card-footer">
                 <button type="button" class="btn btn-primary" @click="createPaymentVoucher">Save</button>
-                <a href="{{ route('paymentVouchers.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('paymentVouchers.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

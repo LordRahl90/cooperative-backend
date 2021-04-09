@@ -34,23 +34,25 @@ class PaymentVoucherController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $paymentVouchers = $this->paymentVoucherRepository->where("company_id", $companyID);
 
-        return view('payment_vouchers.index')
+        return view('payment_vouchers.index', ['account' => $account])
             ->with('paymentVouchers', $paymentVouchers);
     }
 
     /**
      * Show the form for creating a new PaymentVoucher.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         //TODO: Abiodun, sort the account heads with login companies
@@ -58,7 +60,8 @@ class PaymentVoucherController extends AppBaseController
         $banks = Bank::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('payment_vouchers.create', [
             'companies' => [0 => 'Select Account'] + $companies->toArray(),
-            'banks' => $banks
+            'banks' => $banks,
+            'account' => $account
         ]);
     }
 
@@ -67,9 +70,10 @@ class PaymentVoucherController extends AppBaseController
      *
      * @param CreatePaymentVoucherRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreatePaymentVoucherRequest $request)
+    public function store(CreatePaymentVoucherRequest $request, $account)
     {
         $input = $request->all();
 
@@ -77,84 +81,87 @@ class PaymentVoucherController extends AppBaseController
 
         Flash::success('Payment Voucher saved successfully.');
 
-        return redirect(route('paymentVouchers.index'));
+        return redirect(route('paymentVouchers.index', $account));
     }
 
     /**
      * Display the specified PaymentVoucher.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $paymentVoucher = $this->paymentVoucherRepository->find($id);
 
         if (empty($paymentVoucher)) {
             Flash::error('Payment Voucher not found');
 
-            return redirect(route('paymentVouchers.index'));
+            return redirect(route('paymentVouchers.index', $account));
         }
 
-        return view('payment_vouchers.show')->with('paymentVoucher', $paymentVoucher);
+        return view('payment_vouchers.show', ['account' => $account])->with('paymentVoucher', $paymentVoucher);
     }
 
     /**
      * Show the form for editing the specified PaymentVoucher.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $paymentVoucher = $this->paymentVoucherRepository->find($id);
 
         if (empty($paymentVoucher)) {
             Flash::error('Payment Voucher not found');
 
-            return redirect(route('paymentVouchers.index'));
+            return redirect(route('paymentVouchers.index', $account));
         }
 
-        return view('payment_vouchers.edit')->with('paymentVoucher', $paymentVoucher);
+        return view('payment_vouchers.edit', ['account' => $account])->with('paymentVoucher', $paymentVoucher);
     }
 
     /**
      * Update the specified PaymentVoucher in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdatePaymentVoucherRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdatePaymentVoucherRequest $request)
+    public function update($account, $id, UpdatePaymentVoucherRequest $request)
     {
         $paymentVoucher = $this->paymentVoucherRepository->find($id);
 
         if (empty($paymentVoucher)) {
             Flash::error('Payment Voucher not found');
 
-            return redirect(route('paymentVouchers.index'));
+            return redirect(route('paymentVouchers.index', $account));
         }
 
         $paymentVoucher = $this->paymentVoucherRepository->update($request->all(), $id);
 
         Flash::success('Payment Voucher updated successfully.');
 
-        return redirect(route('paymentVouchers.index'));
+        return redirect(route('paymentVouchers.index', $account));
     }
 
     /**
      * Remove the specified PaymentVoucher from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $paymentVoucher = $this->paymentVoucherRepository->find($id);
 
@@ -172,10 +179,11 @@ class PaymentVoucherController extends AppBaseController
     }
 
     /**
+     * @param $account
      * @param $id
      * @return mixed
      */
-    public function printPV($id)
+    public function printPV($account, $id)
     {
         $amount = 0;
         $pv = PaymentVoucher::with(['items', 'company'])->where("pv_id", $id)->get()->first();
@@ -253,11 +261,19 @@ class PaymentVoucherController extends AppBaseController
         return Storage::download("/pv/" . $path);
     }
 
-    public function showReprintPV()
+    /**
+     * @param $account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showReprintPV($account)
     {
-        return view('payment_vouchers.reprint');
+        return view('payment_vouchers.reprint', ['account' => $account]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function reprintPV(Request $request)
     {
         $input = $request->all();

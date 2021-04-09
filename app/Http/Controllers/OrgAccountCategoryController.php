@@ -28,12 +28,14 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
-        $orgAccountCategories = $this->orgAccountCategoryRepository->where("company_id",$companyID);
+        $orgAccountCategories = $this->orgAccountCategoryRepository->where("company_id", $companyID);
 
-        return view('org_account_categories.index')
+        return view('org_account_categories.index', [
+            'account' => $account
+        ])
             ->with('orgAccountCategories', $orgAccountCategories);
     }
 
@@ -42,10 +44,11 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         return view('org_account_categories.create', [
+            'account' => $account,
             'companies' => $companies
         ]);
     }
@@ -57,7 +60,7 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateOrgAccountCategoryRequest $request)
+    public function store(CreateOrgAccountCategoryRequest $request, $account)
     {
         $input = $request->all();
 
@@ -65,7 +68,7 @@ class OrgAccountCategoryController extends AppBaseController
 
         Flash::success('Org Account Category saved successfully.');
 
-        return redirect(route('orgAccountCategories.index'));
+        return redirect(route('orgAccountCategories.index', $account));
     }
 
     /**
@@ -75,17 +78,19 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($id, $account)
     {
         $orgAccountCategory = $this->orgAccountCategoryRepository->find($id);
 
         if (empty($orgAccountCategory)) {
             Flash::error('Org Account Category not found');
 
-            return redirect(route('orgAccountCategories.index'));
+            return redirect(route('orgAccountCategories.index', $account));
         }
 
-        return view('org_account_categories.show')->with('orgAccountCategory', $orgAccountCategory);
+        return view('org_account_categories.show', [
+            'account' => $account
+        ])->with('orgAccountCategory', $orgAccountCategory);
     }
 
     /**
@@ -95,7 +100,7 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $orgAccountCategory = $this->orgAccountCategoryRepository->find($id);
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
@@ -118,7 +123,7 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateOrgAccountCategoryRequest $request)
+    public function update($account, $id, UpdateOrgAccountCategoryRequest $request)
     {
         $orgAccountCategory = $this->orgAccountCategoryRepository->find($id);
 
@@ -144,7 +149,7 @@ class OrgAccountCategoryController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $orgAccountCategory = $this->orgAccountCategoryRepository->find($id);
 
@@ -158,6 +163,6 @@ class OrgAccountCategoryController extends AppBaseController
 
         Flash::success('Org Account Category deleted successfully.');
 
-        return redirect(route('orgAccountCategories.index'));
+        return redirect(route('orgAccountCategories.index', $account));
     }
 }

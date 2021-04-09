@@ -25,11 +25,11 @@
                 <td width="120">
                     {!! Form::open(['route' => ['journalVouchers.destroy', $journalVoucher->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('journalVouchers.show', [$journalVoucher->id]) }}"
+                        <a href="{{ route('journalVouchers.show', [$account,$journalVoucher->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('journalVouchers.edit', [$journalVoucher->id]) }}"
+                        <a href="{{ route('journalVouchers.edit', [$account,$journalVoucher->id]) }}"
                            class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>

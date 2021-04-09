@@ -37,7 +37,7 @@
                 @endif
 
 
-                    <!-- Pv Id Field -->
+                <!-- Pv Id Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('reference', 'Payment Reference:') !!}
                         {!! Form::text('reference', null, ['class' => 'form-control','v-model="pv.id"']) !!}
@@ -48,7 +48,7 @@
 
             <div class="card-footer">
                 <button class="btn btn-primary">Proceed</button>
-                <a href="{{ route('payments.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('payments.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

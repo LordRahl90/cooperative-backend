@@ -32,14 +32,17 @@ class OrgBankAccountController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $orgBankAccounts = $this->orgBankAccountRepository->where("company_id", $companyID);
 
-        return view('org_bank_accounts.index')
+        return view('org_bank_accounts.index', [
+            'account' => $account
+        ])
             ->with('orgBankAccounts', $orgBankAccounts);
     }
 
@@ -48,13 +51,14 @@ class OrgBankAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $banks = Bank::orderBy('name', 'asc')->pluck('name', 'id');
         return view('org_bank_accounts.create', [
             'companies' => $companies,
-            'banks' => $banks
+            'banks' => $banks,
+            'account' => $account
         ]);
     }
 
@@ -65,7 +69,7 @@ class OrgBankAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateOrgBankAccountRequest $request)
+    public function store(CreateOrgBankAccountRequest $request, $account)
     {
         $input = $request->all();
         $companyID = $input['company_id'];
@@ -109,7 +113,7 @@ class OrgBankAccountController extends AppBaseController
         }
 
         DB::commit();
-        return redirect(route('orgBankAccounts.index'));
+        return redirect(route('orgBankAccounts.index', $account));
     }
 
     /**
@@ -119,7 +123,7 @@ class OrgBankAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $orgBankAccount = $this->orgBankAccountRepository->find($id);
 
@@ -129,7 +133,9 @@ class OrgBankAccountController extends AppBaseController
             return redirect(route('orgBankAccounts.index'));
         }
 
-        return view('org_bank_accounts.show')->with('orgBankAccount', $orgBankAccount);
+        return view('org_bank_accounts.show', [
+            'account' => $account
+        ])->with('orgBankAccount', $orgBankAccount);
     }
 
     /**
@@ -139,7 +145,7 @@ class OrgBankAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $banks = Bank::orderBy('name', 'asc')->pluck('name', 'id');
@@ -153,7 +159,8 @@ class OrgBankAccountController extends AppBaseController
 
         return view('org_bank_accounts.edit', [
             'companies' => $companies,
-            'banks' => $banks
+            'banks' => $banks,
+            'account' => $account
         ])->with('orgBankAccount', $orgBankAccount);
     }
 
@@ -165,7 +172,7 @@ class OrgBankAccountController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateOrgBankAccountRequest $request)
+    public function update($account, $id, UpdateOrgBankAccountRequest $request)
     {
         $orgBankAccount = $this->orgBankAccountRepository->find($id);
 
@@ -185,13 +192,12 @@ class OrgBankAccountController extends AppBaseController
     /**
      * Remove the specified OrgBankAccount from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
-     * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $orgBankAccount = $this->orgBankAccountRepository->find($id);
 
@@ -201,7 +207,7 @@ class OrgBankAccountController extends AppBaseController
             if (empty($orgBankAccount)) {
                 Flash::error('Org Bank Account not found');
 
-                return redirect(route('orgBankAccounts.index'));
+                return redirect(route('orgBankAccounts.index', $account));
             }
 
             // Delete the associated account head first
@@ -216,6 +222,6 @@ class OrgBankAccountController extends AppBaseController
         }
 
         DB::commit();
-        return redirect(route('orgBankAccounts.index'));
+        return redirect(route('orgBankAccounts.index', $account));
     }
 }

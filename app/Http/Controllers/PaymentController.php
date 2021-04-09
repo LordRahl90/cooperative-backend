@@ -36,23 +36,25 @@ class PaymentController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $payments = $this->paymentRepository->where("company_id", $companyID);
 
-        return view('payments.index')
+        return view('payments.index', ['account' => $account])
             ->with('payments', $payments);
     }
 
     /**
      * Show the form for creating a new Payment.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
@@ -63,7 +65,8 @@ class PaymentController extends AppBaseController
             'companies' => [0 => 'Select Company'] + $companies,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts,
             'staff' => [0 => 'Select Staff'] + $staff,
-            'pvs' => [0 => "Select PV"] + $pvs
+            'pvs' => [0 => "Select PV"] + $pvs,
+            'account' => $account
         ]);
     }
 
@@ -72,9 +75,10 @@ class PaymentController extends AppBaseController
      *
      * @param CreatePaymentRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreatePaymentRequest $request)
+    public function store(CreatePaymentRequest $request, $account)
     {
         $input = $request->all();
         try {
@@ -95,58 +99,61 @@ class PaymentController extends AppBaseController
             return redirect()->back()->withInput();
         }
         Flash::success("Payment registered successfully.");
-        return redirect(route('payments.index'));
+        return redirect(route('payments.index', $account));
     }
 
     /**
      * Display the specified Payment.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $payment = $this->paymentRepository->find($id);
 
         if (empty($payment)) {
             Flash::error('Payment not found');
 
-            return redirect(route('payments.index'));
+            return redirect(route('payments.index', $account));
         }
 
-        return view('payments.show')->with('payment', $payment);
+        return view('payments.show', ['account' => $account])->with('payment', $payment);
     }
 
     /**
      * Show the form for editing the specified Payment.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $payment = $this->paymentRepository->find($id);
 
         if (empty($payment)) {
             Flash::error('Payment not found');
 
-            return redirect(route('payments.index'));
+            return redirect(route('payments.index', $account));
         }
 
-        return view('payments.edit')->with('payment', $payment);
+        return view('payments.edit', ['account' => $account])->with('payment', $payment);
     }
 
     /**
      * Update the specified Payment in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdatePaymentRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdatePaymentRequest $request)
+    public function update($account, $id, UpdatePaymentRequest $request)
     {
         $payment = $this->paymentRepository->find($id);
 
@@ -160,19 +167,19 @@ class PaymentController extends AppBaseController
 
         Flash::success('Payment updated successfully.');
 
-        return redirect(route('payments.index'));
+        return redirect(route('payments.index', $account));
     }
 
     /**
      * Remove the specified Payment from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $payment = $this->paymentRepository->find($id);
 
@@ -186,10 +193,14 @@ class PaymentController extends AppBaseController
 
         Flash::success('Payment deleted successfully.');
 
-        return redirect(route('payments.index'));
+        return redirect(route('payments.index', $account));
     }
 
-    public function showCreateIncome()
+    /**
+     * @param $account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showCreateIncome($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->pluck('account_name', 'account_head_id');
@@ -203,7 +214,8 @@ class PaymentController extends AppBaseController
         return view("payments.income", [
             'companies' => [0 => 'Select Company'] + $companies,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray(),
-            'acctHeads' => $acctHeads
+            'acctHeads' => $acctHeads,
+            'account' => $account
         ]);
     }
 
@@ -212,7 +224,7 @@ class PaymentController extends AppBaseController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function createIncome(Request $request)
+    public function createIncome(Request $request, $account)
     {
         $v = Validator::make($request->all(), [
             'company_id' => 'required|exists:companies,id',
@@ -244,7 +256,12 @@ class PaymentController extends AppBaseController
         }
     }
 
-    public function showReceipt($id)
+    /**
+     * @param $account
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function showReceipt($account, $id)
     {
         $id = decrypt($id);
         $details = Transaction::with(['company'])->whereRaw("reference=? and credit_amount>?", [$id, 0.0])->first();
@@ -260,15 +277,25 @@ class PaymentController extends AppBaseController
         return $pdf->stream($details->reference . '.pdf');
     }
 
-    public function showReversePayment()
+    /**
+     * @param $account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showReversePayment($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('payments.reverse', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ]);
     }
 
-    public function reversePayment(Request $request)
+    /**
+     * @param Request $request
+     * @param $account
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reversePayment(Request $request, $account)
     {
         $input = $request->all();
         $v = Validator::make($input, [

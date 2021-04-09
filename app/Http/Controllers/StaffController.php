@@ -30,9 +30,10 @@ class StaffController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param string $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account = "")
     {
         $companyID = session('company_id');
         if (isset($companyID)) {
@@ -42,20 +43,22 @@ class StaffController extends AppBaseController
         }
 
 
-        return view('staff.index')
+        return view('staff.index', ['account' => $account])
             ->with('staff', $staff);
     }
 
     /**
      * Show the form for creating a new Staff.
      *
+     * @param string $account
      * @return Response
      */
-    public function create()
+    public function create($account = "")
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('staff.create', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ]);
     }
 
@@ -66,7 +69,7 @@ class StaffController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateStaffRequest $request)
+    public function store(CreateStaffRequest $request, $account = "")
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
@@ -90,7 +93,7 @@ class StaffController extends AppBaseController
             Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password')));
         })->afterResponse();
 
-        return redirect(route('staff.index'));
+        return redirect(route('staff.index', $account));
     }
 
     /**
@@ -98,9 +101,10 @@ class StaffController extends AppBaseController
      *
      * @param int $id
      *
+     * @param string $account
      * @return Response
      */
-    public function show($id)
+    public function show($id, $account = "")
     {
         $staff = $this->staffRepository->find($id);
 
@@ -110,7 +114,9 @@ class StaffController extends AppBaseController
             return redirect(route('staff.index'));
         }
 
-        return view('staff.show')->with('staff', $staff);
+        return view('staff.show', [
+            'account' => $account
+        ])->with('staff', $staff);
     }
 
     /**
@@ -120,7 +126,7 @@ class StaffController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($id, $account = "")
     {
         $staff = $this->staffRepository->find($id);
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
@@ -132,7 +138,8 @@ class StaffController extends AppBaseController
         }
 
         return view('staff.edit', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ])->with('staff', $staff);
     }
 
@@ -142,9 +149,10 @@ class StaffController extends AppBaseController
      * @param int $id
      * @param UpdateStaffRequest $request
      *
+     * @param string $account
      * @return Response
      */
-    public function update($id, UpdateStaffRequest $request)
+    public function update($id, UpdateStaffRequest $request, $account = "")
     {
         $staff = $this->staffRepository->find($id);
 
@@ -158,7 +166,9 @@ class StaffController extends AppBaseController
 
         Flash::success('Staff updated successfully.');
 
-        return redirect(route('staff.index'));
+        return redirect(route('staff.index', [
+            'account' => $account
+        ]));
     }
 
     /**
@@ -166,24 +176,24 @@ class StaffController extends AppBaseController
      *
      * @param int $id
      *
+     * @param string $account
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($id, $account = "")
     {
         $staff = $this->staffRepository->find($id);
 
         if (empty($staff)) {
             Flash::error('Staff not found');
 
-            return redirect(route('staff.index'));
+            return redirect(route('staff.index', $account));
         }
 
         $this->staffRepository->delete($id);
 
         Flash::success('Staff deleted successfully.');
 
-        return redirect(route('staff.index'));
+        return redirect(route('staff.index', $account));
     }
 }

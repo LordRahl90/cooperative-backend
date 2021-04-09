@@ -28,23 +28,27 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test')], f
     });
     Route::get('/staff/activate');
 
-    Route::get('/custom', function () {
-        $company = \App\Models\Company::find(1);
-        $staff = \App\Models\Staff::find(36);
-//    dd('Loan repayment for ' . Date('M, Y'));
-        $path = "app/schedules/cus-606b3083c34d1.xlsx";
-        \App\Jobs\ProcessRepaymentSchedule::dispatch(1, 36, 14, $path, "2021-03")->onQueue('repayment');
-//    \Illuminate\Support\Facades\Log::info($staff);
-//    \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
-//    dump("Mail sent successfully,");
-        dump("All good");
-        response()->json(['success' => true, 'message' => 'all good']);
-    });
+//    Route::get('/custom', function () {
+//        $company = \App\Models\Company::find(1);
+//        $staff = \App\Models\Staff::find(36);
+////    dd('Loan repayment for ' . Date('M, Y'));
+//        $path = "app/schedules/cus-606b3083c34d1.xlsx";
+//        \App\Jobs\ProcessRepaymentSchedule::dispatch(1, 36, 14, $path, "2021-03")->onQueue('repayment');
+////    \Illuminate\Support\Facades\Log::info($staff);
+////    \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
+////    dump("Mail sent successfully,");
+//        dump("All good");
+//        response()->json(['success' => true, 'message' => 'all good']);
+//    });
 
 //    Auth::routes();
 
     Route::group(['middleware' => 'auth'], function () {
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+        Route::resource('orgAccountCategories', App\Http\Controllers\OrgAccountCategoryController::class);
+
+        Route::resource('orgAccountHeads', App\Http\Controllers\OrgAccountHeadController::class);
 
         Route::resource('orgBankAccounts', App\Http\Controllers\OrgBankAccountController::class);
 
@@ -160,10 +164,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('accountCategories', App\Http\Controllers\AccountCategoryController::class);
 
     Route::resource('accountHeads', App\Http\Controllers\AccountHeadController::class);
-
-    Route::resource('orgAccountCategories', App\Http\Controllers\OrgAccountCategoryController::class);
-
-    Route::resource('orgAccountHeads', App\Http\Controllers\OrgAccountHeadController::class);
 
     Route::resource('countries', App\Http\Controllers\CountryController::class);
 

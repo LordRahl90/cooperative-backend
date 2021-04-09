@@ -27,12 +27,12 @@
                 <td>{{ number_format($receipt->amount,2) }}</td>
                 <td>{{ $receipt->processor==null?"":$receipt->processor->name }}</td>
                 <td>
-                    {!! Form::open(['route' => ['receipts.destroy', $receipt->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['receipts.destroy',$account, $receipt->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('receipts.show', [$receipt->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('receipts.show', [$account,$receipt->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('receipts.edit', [$receipt->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('receipts.edit', [$account,$receipt->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-edit"></i>
                         </a>
                         {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}

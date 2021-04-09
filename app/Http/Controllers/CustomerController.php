@@ -41,9 +41,10 @@ class CustomerController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
 
         $companyID = session('company_id');
@@ -53,16 +54,19 @@ class CustomerController extends AppBaseController
             $customers = $this->customerRepository->all();
         }
 
-        return view('customers.index')
+        return view('customers.index', [
+            'account' => $account
+        ])
             ->with('customers', $customers);
     }
 
     /**
      * Show the form for creating a new Customer.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
         $countries = World::Countries()->sortBy('name')->pluck('name', 'code');
@@ -70,7 +74,8 @@ class CustomerController extends AppBaseController
         return view('customers.create', [
             'companies' => $companies,
             'countries' => $countries,
-            'banks' => $banks
+            'banks' => $banks,
+            'account' => $account
         ]);
     }
 
@@ -79,9 +84,10 @@ class CustomerController extends AppBaseController
      *
      * @param CreateCustomerRequest $request
      *
+     * @param $account
      * @return Response
      */
-    public function store(CreateCustomerRequest $request)
+    public function store(CreateCustomerRequest $request, $account)
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
@@ -171,7 +177,7 @@ class CustomerController extends AppBaseController
 
             DB::commit();
             Flash::success('Customer saved successfully.');
-            return redirect(route('members.index'));
+            return redirect(route('members.index', $account));
 
         } catch (\Exception $ex) {
             DB::rollBack();
@@ -184,31 +190,35 @@ class CustomerController extends AppBaseController
     /**
      * Display the specified Customer.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $customer = $this->customerRepository->find($id);
 
         if (empty($customer)) {
             Flash::error('Customer not found');
 
-            return redirect(route('customers.index'));
+            return redirect(route('customers.index', $account));
         }
 
-        return view('customers.show')->with('customer', $customer);
+        return view('customers.show', [
+            'account' => $account
+        ])->with('customer', $customer);
     }
 
     /**
      * Show the form for editing the specified Customer.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $customer = $this->customerRepository->find($id);
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
@@ -216,23 +226,25 @@ class CustomerController extends AppBaseController
         if (empty($customer)) {
             Flash::error('Customer not found');
 
-            return redirect(route('customers.index'));
+            return redirect(route('customers.index', $account));
         }
 
         return view('customers.edit', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ])->with('customer', $customer);
     }
 
     /**
      * Update the specified Customer in storage.
      *
+     * @param $account
      * @param int $id
      * @param UpdateCustomerRequest $request
      *
      * @return Response
      */
-    public function update($id, UpdateCustomerRequest $request)
+    public function update($account, $id, UpdateCustomerRequest $request)
     {
         $customer = $this->customerRepository->find($id);
 
@@ -246,38 +258,38 @@ class CustomerController extends AppBaseController
 
         Flash::success('Customer updated successfully.');
 
-        return redirect(route('customers.index'));
+        return redirect(route('customers.index', $account));
     }
 
     /**
      * Remove the specified Customer from storage.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      * @throws \Exception
-     *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $customer = $this->customerRepository->find($id);
 
         if (empty($customer)) {
             Flash::error('Customer not found');
 
-            return redirect(route('customers.index'));
+            return redirect(route('customers.index', $account));
         }
 
         $this->customerRepository->delete($id);
 
         Flash::success('Customer deleted successfully.');
 
-        return redirect(route('customers.index'));
+        return redirect(route('customers.index', $account));
     }
 
-    public function showUpload()
+    public function showUpload($account)
     {
-        return view('customers.upload');
+        return view('customers.upload', ['account' => $account]);
     }
 
     public function upload(Request $request)

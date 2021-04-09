@@ -91,7 +91,7 @@
 
             <div class="card-footer" v-if="pv.id!==undefined">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('payments.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('payments.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

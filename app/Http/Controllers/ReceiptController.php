@@ -32,21 +32,22 @@ class ReceiptController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $receipts = $this->receiptRepository->where("company_id", $companyID);
 
-        return view('receipts.index')
+        return view('receipts.index', ['account' => $account])
             ->with('receipts', $receipts);
     }
 
     /**
      * Show the form for creating a new Receipt.
      *
+     * @param $account
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         $companyID = session('company_id');
@@ -59,7 +60,8 @@ class ReceiptController extends AppBaseController
         return view('receipts.create', [
             'companies' => $companies,
             'bankAccounts' => [0 => 'Select Bank Account'] + $bankAccounts->toArray(),
-            'acctHeads' => [0 => 'Select Account Head'] + $acctHeads->toArray()
+            'acctHeads' => [0 => 'Select Account Head'] + $acctHeads->toArray(),
+            'account' => $account
         ]);
     }
 
@@ -70,7 +72,7 @@ class ReceiptController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateReceiptRequest $request)
+    public function store(CreateReceiptRequest $request, $account)
     {
         $input = $request->all();
 
@@ -78,27 +80,28 @@ class ReceiptController extends AppBaseController
 
         Flash::success('Receipt saved successfully.');
 
-        return redirect(route('receipts.index'));
+        return redirect(route('receipts.index', $account));
     }
 
     /**
      * Display the specified Receipt.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $receipt = $this->receiptRepository->find($id);
 
         if (empty($receipt)) {
             Flash::error('Receipt not found');
 
-            return redirect(route('receipts.index'));
+            return redirect(route('receipts.index', $account));
         }
 
-        return view('receipts.show')->with('receipt', $receipt);
+        return view('receipts.show', ['account' => $account])->with('receipt', $receipt);
     }
 
     /**
@@ -175,9 +178,9 @@ class ReceiptController extends AppBaseController
         return redirect(route('receipts.index'));
     }
 
-    public function showReprintReceipt()
+    public function showReprintReceipt($account)
     {
-        return view('receipts.reprint');
+        return view('receipts.reprint', ['account' => $account]);
     }
 
     public function reprintReceipt(Request $request)
@@ -187,11 +190,12 @@ class ReceiptController extends AppBaseController
         return response()->redirectTo("/income/$reference/receipt");
     }
 
-    public function showReverseReceipt()
+    public function showReverseReceipt($account)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('receipts.reverse', [
-            'companies' => $companies
+            'companies' => $companies,
+            'account' => $account
         ]);
     }
 

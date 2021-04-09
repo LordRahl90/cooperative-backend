@@ -29,14 +29,15 @@ class JournalVoucherController extends AppBaseController
      *
      * @param Request $request
      *
+     * @param $account
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $journalVouchers = $this->journalVoucherRepository->where("company_id", $companyID);
 
-        return view('journal_vouchers.index')
+        return view('journal_vouchers.index', ['account' => $account])
             ->with('journalVouchers', $journalVouchers);
     }
 
@@ -45,7 +46,7 @@ class JournalVoucherController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
@@ -53,7 +54,8 @@ class JournalVoucherController extends AppBaseController
 
         return view('journal_vouchers.create', [
             'companies' => $companies,
-            'accountHeads' => $acctHeads
+            'accountHeads' => $acctHeads,
+            'account' => $account
         ]);
     }
 
@@ -64,7 +66,7 @@ class JournalVoucherController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateJournalVoucherRequest $request)
+    public function store(CreateJournalVoucherRequest $request, $account)
     {
         $input = $request->all();
 
@@ -72,7 +74,7 @@ class JournalVoucherController extends AppBaseController
 
         Flash::success('Journal Voucher saved successfully.');
 
-        return redirect(route('journalVouchers.index'));
+        return redirect(route('journalVouchers.index', $account));
     }
 
     /**
@@ -82,7 +84,7 @@ class JournalVoucherController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $journalVoucher = $this->journalVoucherRepository->find($id);
 
@@ -92,7 +94,9 @@ class JournalVoucherController extends AppBaseController
             return redirect(route('journalVouchers.index'));
         }
 
-        return view('journal_vouchers.show')->with('journalVoucher', $journalVoucher);
+        return view('journal_vouchers.show', [
+            'account' => $account
+        ])->with('journalVoucher', $journalVoucher);
     }
 
     /**
@@ -102,7 +106,7 @@ class JournalVoucherController extends AppBaseController
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         // Use the company to load content
@@ -118,7 +122,8 @@ class JournalVoucherController extends AppBaseController
 
         return view('journal_vouchers.edit', [
             'companies' => $companies,
-            'accountHeads' => $acctHeads
+            'accountHeads' => $acctHeads,
+            'account' => $account
         ])->with('journalVoucher', $journalVoucher);
     }
 
@@ -130,21 +135,21 @@ class JournalVoucherController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateJournalVoucherRequest $request)
+    public function update($account, $id, UpdateJournalVoucherRequest $request)
     {
         $journalVoucher = $this->journalVoucherRepository->find($id);
 
         if (empty($journalVoucher)) {
             Flash::error('Journal Voucher not found');
 
-            return redirect(route('journalVouchers.index'));
+            return redirect(route('journalVouchers.index', $account));
         }
 
         $journalVoucher = $this->journalVoucherRepository->update($request->all(), $id);
 
         Flash::success('Journal Voucher updated successfully.');
 
-        return redirect(route('journalVouchers.index'));
+        return redirect(route('journalVouchers.index', $account));
     }
 
     /**
@@ -156,21 +161,21 @@ class JournalVoucherController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $journalVoucher = $this->journalVoucherRepository->find($id);
 
         if (empty($journalVoucher)) {
             Flash::error('Journal Voucher not found');
 
-            return redirect(route('journalVouchers.index'));
+            return redirect(route('journalVouchers.index', $account));
         }
 
         $this->journalVoucherRepository->delete($id);
 
         Flash::success('Journal Voucher deleted successfully.');
 
-        return redirect(route('journalVouchers.index'));
+        return redirect(route('journalVouchers.index', $account));
     }
 
     public function printJV($reference)
@@ -189,9 +194,9 @@ class JournalVoucherController extends AppBaseController
         return $pdf->stream($reference . '.pdf');
     }
 
-    public function showReprintJV()
+    public function showReprintJV($account)
     {
-        return view('journal_vouchers.reprint');
+        return view('journal_vouchers.reprint', ['account' => $account]);
     }
 
     public function reprintJV(Request $request)

@@ -136,7 +136,7 @@
                 <div class="card-footer">
                     <button type="button" @click="postJV()" class="btn btn-primary">Post JV</button>
                     <button type="button" @click="previewJV()" class="btn btn-info">Preview JV</button>
-                    <a href="{{ route('payments.index') }}" class="btn btn-default">Cancel</a>
+                    <a href="{{ route('payments.index',$account) }}" class="btn btn-default">Cancel</a>
                 </div>
 
                 {!! Form::close() !!}
@@ -180,7 +180,7 @@
                 },
                 credit: [],
                 debit: [],
-                narration: 'Test Narration',
+                narration: '',
                 reference: '{{ strtoupper(uniqid('JV-')) }}'
             },
             methods: {

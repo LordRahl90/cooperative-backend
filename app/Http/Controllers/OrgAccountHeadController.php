@@ -30,12 +30,14 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request, $account)
     {
         $companyID = session('company_id');
         $orgAccountHeads = $this->orgAccountHeadRepository->where("company_id", $companyID);
 
-        return view('org_account_heads.index')
+        return view('org_account_heads.index', [
+            'account' => $account
+        ])
             ->with('orgAccountHeads', $orgAccountHeads);
     }
 
@@ -44,14 +46,15 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($account)
     {
         //TODO: return the categories based on the company name
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
         $categories = OrgAccountCategory::orderBy('name', 'asc')->pluck('name', 'id');
         return view('org_account_heads.create', [
             'companies' => $companies,
-            'categories' => $categories
+            'categories' => $categories,
+            'account' => $account
         ]);
     }
 
@@ -62,7 +65,7 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @return Response
      */
-    public function store(CreateOrgAccountHeadRequest $request)
+    public function store(CreateOrgAccountHeadRequest $request, $account)
     {
         $input = $request->all();
         $category = OrgAccountCategory::WhereRaw('company_id=? AND id=?', [$input['company_id'], $input['category_id']])->get();
@@ -77,7 +80,7 @@ class OrgAccountHeadController extends AppBaseController
 
         Flash::success('Org Account Head saved successfully.');
 
-        return redirect(route('orgAccountHeads.index'));
+        return redirect(route('orgAccountHeads.index',$account));
     }
 
     /**
@@ -87,7 +90,7 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @return Response
      */
-    public function show($id)
+    public function show($account, $id)
     {
         $orgAccountHead = $this->orgAccountHeadRepository->find($id);
 
@@ -103,11 +106,12 @@ class OrgAccountHeadController extends AppBaseController
     /**
      * Show the form for editing the specified OrgAccountHead.
      *
+     * @param $account
      * @param int $id
      *
      * @return Response
      */
-    public function edit($id)
+    public function edit($account, $id)
     {
         $orgAccountHead = $this->orgAccountHeadRepository->find($id);
         $companies = Company::orderBy('name', 'desc')->pluck('name', 'id');
@@ -121,7 +125,8 @@ class OrgAccountHeadController extends AppBaseController
 
         return view('org_account_heads.edit', [
             'companies' => $companies,
-            'categories' => $categories
+            'categories' => $categories,
+            'account'=>$account
         ])->with('orgAccountHead', $orgAccountHead);
     }
 
@@ -133,7 +138,7 @@ class OrgAccountHeadController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdateOrgAccountHeadRequest $request)
+    public function update($account, $id, UpdateOrgAccountHeadRequest $request)
     {
         $orgAccountHead = $this->orgAccountHeadRepository->find($id);
 
@@ -147,7 +152,7 @@ class OrgAccountHeadController extends AppBaseController
 
         Flash::success('Org Account Head updated successfully.');
 
-        return redirect(route('orgAccountHeads.index'));
+        return redirect(route('orgAccountHeads.index',$account));
     }
 
     /**
@@ -159,7 +164,7 @@ class OrgAccountHeadController extends AppBaseController
      * @throws \Exception
      *
      */
-    public function destroy($id)
+    public function destroy($account, $id)
     {
         $orgAccountHead = $this->orgAccountHeadRepository->find($id);
 
@@ -173,6 +178,6 @@ class OrgAccountHeadController extends AppBaseController
 
         Flash::success('Org Account Head deleted successfully.');
 
-        return redirect(route('orgAccountHeads.index'));
+        return redirect(route('orgAccountHeads.index',$account));
     }
 }

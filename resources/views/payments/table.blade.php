@@ -27,14 +27,14 @@
                 <td>{{ number_format($payment->total_amount,2) }}</td>
                 <td>{{ $payment->bankAccount->account_name }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['payments.destroy', $payment->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['payments.destroy',$account, $payment->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('payments.show', [$payment->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('payments.show', [$account,$payment->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-                        <a href="{{ route('payments.edit', [$payment->id]) }}" class='btn btn-default btn-xs'>
-                            <i class="far fa-edit"></i>
-                        </a>
+{{--                        <a href="{{ route('payments.edit', [$account,$payment->id]) }}" class='btn btn-default btn-xs'>--}}
+{{--                            <i class="far fa-edit"></i>--}}
+{{--                        </a>--}}
 {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}

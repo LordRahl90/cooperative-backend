@@ -44,7 +44,7 @@
 
             <div class="card-footer">
                 <button class="btn btn-primary">Proceed</button>
-                <a href="{{ route('receipts.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('receipts.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
             {!! Form::close() !!}

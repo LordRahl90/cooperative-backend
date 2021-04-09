@@ -76,6 +76,7 @@ class Transactions
             }
             $receipt = Receipt::create([
                 'company_id' => $companyID,
+                'processed_by' => $user,
                 'reference' => $reference,
                 'payer' => $payer,
                 'phone' => $phone,
