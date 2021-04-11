@@ -22,3 +22,7 @@ Artisan::command('inspire', function () {
 Artisan::command('internet', function () {
     $this->comment('Hello internet');
 })->purpose('Checking if an internet exists');
+
+Artisan::command('run-queue', function () {
+
+});

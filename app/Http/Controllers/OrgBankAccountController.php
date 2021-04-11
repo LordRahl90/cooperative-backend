@@ -67,6 +67,7 @@ class OrgBankAccountController extends AppBaseController
      *
      * @param CreateOrgBankAccountRequest $request
      *
+     * @param $account
      * @return Response
      */
     public function store(CreateOrgBankAccountRequest $request, $account)
@@ -76,7 +77,7 @@ class OrgBankAccountController extends AppBaseController
         $config = Configuration::with('cash_account')->where("company_id", $companyID)->get();
         if (count($config) == 0) {
             Flash::error("Please configure your account heads");
-            return redirect(route("configurations.create"));
+            return redirect(route("configurations.create",$account));
         }
         $config = $config->first();
         DB::beginTransaction();

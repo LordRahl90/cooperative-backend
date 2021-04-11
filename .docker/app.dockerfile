@@ -32,5 +32,5 @@ RUN composer install --quiet --optimize-autoloader && composer update --quiet --
 
 RUN chown -R www-data:www-data /app && a2enmod rewrite
 # RUN  php artisan jwt:secret
-# RUN php artisan key:generate
+RUN php artisan key:generate
 RUN php artisan config:clear

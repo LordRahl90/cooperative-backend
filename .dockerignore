@@ -1,1 +1,6 @@
 /vendor
+/storage/logs/*.log
+/storage/app/customers/*.*
+/storage/app/pv/*.*
+/storage/app/schedules/*.*
+/storage/app/uploads/*.*
