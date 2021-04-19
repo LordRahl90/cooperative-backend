@@ -18,6 +18,7 @@ class NewStaffRegistered extends Mailable
     public $staff;
     public $password;
     public $token;
+    public $link;
 
     /**
      * Create a new message instance.
@@ -25,13 +26,15 @@ class NewStaffRegistered extends Mailable
      * @param $company
      * @param $staff
      * @param $password
+     * @param $link
      */
-    public function __construct($company, $staff, $password)
+    public function __construct($company, $staff, $password, $link)
     {
         $this->company = $company;
         $this->staff = $staff;
         $this->password = $password;
         $this->token = uniqid('tk-');
+        $this->link = $link;
     }
 
     /**
@@ -49,13 +52,12 @@ class NewStaffRegistered extends Mailable
         if (!$newPasswordReset) {
             Log::info("cannot create a new reset password token");
         }
-        Log::info(config('app.url'));
+        Log::info($this->link);
         $host = explode("://", config('app.url'));
-        Log::info($host);
         return $this
             ->subject("New Staff Registration")
-            ->from('registrations@' . $host[1], 'Staff Registration')
-//            ->from('registration@coop-account.com', 'Staff Registration')
+//            ->from('registrations@' . $host[1], 'Staff Registration')
+            ->from('registration@coop-account.com', 'Staff Registration')
             ->view('staff.welcome');
     }
 }

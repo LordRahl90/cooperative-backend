@@ -67,6 +67,7 @@ class StaffController extends AppBaseController
      *
      * @param CreateStaffRequest $request
      *
+     * @param string $account
      * @return Response
      */
     public function store(CreateStaffRequest $request, $account = "")
@@ -88,9 +89,14 @@ class StaffController extends AppBaseController
 
         Flash::success('Staff saved successfully.');
         $company = Company::find($input['company_id']);
-//        Mail::send(new NewStaffRegistered($company, $staff));
-        dispatch(function () use ($user, $company, $staff, $request) {
-            Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password')));
+        if ($account != "") {
+            $link = url("password/reset");
+        } else {
+            $host = explode("://", config('app.url'));
+            $link = "https://" . $company->slug . "." . $host[1];
+        }
+        dispatch(function () use ($user, $company, $staff, $request, $link) {
+            Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password'), $link));
         })->afterResponse();
 
         return redirect(route('staff.index', $account));
