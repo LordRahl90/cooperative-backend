@@ -49,7 +49,8 @@ class NewStaffRegistered extends Mailable
         if (!$newPasswordReset) {
             Log::info("cannot create a new reset password token");
         }
-        $host = explode(config('app.url'), "://");
+        Log::info(config('app.url'));
+        $host = explode("://", config('app.url'));
         Log::info($host);
         return $this
             ->subject("New Staff Registration")

@@ -29,13 +29,13 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'm
 
     Route::get('/custom', function () {
         Log::info("hello world");
-//        $company = \App\Models\Company::find(1);
-//        $staff = \App\Models\Staff::find(2);
+        $company = \App\Models\Company::find(1);
+        $staff = \App\Models\Staff::find(2);
 //    dd('Loan repayment for ' . Date('M, Y'));
 //        $path = "app/schedules/cus-606b3083c34d1.xlsx";
 //        \App\Jobs\ProcessRepaymentSchedule::dispatch(1, 36, 14, $path, "2021-03")->onQueue('repayment');
 //    \Illuminate\Support\Facades\Log::info($staff);
-    \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
+    \Illuminate\Support\Facades\Mail::to("tolaabbey001@hotmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password"));
     dump("Mail sent successfully,");
 //        dump("All good");
         response()->json(['success' => true, 'message' => 'all good']);
