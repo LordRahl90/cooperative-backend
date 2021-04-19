@@ -62,9 +62,11 @@ class LoanRepaymentUpload extends Mailable
         foreach ($allStaff as $af) {
             $otherEmails[] = $af->email;
         }
+        $host = explode(config('app.url'), "://");
+        Log::info($host);
 
         return $this
-            ->from('tolaabbey009@gmail.com', 'Transactions')
+            ->from('jobs-manager@' . $host[1], 'Job Manager')
             ->cc($otherEmails)
             ->subject('Monthly Repayment Schedule Upload')
             ->view('loan_repayments.emails.upload_done');

@@ -49,9 +49,11 @@ class NewStaffRegistered extends Mailable
         if (!$newPasswordReset) {
             Log::info("cannot create a new reset password token");
         }
+        $host = explode(config('app.url'), "://");
+        Log::info($host);
         return $this
             ->subject("New Staff Registration")
-            ->from('tolaabbey009@gmail.com', 'Staff Registration')
+            ->from('registrations@' . $host[1], 'Staff Registration')
 //            ->from('registration@coop-account.com', 'Staff Registration')
             ->view('staff.welcome');
     }
