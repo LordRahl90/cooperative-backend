@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1>Create Savings Payment</h1>
+                    <h1>Liquidate Savings</h1>
                 </div>
             </div>
         </div>
@@ -16,10 +16,11 @@
     <div class="content px-3">
 
         @include('adminlte-templates::common.errors')
+        @include('flash::message')
 
-        <div class="card" id="savingsPaymentDiv">
+        <div class="card" id="savingsLiquidateDiv">
 
-            {!! Form::open(['/customer-savings/payment','target'=>'_blank']) !!}
+            {!! Form::open(['/customer-savings/liquidate','target'=>'_blank']) !!}
 
             <div class="card-body">
 
@@ -44,8 +45,7 @@
                     <!-- Loan Id Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('savings_id', 'Savings Plan:') !!}
-{{--                        <v-select name="savings_id" v-model="savings_id" :options="savings"></v-select>--}}
-                        <select name="savings_id" v-model="savings_id" class="form-control">
+                        <select name="savings_id" v-model="savings_id" class="form-control" @change="loadSavingsAmount">
                             <option value="0" selected disabled>Select Savings Plan</option>
                             <option v-for="saving in savings" :value="saving.id">@{{ saving.savings.name }}
                             </option>
@@ -64,17 +64,22 @@
                         {!! Form::text('reference', strtoupper(uniqid('SV-')), ['class' => 'form-control']) !!}
                     </div>
 
-                    <!-- Narration Field -->
-                    <div class="form-group col-sm-6">
-                        {!! Form::label('narration', 'Narration:') !!}
-                        {!! Form::text('narration', null, ['class' => 'form-control']) !!}
-                    </div>
-
-
                     <!-- Amount Field -->
                     <div class="form-group col-sm-6">
                         {!! Form::label('amount', 'Amount:') !!}
-                        {!! Form::text('amount', null, ['class' => 'form-control','v-model'=>'amount']) !!}
+                        {!! Form::text('amount', null, ['class' => 'form-control','v-model'=>'amount','@change="updateBalance"']) !!}
+                    </div>
+
+                    <!-- Current Balance Field -->
+                    <div class="form-group col-sm-6" v-if="savingsBalance>0">
+                        {!! Form::label('savingsBalance', 'Savings Balance:') !!}
+                        {!! Form::text('savingsBalance', null, ['class' => 'form-control','v-model'=>'savingsBalance','readonly']) !!}
+                    </div>
+
+                    <!-- Narration Field -->
+                    <div class="form-group col-sm-6">
+                        {!! Form::label('narration', 'Narration:') !!}
+                        {!! Form::text('narration', 'Liquidating savings', ['class' => 'form-control']) !!}
                     </div>
 
                 </div>
@@ -95,18 +100,19 @@
     <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 @endsection
 @section('third_party_scripts')
-    <script src="https://unpkg.com/vue-select@latest"></script>
+    <script src="https://unpkg.com/vue-select@3.0.0"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         Vue.component('v-select', VueSelect.VueSelect);
         var loanRepaymentApp = new Vue({
-            el: '#savingsPaymentDiv',
+            el: '#savingsLiquidateDiv',
             data: {
                 company_id: 0,
                 customer_id: 0,
                 savings_id: 0,
                 amount: 0,
                 savings: [],
+                savingsBalance: 0,
             },
             methods: {
                 async loadCustomerLoans() {
@@ -118,10 +124,25 @@
                         }
                         let response = await axios.get(`/api/customer-savings/${this.customer_id}`);
                         this.savings = response.data.data;
-                        console.log(response.data);
                     } catch (e) {
                         console.log(e);
                     }
+                },
+                async loadSavingsAmount() {
+                    let savingsID = this.savings_id;
+                    if (savingsID === 0) {
+                        return;
+                    }
+                    try {
+                        let response = await axios.get(`/api/customer-savings/${savingsID}/balance`);
+                        this.savingsBalance = response.data.data.balance;
+                        console.log(this.savingsBalance);
+                    } catch (e) {
+                        console.log(e);
+                    }
+                },
+                updateBalance() {
+                    this.savingsBalance = parseFloat(this.savingsBalance) - parseFloat(this.amount);
                 }
             }
         });

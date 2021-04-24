@@ -64,6 +64,7 @@ Route::resource('customers', App\Http\Controllers\API\CustomerAPIController::cla
 Route::get('/customer-loans/{id}', 'CustomerAPIController@customerLoans');
 Route::get('/customer-loans/{loanID}/details', 'CustomerAPIController@loadLoanDetails');
 Route::get('/customer-savings/{id}', 'CustomerAPIController@customerSavings');
+Route::get('/customer-savings/{savingsId}/balance', 'CustomerAPIController@savingsBalance');
 
 Route::resource('customer_addresses', App\Http\Controllers\API\CustomerAddressAPIController::class);
 
@@ -98,3 +99,6 @@ Route::resource('customer_loan_logs', App\Http\Controllers\API\CustomerLoanLogAP
 
 
 Route::resource('loan_guarators', App\Http\Controllers\API\LoanGuaratorAPIController::class);
+
+
+Route::resource('fee_managements', App\Http\Controllers\API\FeeManagementAPIController::class);

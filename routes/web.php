@@ -131,6 +131,8 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'm
 
         Route::get('/customer-savings/payment', 'App\Http\Controllers\CustomerSavingController@showSavingsPayment');
         Route::post('/customer-savings/payment', 'App\Http\Controllers\CustomerSavingController@makeSavingsPayment');
+        Route::get('/customer-savings/liquidate', 'App\Http\Controllers\CustomerSavingController@showSavingsPayout');
+        Route::post('/customer-savings/liquidate', 'App\Http\Controllers\CustomerSavingController@makeSavingsPayout');
 
         Route::resource('loanApplications', App\Http\Controllers\LoanApplicationController::class);
 
@@ -150,6 +152,8 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'm
     });
 
     Route::resource('customerLoanLogs', App\Http\Controllers\CustomerLoanLogController::class);
+
+    Route::resource('feeManagements', App\Http\Controllers\FeeManagementController::class);
 
     Route::resource('loanGuarators', App\Http\Controllers\LoanGuaratorController::class);
 });

@@ -10,6 +10,8 @@ use App\Models\CustomerLoan;
 use App\Models\CustomerSaving;
 use App\Models\CustomerTransaction;
 use App\Models\OrgBankAccount;
+use App\Models\PaymentVoucher;
+use App\Models\PaymentVoucherDetails;
 use App\Models\SavingsAccount;
 use App\Repositories\CustomerSavingRepository;
 use App\Http\Controllers\AppBaseController;
@@ -17,6 +19,7 @@ use App\Utility\Transactions;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Response;
 
 class CustomerSavingController extends AppBaseController
@@ -245,6 +248,116 @@ class CustomerSavingController extends AppBaseController
             dd($ex);
             Flash::error($ex->getMessage());
             return redirect()->back()->withInput();
+        }
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $account
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function showSavingsPayout(Request $request, $account)
+    {
+        $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
+        $companyID = session('company_id');
+        $customers = Customer::orderBy('surname', 'asc')->where('company_id', $companyID)->get()->pluck('full_name', 'id');
+        $bankAccounts = OrgBankAccount::orderBy('account_name', 'asc')->where('company_id', $companyID)->pluck('account_name', 'id')->toArray();
+
+        return view('customer_savings.liquidate', [
+            'companies' => $companies,
+            'customers' => $customers,
+            'bankAccounts' => $bankAccounts,
+            'account' => $account
+        ]);
+    }
+
+    public function makeSavingsPayout(Request $request, $account)
+    {
+        DB::beginTransaction();
+        $input = $request->all();
+        try {
+            $companyID = $input['company_id'];
+            $customerID = $input['customer_id'];
+            $savingsID = $input['savings_id'];
+            $bankAccount = $input['bank_account'];
+            $reference = $input['reference'];
+            $amount = $input['amount'];
+            $narration = $input['narration'];
+            $customer = Customer::find($customerID);
+            $savings = CustomerSaving::with(['savings'])->find($savingsID);
+            $accountHead = $savings->savings->account_head_id;
+
+            if (count($customer->bank_accounts) == 0) {
+                Log::error("customer bank information not provided.");
+                throw new \Exception("Bank details not set for customer");
+            }
+            if (count($customer->addresses) == 0) {
+                throw new \Exception("Customer address not setup properly.");
+            }
+            $accountInfo = $customer->bank_accounts->first();
+            $address = $customer->addresses->first();
+
+            $newPV = PaymentVoucher::create([
+                'company_id' => $companyID,
+                'payee' => $customer->full_name,
+                'address' => $address->street,
+                'email' => $customer->email,
+                'website' => '',
+                'phone' => $customer->phone,
+                'pv_id' => strtoupper(uniqid('PV-')),
+                'account_name' => $accountInfo->account_name,
+                'account_number' => $accountInfo->account_number,
+                'bank_id' => $accountInfo->bank_id,
+                'status' => "PAID",
+                'created_by' => auth()->id(),
+            ]);
+            if (!$newPV) {
+                throw new \Exception("cannot create PV details.");
+            }
+
+            $newItem = PaymentVoucherDetails::create([
+                'company_id' => $companyID,
+                'pv_id' => $newPV->id,
+                'account_head_id' => $accountHead,
+                'narration' => $narration,
+                'rate' => 1,
+                'quantity' => 1,
+                'amount' => $amount
+            ]);
+
+            if (!$newItem) {
+                throw new \Exception("Cannot create a new item");
+            }
+
+            $customerTransaction = CustomerTransaction::create([
+                'company_id' => $companyID,
+                'customer_id' => $customerID,
+                'savings_id' => $savingsID,
+                'debit' => $amount,
+                'credit' => 0,
+                'narration' => $narration,
+                'reference' => $reference
+            ]);
+
+            if (!$customerTransaction) {
+                throw new \Exception("cannot create customer transaction");
+            }
+
+            $user = auth()->id();
+            $transaction = Transactions::makePayment($companyID, $newPV->id, $bankAccount, $reference, $narration, $amount, $user, $user, $user);
+            if (!$transaction) {
+                throw new \Exception("Error making payment, try again.");
+            }
+
+            Flash::success("Savings Payout registered successfully.");
+            DB::commit();
+            return redirect()->to('/customer-savings/liquidate');
+
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            Flash::error($ex->getMessage());
+            dd($ex);
         }
     }
 }

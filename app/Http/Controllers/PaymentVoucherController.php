@@ -54,12 +54,13 @@ class PaymentVoucherController extends AppBaseController
      */
     public function create($account)
     {
+        $companyID = session('company_id');
         $companies = Company::orderBy('name', 'asc')->pluck('name', 'id');
-        //TODO: Abiodun, sort the account heads with login companies
-        $accountHeads = OrgAccountHead::orderBy('name', 'asc')->pluck('name', 'id');
+        $accountHeads = OrgAccountHead::orderBy('name', 'asc')->where('company_id', $companyID)->pluck('name', 'id');
         $banks = Bank::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
         return view('payment_vouchers.create', [
             'companies' => [0 => 'Select Account'] + $companies->toArray(),
+            'account_heads' => $accountHeads,
             'banks' => $banks,
             'account' => $account
         ]);

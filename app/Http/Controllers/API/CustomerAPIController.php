@@ -7,6 +7,7 @@ use App\Http\Requests\API\UpdateCustomerAPIRequest;
 use App\Models\Customer;
 use App\Models\CustomerLoan;
 use App\Models\CustomerSaving;
+use App\Models\CustomerTransaction;
 use App\Models\LoanRepayment;
 use App\Repositories\CustomerRepository;
 use App\Utility\Transactions;
@@ -283,18 +284,30 @@ class CustomerAPIController extends AppBaseController
         return $this->sendSuccess('Customer deleted successfully');
     }
 
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function customerLoans($id)
     {
         $loans = CustomerLoan::with(['loan_application.pv', 'customer'])->whereRaw('customer_id=? AND status=?', [$id, 'RUNNING'])->get();
         return $this->sendResponse($loans, "Customer loans loaded successfully");
     }
 
+    /**
+     * @param $customerID
+     * @return mixed
+     */
     public function customerSavings($customerID)
     {
         $savings = CustomerSaving::with(['savings'])->where('customer_id', $customerID)->get();
         return $this->sendResponse($savings, 'Customer savings loaded successfully.');
     }
 
+    /**
+     * @param $loanID
+     * @return mixed
+     */
     public function loadLoanDetails($loanID)
     {
         $principal = $interest = 0;
@@ -303,17 +316,23 @@ class CustomerAPIController extends AppBaseController
         if ($application->interest_type == "FLAT_RATE") {
             $principal = $application->repayment_amount;
         } else {
-//            $paymentInfo = DB::table('loan_repayments')
-//                ->selectRaw('COALESCE(sum(principal),0) as paid,COALESCE(sum(amount_payable),0) as payable')
-//                ->where("loan_id", $loanID)->get()->first();
-//            $principal = $application->principal - $paymentInfo->paid;
-//            $rate = $application->rate / 100;
-//            $interest = $principal * $rate;
-//            $repayment = $application->repayment_amount + $interest;
             $principal = $application->repayment_amount;
             $interest = Transactions::getLoanInterest($loanID);
         }
 
         return $this->sendResponse(['principal' => $principal, 'interest' => $interest], "Loan details loaded successfully.");
+    }
+
+    /**
+     * @param $savingsID
+     * @return mixed
+     */
+    public function savingsBalance($savingsID)
+    {
+        $result = CustomerTransaction::where('savings_id', $savingsID)->get();
+        $debit = $result->sum('debit');
+        $credit = $result->sum('credit');
+
+        return $this->sendResponse(['balance' => ($credit - $debit)], 'savings total loaded successfully');
     }
 }

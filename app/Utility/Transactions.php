@@ -423,11 +423,8 @@ class Transactions
         $repaymentAmount = $application->repayment_amount;
         $interest = 0;
 
-        if ($application->interest_type === 'FLAT_RATE') {
-            $payable = $repaymentAmount;
-        } else {
+        if ($application->interest_type !== 'FLAT_RATE') {
             $interest = ($loanAmount - $repaidAmount) * $rate / 100;
-            $payable = $repaymentAmount + $interest;
         }
 
         return [

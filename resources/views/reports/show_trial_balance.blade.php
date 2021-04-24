@@ -29,7 +29,7 @@
 
         <div class="card">
 
-            {!! Form::open(['url' => '/reports/trial-balance']) !!}
+            {!! Form::open(['url' => '/reports/trial-balance','target'=>'_blank']) !!}
 
             <div class="card-body">
 

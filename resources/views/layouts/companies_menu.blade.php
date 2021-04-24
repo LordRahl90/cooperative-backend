@@ -9,6 +9,7 @@
             <i class="fas fa-angle-left right"></i>
         </p>
     </a>
+
     <ul class="nav nav-treeview" style="display: none;">
         <li class="nav-item">
             <a href="{{ route('configurations.index',[$account]) }}"
@@ -47,6 +48,13 @@
                class="nav-link {{ Request::is('staff*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Staff</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="{{ route('feeManagements.index',$account) }}"
+               class="nav-link {{ Request::is('feeManagements*') ? 'active' : '' }}">
+                <p>Fee Managements</p>
             </a>
         </li>
 
@@ -268,9 +276,17 @@
 
         <li class="nav-item">
             <a href="/customer-savings/payment"
-               class="nav-link {{ Request::is('customer-savings*') ? 'active' : '' }}">
+               class="nav-link {{ Request::is('customer-savings/payment') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Savings Payment</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/customer-savings/liquidate"
+               class="nav-link {{ Request::is('customer-savings/liquidate') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Savings Payout</p>
             </a>
         </li>
 
