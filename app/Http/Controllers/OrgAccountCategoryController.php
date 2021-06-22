@@ -130,14 +130,18 @@ class OrgAccountCategoryController extends AppBaseController
         if (empty($orgAccountCategory)) {
             Flash::error('Org Account Category not found');
 
-            return redirect(route('orgAccountCategories.index'));
+            return redirect(route('orgAccountCategories.index', [
+                'account' => $account
+            ]));
         }
 
         $orgAccountCategory = $this->orgAccountCategoryRepository->update($request->all(), $id);
 
         Flash::success('Org Account Category updated successfully.');
 
-        return redirect(route('orgAccountCategories.index'));
+        return redirect(route('orgAccountCategories.index', [
+            'account' => $account
+        ]));
     }
 
     /**

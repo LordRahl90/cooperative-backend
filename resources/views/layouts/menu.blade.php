@@ -7,4 +7,3 @@ $role = session('role');
 @else
     @include("layouts.companies_menu")
 @endif
-

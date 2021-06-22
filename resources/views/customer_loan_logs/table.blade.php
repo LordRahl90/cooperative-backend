@@ -9,10 +9,10 @@
                 <th>Company</th>
             @endif
             <th>Customer</th>
-            <th>Loan Id</th>
+            <th>Loan Ref</th>
             <th>Debit</th>
             <th>Credit</th>
-            <th colspan="3">Action</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
@@ -32,11 +32,11 @@
                            class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
-{{--                        <a href="{{ route('customerLoanLogs.edit', [$customerLoanLog->id]) }}"--}}
-{{--                           class='btn btn-default btn-xs'>--}}
-{{--                            <i class="far fa-edit"></i>--}}
-{{--                        </a>--}}
-{{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
+                        {{--                        <a href="{{ route('customerLoanLogs.edit', [$customerLoanLog->id]) }}"--}}
+                        {{--                           class='btn btn-default btn-xs'>--}}
+                        {{--                            <i class="far fa-edit"></i>--}}
+                        {{--                        </a>--}}
+                        {{--                        {!! Form::button('<i class="far fa-trash-alt"></i>', ['type' => 'submit', 'class' => 'btn btn-danger btn-xs', 'onclick' => "return confirm('Are you sure?')"]) !!}--}}
                     </div>
                     {!! Form::close() !!}
                 </td>

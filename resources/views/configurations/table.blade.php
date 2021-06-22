@@ -21,13 +21,13 @@
                 @if(session('company_id')==0)
                     <td>{{ $configuration->company->name }}</td>
                 @endif
-                <td>{{ $configuration->income->name }}</td>
-                <td>{{ $configuration->expense->name }}</td>
-                <td>{{ $configuration->cash_account->name }}</td>
-                <td>{{ $configuration->fixed_asset->name }}</td>
-                <td>{{ $configuration->current_asset->name }}</td>
-                <td>{{ $configuration->account_payable->name }}</td>
-                <td>{{ $configuration->account_receivable->name }}</td>
+                <td>{{ $configuration->income == null ? "": $configuration->income->name }}</td>
+                <td>{{ $configuration->expense == null? "": $configuration->expense->name }}</td>
+                <td>{{ $configuration->cash_account==null?"": $configuration->expense->name }}</td>
+                <td>{{ $configuration->fixed_asset==null?"": $configuration->expense->name }}</td>
+                <td>{{ $configuration->current_asset==null?"": $configuration->expense->name }}</td>
+                <td>{{ $configuration->account_payable==null?"": $configuration->expense->name }}</td>
+                <td>{{ $configuration->account_receivable==null?"": $configuration->expense->name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['configurations.destroy',$account, $configuration->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

@@ -30,7 +30,7 @@
 <!-- State Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('state', 'Select State:') !!}
-    <select name="state" id="state" class="form-control">
+    <select name="state" id="state" class="form-control" v-model="address.state">
         <option disabled selected>Select State</option>
         <option v-for="state in states" :key="state.id" :value="state.id">@{{ state.name }}</option>
     </select>

@@ -1,9 +1,17 @@
+<?php
+$companyID = session('company_id');
+$company = \App\Models\Company::find($companyID);
+$appName = config('app.name');
+if ($company != null) {
+    $appName = ucfirst($company->name);
+}
+?>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="{{ route('home') }}" class="brand-link">
         <img src="https://assets.infyom.com/logo/blue_logo_150x150.png"
              alt="{{ config('app.name') }} Logo"
              class="brand-image img-circle elevation-3">
-        <span class="brand-text font-weight-light">{{ config('app.name') }}</span>
+        <span class="brand-text font-weight-light">{{ $appName }}</span>
     </a>
 
     <div class="sidebar">

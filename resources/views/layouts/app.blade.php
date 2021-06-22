@@ -1,11 +1,16 @@
 <?php
-//dump(session()->all());
-//?>
+$companyID = session('company_id');
+$company = \App\Models\Company::find($companyID);
+$appName = config('app.name');
+if ($company != null) {
+    $appName = ucfirst($company->name);
+}
+?>
     <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{{ config('app.name') }}</title>
+    <title>{{ $appName }}</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
     <!-- Font Awesome -->
@@ -105,7 +110,7 @@
         <div class="float-right d-none d-sm-block">
             <b>Version</b> 3.0.5
         </div>
-        <strong>Copyright &copy; 2014-2020 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
+        <strong>Copyright &copy; {{ Date('Y') }} <a href="https://adminlte.io">{{ $appName }}</a>.</strong> All rights
         reserved.
     </footer>
 </div>
