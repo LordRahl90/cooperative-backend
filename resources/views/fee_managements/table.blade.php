@@ -2,26 +2,30 @@
     <table class="table" id="feeManagements-table">
         <thead>
         <tr>
-            <th>Company Id</th>
+            @if(session('company_id')==0)
+                <th>Company</th>
+            @endif
             <th>Name</th>
             <th>Description</th>
-            <th>Duration</th>
+            {{--            <th>Duration</th>--}}
             <th>Deadline</th>
             <th>Amount</th>
-            <th>Account Head Id</th>
-            <th colspan="3">Action</th>
+            <th>Account Head</th>
+            <th>Action</th>
         </tr>
         </thead>
         <tbody>
         @foreach($feeManagements as $feeManagement)
             <tr>
-                <td>{{ $feeManagement->company_id }}</td>
+                @if(session('company_id')==0)
+                    <td>{{ $feeManagement->company_id }}</td>
+                @endif
                 <td>{{ $feeManagement->name }}</td>
                 <td>{{ $feeManagement->description }}</td>
-                <td>{{ $feeManagement->duration }}</td>
-                <td>{{ $feeManagement->deadline }}</td>
-                <td>{{ $feeManagement->amount }}</td>
-                <td>{{ $feeManagement->account_head_id }}</td>
+                {{--                <td>{{ $feeManagement->duration }}</td>--}}
+                <td>{{ $feeManagement->deadline->format('Y-m-d') }}</td>
+                <td>{{ number_format($feeManagement->amount,2) }}</td>
+                <td>{{ $feeManagement->account_head->name }}</td>
                 <td width="120">
                     {!! Form::open(['route' => ['feeManagements.destroy',$account, $feeManagement->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>

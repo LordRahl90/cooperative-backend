@@ -26,10 +26,9 @@ class FeeManagement extends Model
     use HasFactory;
 
     public $table = 'fee_managements';
-    
+
 
     protected $dates = ['deleted_at'];
-
 
 
     public $fillable = [
@@ -67,11 +66,15 @@ class FeeManagement extends Model
         'company_id' => 'required|exists:companies,id',
         'name' => 'required',
         'description' => 'required',
-        'duration' => 'required',
+//        'duration' => 'required',
         'deadline' => 'required',
         'amount' => 'required',
         'account_head_id' => 'required|exists:org_account_heads,id'
     ];
 
-    
+    public function account_head()
+    {
+        return $this->belongsTo(OrgAccountHead::class, "account_head_id", "id");
+    }
+
 }
