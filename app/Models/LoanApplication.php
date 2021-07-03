@@ -125,7 +125,7 @@ class LoanApplication extends Model
         'loan_account_id' => 'required',
         'principal' => 'required',
         'rate' => 'required',
-        'interest_type' => 'required',
+//        'interest_type' => 'required',
         'tenor' => 'required',
         'status' => 'required',
         'staff_id' => 'required',

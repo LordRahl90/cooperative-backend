@@ -25,9 +25,9 @@
                 <td>{{ $customerLoan->status }}</td>
                 <td>{{ $customerLoan->narration }}</td>
                 <td width="120">
-                    {!! Form::open(['route' => ['customerLoans.destroy', $customerLoan->id], 'method' => 'delete']) !!}
+                    {!! Form::open(['route' => ['customerLoans.destroy', $account, $customerLoan->id], 'method' => 'delete']) !!}
                     <div class='btn-group'>
-                        <a href="{{ route('customerLoans.show', [$customerLoan->id]) }}" class='btn btn-default btn-xs'>
+                        <a href="{{ route('customerLoans.show', [$account,$customerLoan->id]) }}" class='btn btn-default btn-xs'>
                             <i class="far fa-eye"></i>
                         </a>
 {{--                        <a href="{{ route('customerLoans.edit', [$customerLoan->id]) }}" class='btn btn-default btn-xs'>--}}

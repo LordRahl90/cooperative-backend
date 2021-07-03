@@ -1,3 +1,7 @@
+<?php
+//dd($customers);
+
+?>
 @if(session('company_id')==0)
     <!-- Company Id Field -->
     <div class="form-group col-sm-6">
@@ -12,7 +16,7 @@
 <!-- Customer Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('customer_id', 'Customer:') !!}
-    {!! Form::select('customer_id', $customers, null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('customer_id', $customers, null, ['class' => 'form-control']) !!}
 </div>
 
 
@@ -55,10 +59,18 @@
     {!! Form::text('repayment_amount', null, ['class' => 'form-control','v-model'=>'repayment_amount',':readonly="flatRate" @change="calculateTenor"']) !!}
 </div>
 
+<div class="form-group col-sm-6">
+    <label>Select Guarantor</label>
+    <select class="form-control" id="guarantors" name="guarantors[]" multiple="multiple">
+        @foreach($customers as $k=>$v)
+            <option value="{{ $k }}">{{ $v }}</option>
+        @endforeach
+    </select>
+</div>
+
 <!-- Status Field -->
 <div class="form-group col-sm-6">
     <input type="hidden" name="status" value="PENDING"/>
 </div>
-
 
 <input type="hidden" name="staff_id" value="{{ auth()->id() }}"/>

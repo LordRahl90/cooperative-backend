@@ -18,7 +18,7 @@ class CreateLoanGuarantorsTable extends Migration
             $table->increments('id');
             $table->integer('company_id')->unsigned();
             $table->integer('customer_id')->unsigned();
-            $table->integer('loan_id')->unsigned();
+            $table->integer('loan_id')->unsigned()->nullable();
             $table->integer('guarantor')->unsigned();
             $table->timestamps();
             $table->softDeletes();

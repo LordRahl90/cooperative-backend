@@ -54,7 +54,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  *      )
  * )
  */
-class LoanGuarator extends Model
+class LoanGuarantor extends Model
 {
     use SoftDeletes;
 
@@ -65,13 +65,7 @@ class LoanGuarator extends Model
 
     protected $dates = ['deleted_at'];
 
-
-    public $fillable = [
-        'company_id',
-        'customer_id',
-        'loan_id',
-        'guarantor'
-    ];
+    public $guarded = ['deleted_at'];
 
     /**
      * The attributes that should be casted to native types.
@@ -83,6 +77,7 @@ class LoanGuarator extends Model
         'company_id' => 'integer',
         'customer_id' => 'integer',
         'loan_id' => 'integer',
+        'loan_application_id' => 'integer',
         'guarantor' => 'integer'
     ];
 
@@ -94,8 +89,8 @@ class LoanGuarator extends Model
     public static $rules = [
         'company_id' => 'required',
         'customer_id' => 'required',
-        'loan_id' => 'required',
-        'guarantor' => 'required'
+        'guarantor' => 'required',
+        'loan_application_id' => 'required'
     ];
 
 
