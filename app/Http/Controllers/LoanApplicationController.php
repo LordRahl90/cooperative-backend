@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\LoanAccount;
 use App\Models\LoanApplication;
+use App\Models\LoanGuarantor;
 use App\Models\Payment;
 use App\Models\PaymentVoucher;
 use App\Models\PaymentVoucherDetails;
@@ -74,6 +75,8 @@ class LoanApplicationController extends AppBaseController
     public function store(CreateLoanApplicationRequest $request)
     {
         $input = $request->all();
+        $guarantors = $input['guarantors'];
+//        dd($guarantors);
 
         DB::beginTransaction();
         try {
@@ -125,6 +128,19 @@ class LoanApplicationController extends AppBaseController
             $loanApplication = $this->loanApplicationRepository->create($input);
             if (!$loanApplication) {
                 throw new \Exception("Cannot create a new loan application record");
+            }
+
+            foreach ($guarantors as $guarantor) {
+                $g = LoanGuarantor::create([
+                    'company_id' => $input['company_id'],
+                    'customer_id' => $customer->id,
+                    'loan_application_id' => $loanApplication->id,
+                    'guarantor' => $guarantor
+                ]);
+
+                if (!$g) {
+                    throw new \Exception("error adding loan guarantor");
+                }
             }
 
             DB::commit();
