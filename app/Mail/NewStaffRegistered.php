@@ -26,15 +26,16 @@ class NewStaffRegistered extends Mailable
      * @param $company
      * @param $staff
      * @param $password
+     * @param $token
      * @param $link
      */
-    public function __construct($company, $staff, $password, $link)
+    public function __construct($company, $staff, $password, $token, $link)
     {
         $this->company = $company;
         $this->staff = $staff;
         $this->password = $password;
-        $this->token = uniqid('tk-');
         $this->link = $link;
+        $this->token = $token;
     }
 
     /**
@@ -44,20 +45,22 @@ class NewStaffRegistered extends Mailable
      */
     public function build()
     {
+        Log::info("Received token: $this->token");
+        Log::info($this->link);
         $newPasswordReset = DB::table('password_resets')->insert([
-            'email' => $this->staff->email,
-            'token' => Hash::make($this->token),
+            'email' => $this->staff['email'],
+            'token' => $this->token,
             'created_at' => now()
         ]);
         if (!$newPasswordReset) {
-            Log::info("cannot create a new reset password token");
+            Log::error("cannot create a new reset password token");
         }
-        Log::info($this->link);
         $host = explode("://", config('app.url'));
+        $from = 'registrations@' . $host[1];
         return $this
             ->subject("New Staff Registration")
-//            ->from('registrations@' . $host[1], 'Staff Registration')
-            ->from('registration@coop-account.com', 'Staff Registration')
+            ->from($from, 'Staff Registration')
+//            ->from('registration@coop-account.com', 'Staff Registration')
             ->view('staff.welcome');
     }
 }

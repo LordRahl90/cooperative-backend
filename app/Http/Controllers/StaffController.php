@@ -6,12 +6,14 @@ use App\Http\Requests\CreateStaffRequest;
 use App\Http\Requests\UpdateStaffRequest;
 use App\Mail\NewStaffRegistered;
 use App\Models\Company;
+use App\Models\Staff;
 use App\Models\User;
 use App\Repositories\StaffRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Response;
 
@@ -74,6 +76,12 @@ class StaffController extends AppBaseController
     {
         $input = $request->all();
         $input['password'] = Hash::make($input['password']);
+        $check = Staff::whereRaw('company_id=? AND (email=? OR phone=?)',
+            [$input['company_id'], $input['email'], $input['phone']])->count();
+        if ($check > 0) {
+            Flash::error("Staff already exists. do you want to reset their password?");
+            return redirect()->back()->withInput();
+        }
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
@@ -86,18 +94,23 @@ class StaffController extends AppBaseController
         $input['user_id'] = $user->id;
         $input['active'] = false;
         $staff = $this->staffRepository->create($input);
+        $token = uniqid('tk-');
+        $hashedToken = Hash::make($token);
 
-        Flash::success('Staff saved successfully.');
         $company = Company::find($input['company_id']);
         if ($account != "") {
-            $link = url("password/reset");
+            $link = url('password/reset', $token) . '?email=' . urlencode($staff->user->getEmailForPasswordReset());
         } else {
             $host = explode("://", config('app.url'));
-            $link = "https://" . $company->slug . "." . $host[1];
+            $link = "https://" . $company->slug . "." . $host[1] . "/password/reset/$token?email="
+                . urlencode($staff->user->getEmailForPasswordReset());
         }
-        dispatch(function () use ($user, $company, $staff, $request, $link) {
-            Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password'), $link));
-        })->afterResponse();
+
+        Mail::to($user->email)->queue(new NewStaffRegistered($company, $staff, $request->get('password'), $hashedToken, $link));
+        Flash::success('Staff saved successfully.');
+//        dispatch(function () use ($user, $company, $staff, $request, $token, $link, $hashedToken) {
+//            Mail::to($user->email)->send(new NewStaffRegistered($company, $staff, $request->get('password'), $hashedToken, $link));
+//        });//->afterResponse();
 
         return redirect(route('staff.index', $account));
     }
@@ -186,7 +199,7 @@ class StaffController extends AppBaseController
      * @return Response
      * @throws \Exception
      */
-    public function destroy($id, $account = "")
+    public function destroy($account, $id)
     {
         $staff = $this->staffRepository->find($id);
 

@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+//dd(urldecode($token));
+?>
+    <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -44,7 +47,7 @@
             <form action="{{ route('password.update') }}" method="POST">
                 @csrf
 
-                <input type="hidden" name="token" value="{{ $token }}">
+                <input type="hidden" name="token" value="{{ urldecode($token) }}">
 
                 <div class="input-group mb-3">
                     <input type="email"

@@ -23,7 +23,7 @@
                                         <img src="{{ $company->logo }}" width="100" height="50"
                                              alt="{{ $company->name }}"/>
                                     @else
-                                        <h1>{{ $tutorial->name }}</h1>
+                                        <h1>{{ $company->name }}</h1>
                                     @endif
                                 </td>
                                 <td align="right">
@@ -57,7 +57,7 @@
                                     In order to log in, kindly follow the steps below:
                                     <br> <br>
                                     1. Click on this <a
-                                        href="{{ $link = url('password/reset', $token).'?email='.urlencode($staff->user->getEmailForPasswordReset()) }}">link</a>
+                                        href="{{ $link }}">link</a>
                                     and
                                     use your
                                     new log-in details below to access your account

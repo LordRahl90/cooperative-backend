@@ -17,9 +17,7 @@ use Illuminate\Support\Facades\Route;
 //Route::domain('{account}.' . env('APP_URL', 'coop-account.test'))->group(function () {
 Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'middleware' => 'domain'], function () {
     Route::resource('users', App\Http\Controllers\UserController::class);
-//    Route::get('/custom', function ($account) {
-//        dd($account);
-//    });
+
 
     Route::get('/', function ($account) {
         return view('welcome');
@@ -29,16 +27,16 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'm
 
     Route::get('/custom', function ($account) {
         Log::info("hello world");
+        dd(url("/custom"));
         $company = \App\Models\Company::find(1);
         $staff = \App\Models\Staff::find(2);
         $link = url("/password/reset");
-//    dd('Loan repayment for ' . Date('M, Y'));
-//        $path = "app/schedules/cus-606b3083c34d1.xlsx";
+        $path = "app/schedules/cus-606b3083c34d1.xlsx";
 //        \App\Jobs\ProcessRepaymentSchedule::dispatch(1, 36, 14, $path, "2021-03")->onQueue('repayment');
 //    \Illuminate\Support\Facades\Log::info($staff);
-        \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password", $link));
+        \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password", uniqid("tk-"), $link));
         dump("Mail sent successfully,");
-//        dump("All good");
+        dump("All good");
         response()->json(['success' => true, 'message' => 'all good']);
     });
 
@@ -155,7 +153,7 @@ Route::group(['domain' => '{account}.' . env('APP_URL', 'coop-account.test'), 'm
 
     Route::resource('feeManagements', App\Http\Controllers\FeeManagementController::class);
 
-    Route::resource('loanGuarators', App\Http\Controllers\LoanGuaratorController::class);
+    Route::resource('loanGuarantors', App\Http\Controllers\LoanGuaratorController::class);
 });
 
 
@@ -163,6 +161,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 Auth::routes();
+
+Route::get('/custom', function () {
+    Log::info("hello world");
+    $company = \App\Models\Company::find(1);
+    $staff = \App\Models\Staff::find(36);
+    $link = url("/password/reset");
+    \Illuminate\Support\Facades\Mail::to("tolaabbey009@gmail.com")->queue(new \App\Mail\NewStaffRegistered($company, $staff, "password", uniqid("tk-"), $link));
+    dump("Mail sent successfully,");
+    dump("All good");
+    response()->json(['success' => true, 'message' => 'all good']);
+});
 
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('accountCategories', App\Http\Controllers\AccountCategoryController::class);

@@ -230,8 +230,8 @@
         </li>
 
         <li class="nav-item">
-            <a href="{{ route('loanGuarators.index',[$account]) }}"
-               class="nav-link {{ Request::is('loanGuarators*') ? 'active' : '' }}">
+            <a href="{{ route('loanGuarantors.index',[$account]) }}"
+               class="nav-link {{ Request::is('loanGuarantors*') ? 'active' : '' }}">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Loan Guarators</p>
             </a>

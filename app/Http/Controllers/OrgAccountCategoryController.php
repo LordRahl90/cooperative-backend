@@ -58,6 +58,7 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @param CreateOrgAccountCategoryRequest $request
      *
+     * @param $account
      * @return Response
      */
     public function store(CreateOrgAccountCategoryRequest $request, $account)
@@ -76,6 +77,7 @@ class OrgAccountCategoryController extends AppBaseController
      *
      * @param int $id
      *
+     * @param $account
      * @return Response
      */
     public function show($id, $account)
