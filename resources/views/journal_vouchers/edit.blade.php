@@ -17,7 +17,7 @@
 
         <div class="card">
 
-            {!! Form::model($journalVoucher, ['route' => ['journalVouchers.update', $journalVoucher->id], 'method' => 'patch']) !!}
+            {!! Form::model($journalVoucher, ['route' => ['journalVouchers.update',$account, $journalVoucher->id], 'method' => 'patch']) !!}
 
             <div class="card-body">
                 <div class="row">
@@ -27,7 +27,7 @@
 
             <div class="card-footer">
                 {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-                <a href="{{ route('journalVouchers.index') }}" class="btn btn-default">Cancel</a>
+                <a href="{{ route('journalVouchers.index',$account) }}" class="btn btn-default">Cancel</a>
             </div>
 
            {!! Form::close() !!}
