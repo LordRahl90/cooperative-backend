@@ -186,18 +186,17 @@
             methods: {
                 addDebitEntry() {
                     let entry = this.debitItem;
-                    if (entry.accountHead == 0) {
+                    if (entry.accountHead === 0) {
                         this.error('Invalid account head');
                         return;
                     }
-                    if (entry.amount == 0) {
+                    if (entry.amount === 0) {
                         this.error('Amount must be greater than 0');
                         return;
                     }
 
                     // check for duplicates in credit entry
                     for (const i of this.credit) {
-                        console.log(`Account head: ${i.accountHead}`);
                         if (i.accountHead === entry.accountHead) {
                             this.error('Cannot have same account on both sides');
                             return;
@@ -211,17 +210,16 @@
                 },
                 addCreditEntry() {
                     let entry = this.creditItem;
-                    if (entry.accountHead == 0) {
+                    if (entry.accountHead === 0) {
                         this.error('Invalid account head');
                         return;
                     }
-                    if (entry.amount == 0) {
+                    if (entry.amount === 0) {
                         this.error('Amount must be greater than 0');
                         return;
                     }
                     // check for duplicates in credit entry
                     for (const i of this.debit) {
-                        console.log(`Account head: ${i.accountHead}`);
                         if (i.accountHead === entry.accountHead) {
                             this.error('Cannot have same account on both sides');
                             return;
