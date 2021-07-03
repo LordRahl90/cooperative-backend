@@ -19,7 +19,7 @@ class CreateOrgAccountCategoriesTable extends Migration
             $table->integer('company_id')->unsigned();
             $table->string('name');
             $table->string('slug');
-            $table->enum('account_type', ['CREDIT','DEBIT']);
+            $table->enum('account_type', ['CREDIT', 'DEBIT']);
             $table->integer('prefix_digit');
             $table->timestamps();
             $table->softDeletes();

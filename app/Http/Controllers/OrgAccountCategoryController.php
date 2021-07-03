@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateOrgAccountCategoryRequest;
 use App\Http\Requests\UpdateOrgAccountCategoryRequest;
 use App\Models\Company;
+use App\Models\OrgAccountCategory;
 use App\Repositories\OrgAccountCategoryRepository;
 use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
@@ -64,11 +65,14 @@ class OrgAccountCategoryController extends AppBaseController
     public function store(CreateOrgAccountCategoryRequest $request, $account)
     {
         $input = $request->all();
+        $count = OrgAccountCategory::whereRaw('company_id=? AND prefix_digit = ?', [$input['company_id'], $input['prefix_digit']])->count();
+        if ($count > 0) {
+            Flash::error("Account category exists already");
+            return redirect()->back()->withInput();
+        }
 
         $orgAccountCategory = $this->orgAccountCategoryRepository->create($input);
-
         Flash::success('Org Account Category saved successfully.');
-
         return redirect(route('orgAccountCategories.index', $account));
     }
 
