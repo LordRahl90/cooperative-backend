@@ -54,7 +54,8 @@
         <li class="nav-item">
             <a href="{{ route('feeManagements.index',$account) }}"
                class="nav-link {{ Request::is('feeManagements*') ? 'active' : '' }}">
-                <p>Fee Managements</p>
+                <i class="far fa-circle nav-icon"></i>
+                <p>Fee Management</p>
             </a>
         </li>
 

@@ -123,9 +123,9 @@ abstract class BaseRepository
         return $query->get($columns);
     }
 
-    public function where($field, $value)
+    public function where($field, $value, $limit = 100)
     {
-        return $this->model->where($field, $value)->get();
+        return $this->model->where($field, $value)->limit($limit)->get();
     }
 
     /**

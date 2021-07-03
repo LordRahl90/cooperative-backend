@@ -1,3 +1,14 @@
+@if(session('company_id')==0)
+    <!-- Company Id Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('company_id', 'Company:') !!}
+        {!! Form::select('company_id', $companies, null, ['class' => 'form-control custom-select','v-model'=>'account.company_id']) !!}
+    </div>
+@else
+    <input type="hidden" name="company_id" value="{{ session('company_id') }}"/>
+@endif
+
+
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
@@ -41,5 +52,5 @@
 <!-- Account Head Id Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('account_head_id', 'Account Head:') !!}
-    {!! Form::select('account_head_id', [], null, ['class' => 'form-control custom-select']) !!}
+    {!! Form::select('account_head_id', $accountHeads, null, ['class' => 'form-control custom-select']) !!}
 </div>

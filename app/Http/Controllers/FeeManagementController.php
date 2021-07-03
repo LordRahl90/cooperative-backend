@@ -6,6 +6,7 @@ use App\Http\Requests\CreateFeeManagementRequest;
 use App\Http\Requests\UpdateFeeManagementRequest;
 use App\Repositories\FeeManagementRepository;
 use App\Http\Controllers\AppBaseController;
+use App\Utility\Utility;
 use Illuminate\Http\Request;
 use Flash;
 use Response;
@@ -30,12 +31,12 @@ class FeeManagementController extends AppBaseController
      */
     public function index(Request $request, $account)
     {
-        $feeManagements = $this->feeManagementRepository->all();
+        $companyID = session('company_id');
+        $feeManagements = $this->feeManagementRepository->where('company_id', $companyID);
 
         return view('fee_managements.index', [
             'account' => $account
-        ])
-            ->with('feeManagements', $feeManagements);
+        ])->with('feeManagements', $feeManagements);
     }
 
     /**
@@ -46,8 +47,11 @@ class FeeManagementController extends AppBaseController
      */
     public function create($account)
     {
+        $companyID = session('company_id');
+        $accountHeads = Utility::getAccountHeads($companyID);
         return view('fee_managements.create', [
-            'account' => $account
+            'account' => $account,
+            'accountHeads' => $accountHeads
         ]);
     }
 
@@ -62,6 +66,8 @@ class FeeManagementController extends AppBaseController
     public function store(CreateFeeManagementRequest $request, $account)
     {
         $input = $request->all();
+        $input['company_id'] = session('company_id');
+        $input['duration'] = 0;
 
         $feeManagement = $this->feeManagementRepository->create($input);
 
