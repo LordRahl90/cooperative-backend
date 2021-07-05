@@ -1,4 +1,4 @@
-# Accounting Basics
+# Cooperative Project
 
 This project is designed to be the accounting scaffold/cornerstone of future applications.
 
