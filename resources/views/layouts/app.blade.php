@@ -45,6 +45,8 @@ if ($company != null) {
           integrity="sha512-aEe/ZxePawj0+G2R+AaIxgrQuKT68I28qh+wgLrcAJOz3rxCP+TwrK5SPN+E5I+1IQjNtcfvb96HDagwrKRdBw=="
           crossorigin="anonymous"/>
 
+    @include('layouts.datatables_css')
+
     @yield('third_party_stylesheets')
 
     @stack('page_css')
@@ -154,6 +156,7 @@ if ($company != null) {
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 {{--<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>--}}
+@include('layouts.datatables_js')
 
 <script>
     toastr.options = {

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table" id="orgBankAccounts-table">
+    <table id="example" class="table table-bordered table-hover">
         <thead>
         <tr>
             @if(session('company_id')==0)
