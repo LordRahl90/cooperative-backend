@@ -9,9 +9,9 @@ services:
     volumes:
       - ../:/app
     env_file:
-      - ../.envs/app.env
+      - ../.envs/app.env.example
     ports:
-      - 80:80
+      - 8000:80
     networks:
       - coop-network
     depends_on:
@@ -24,7 +24,7 @@ services:
     ports:
       - "3308:3306"
     env_file:
-      - ../.envs/mysql.env
+      - ../.envs/mysql.env.example
     volumes:
       - coop-db-volume:/var/lib/mysql
     networks:
@@ -43,7 +43,7 @@ services:
     environment:
       PMA_HOST: database
     env_file:
-      - ../.envs/mysql.env
+      - ../.envs/mysql.env.example
 
     networks:
       - coop-network
