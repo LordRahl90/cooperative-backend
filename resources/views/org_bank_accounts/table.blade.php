@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<div class="table-responsive" style="padding:5px 5px;">
     <table id="example" class="table table-bordered table-hover">
         <thead>
         <tr>

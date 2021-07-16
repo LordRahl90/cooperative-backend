@@ -180,8 +180,8 @@ if ($company != null) {
     $(function () {
         bsCustomFileInput.init();
         $('ul').Treeview();
+		$("#example").DataTable();
     });
-
 
     $("input[data-bootstrap-switch]").each(function () {
         $(this).bootstrapSwitch('state', $(this).prop('checked'));

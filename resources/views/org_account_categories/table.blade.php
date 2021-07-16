@@ -1,5 +1,5 @@
-<div class="table-responsive">
-    <table class="table" id="orgAccountCategories-table">
+<div class="table-responsive" style="padding:5px 5px;">
+    <table class="table table-bordered table-hover" id="example">
         <thead>
         <tr>
             @if(session('company_id')==0)
